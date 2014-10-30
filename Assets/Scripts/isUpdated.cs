@@ -1,31 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class isUpdated : MonoBehaviour {
+public class isUpdated : Photon.MonoBehaviour {
 
-	bool isInCurrentRoom;
+	bool visibleInRoom = true;
 
 	// Use this for initialization
 	void Start () {
-		isInCurrentRoom = true;
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-	}
-
-	public void updateObjectStatus( bool inRoom) {
-		isInCurrentRoom = inRoom;
-		if (isInCurrentRoom) {
-
-		} else {
-			removeFromRoom ();
+		if (Input.GetButtonDown ("jumpButton")) {
+			updateObjectStatus(false);
 		}
 	}
 
-	[RPC]
-	void removeFromRoom() {
-		Destroy ( gameObject);
+	public void updateObjectStatus (bool isInCurrentRoom)  {
+		if (isInCurrentRoom) {
+
+		} else {
+			photonView.RPC("removeFromRoom", PhotonTargets.All, (byte)1);
+		}
+	}
+
+	[RPC] void removeFromRoom(byte num) {
+		MeshRenderer graphicsMesh = GetComponentInChildren<MeshRenderer>();
+
+		visibleInRoom = !visibleInRoom;
+		graphicsMesh.enabled = visibleInRoom;
 	}
 }
