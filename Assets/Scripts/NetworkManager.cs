@@ -54,20 +54,13 @@ public class NetworkManager : MonoBehaviour {
 		}
 
 		SpawnSpot mySpawnSpot = spawnSpots [Random.Range (0, spawnSpots.Length)];
-
+		
 		//StandbyCamera.SetActive(false);
 		myPlayerGO = PhotonNetwork.Instantiate ("WC", mySpawnSpot.transform.position, mySpawnSpot.transform.rotation, 0);
 
-
 		((MonoBehaviour) myPlayerGO.GetComponent ("ThirdPersonController")).enabled = true;
 		((MonoBehaviour) myPlayerGO.GetComponent ("ThirdPersonCamera")).enabled = true;
-
-		//((MonoBehaviour) myPlayerGO.GetComponent ("FPSInputController")).enabled = true;
-		//((MonoBehaviour) myPlayerGO.GetComponent ("MouseLook")).enabled = true;
-		//((MonoBehaviour) myPlayerGO.GetComponent ("CharacterMotor")).enabled = true;
-
-		//myPlayerGO.transform.FindChild ("Main Camera").gameObject.SetActive (true);
-
+		
 	}
 
 	// Update is called once per frame
