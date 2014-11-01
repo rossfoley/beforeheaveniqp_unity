@@ -18,17 +18,12 @@ public class isUpdated : Photon.MonoBehaviour {
 	}
 
 	public void updateObjectStatus (bool isInCurrentRoom)  {
-		if (isInCurrentRoom) {
-
-		} else {
-			photonView.RPC("removeFromRoom", PhotonTargets.All, (byte)1);
-		}
+		photonView.RPC("removeFromRoom", PhotonTargets.All, !visibleInRoom);
 	}
 
-	[RPC] void removeFromRoom(byte num) {
+	[RPC] void removeFromRoom(bool inRoom) {
 		MeshRenderer graphicsMesh = GetComponentInChildren<MeshRenderer>();
-
-		visibleInRoom = !visibleInRoom;
+		visibleInRoom = inRoom;
 		graphicsMesh.enabled = visibleInRoom;
 	}
 }
