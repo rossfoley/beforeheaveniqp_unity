@@ -130,8 +130,8 @@ MonoBehaviour:
   ownerId: 0
   group: 0
   prefixBackup: -1
-  observed: {fileID: 35972615}
-  synchronization: 3
+  observed: {fileID: 0}
+  synchronization: 0
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   instantiationId: 0
@@ -1398,8 +1398,8 @@ MonoBehaviour:
   ownerId: 0
   group: 0
   prefixBackup: -1
-  observed: {fileID: 426209484}
-  synchronization: 3
+  observed: {fileID: 0}
+  synchronization: 0
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   instantiationId: 0
@@ -11524,6 +11524,66 @@ MonoBehaviour:
   currentRoom: {fileID: 2023045260}
   roomTemplate: {fileID: 100002, guid: 76b4100b78d0c2046aa32aa661ff2797, type: 2}
   networkManager: {fileID: 2039934023}
+  scrollPosition: {x: 0, y: 0}
+  style:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
 --- !u!4 &1390327964
 Transform:
   m_ObjectHideFlags: 0
@@ -12052,7 +12112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8297653c07a92e2448ec005bda7b2f39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StandbyCamera: {fileID: 858580294}
+  StandbyCamera: {fileID: 0}
   myPlayerGO: {fileID: 0}
   inLobby: 0
 --- !u!4 &2039934024
