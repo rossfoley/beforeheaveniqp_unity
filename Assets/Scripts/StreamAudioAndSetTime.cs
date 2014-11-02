@@ -10,6 +10,9 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	private WaveStream nMainOutputStream;
 	private WaveChannel32 nVolumeStream;
 
+	public string o_username;
+	public string o_password;
+
 	private bool LoadAudioFromData(byte[] data){
 		try{
 			MemoryStream tmpStr = new MemoryStream(data);
@@ -40,9 +43,42 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 		nWaveOutDevice.Play();
 		Resources.UnloadUnusedAssets();
 	}
+
+	public void LoginUser(string username, string enteredPassword){
+		WWWForm form = new WWWForm();
+		form.AddField("username", username);
+		form.AddField("password", enteredPassword);
+		byte[] rawData = form.data;
+
+		Hashtable headers = new Hashtable();
+		headers = form.headers;
+
+		string url = "http://beforeheaveniqp.herokuapp.com/";
+
+		headers["Authorization"] = "Basic " + System.Convert.ToBase64String(System.Text.Encoding.ASCII.GetBytes("username:password"));
+		WWW www = new WWW(url, form);
+
+		StartCoroutine(WaitForRequest(www));
+	}
+
+	IEnumerator WaitForRequest(WWW www){
+		yield return www;
+		Debug.Log(www.text);
+		// check for errors
+		if (www.error == null){
+			Debug.Log("WWW Ok!: " + www.text);
+			Debug.Log("WWW Ok!: " + www.data);
+		} else {
+			Debug.Log("WWW Error: " + www.error);
+		}
+	} 
+
 	// Use this for initialization
 	void Start () {
-		LoadAudio();
+		o_username = "butts@ss.com";
+		o_password = "butts123";
+		LoginUser(o_username, o_password);
+		//LoadAudio();
 		/*
 		WWW www = new WWW ("http://localhost:8888/test2.ogg");  // start a download of the given URL
 		AudioClip clip  = www.GetAudioClip(false, true); // 2D, streaming
