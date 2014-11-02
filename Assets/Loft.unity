@@ -1531,6 +1531,7 @@ GameObject:
   - 33: {fileID: 520016393}
   - 65: {fileID: 520016392}
   - 23: {fileID: 520016391}
+  - 114: {fileID: 520016394}
   m_Layer: 0
   m_Name: North Wall
   m_TagString: Untagged
@@ -1589,6 +1590,17 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 520016389}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &520016394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 520016389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d14d73b63678f4f80b0f40959b9fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &527353848
 GameObject:
   m_ObjectHideFlags: 0
@@ -11687,6 +11699,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1603427658}
+  - 114: {fileID: 1603427659}
   m_Layer: 0
   m_Name: AudioStream
   m_TagString: Untagged
@@ -11706,6 +11719,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 14
+--- !u!114 &1603427659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1603427657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d14d73b63678f4f80b0f40959b9fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1737087071
 GameObject:
   m_ObjectHideFlags: 0
