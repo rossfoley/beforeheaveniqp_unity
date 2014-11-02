@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using NAudio;
+using NAudio.Wave;
+
 public class NewBehaviourScript : MonoBehaviour {
 
 	// Use this for initialization
