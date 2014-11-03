@@ -61,6 +61,30 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 		StartCoroutine(WaitForRequest(www));
 	}
 
+	/*
+	 * string url = "http://beforeheaveniqp.herokuapp.com/user/login";
+
+		WWWForm form = new WWWForm();
+		form.AddField("username", username);
+		form.AddField("password", enteredPassword);
+		WWW www = new WWW(url, form);
+		yield return www;
+		var parsed = JSON.Parse(www.text);
+
+		// Save the user email and auth key
+		string userEmail = (parsed ["data"] ["email"]).ToString().Trim('"');
+		string userAuthKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
+
+		Hashtable headers = new Hashtable();
+		headers = form.headers;
+		
+		headers.Add ("Content-Type", "application/json");
+		headers.Add("X-User-Email", userEmail);
+		headers.Add("X-User-Token", userAuthKey);
+		//WWW mp3stream = new WWW (roomsURL, null, headers);
+		//yield return rooms;
+	 **/
+
 	IEnumerator WaitForRequest(WWW www){
 		yield return www;
 		Debug.Log(www.text);
