@@ -5,7 +5,10 @@ using System.Linq;
 public class NetworkManager : MonoBehaviour {
 
 	public GameObject StandbyCamera;
-	SpawnSpot[] spawnSpots;
+	private SpawnSpot[] spawnSpots;
+	public GameObject myPlayerGO;
+	private bool isStartup;
+	public bool	inLobby;
 
 	void OnGUI () {
 		GUILayout.Label (PhotonNetwork.connectionStateDetailed.ToString()); // show connectivity status
@@ -13,8 +16,9 @@ public class NetworkManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		spawnSpots = GameObject.FindObjectsOfType<SpawnSpot>();
-
+		PhotonNetwork.autoJoinLobby = true;
+		inLobby = false;
+		isStartup = true;
 		Connect (); // connect to photon stuff
 	}
 
@@ -23,7 +27,12 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	void OnJoinedLobby() {
-		PhotonNetwork.JoinRandomRoom ();
+		Debug.Log ("OnJoinedLobby Called");
+		inLobby = true;
+		if (isStartup){
+			PhotonNetwork.JoinRandomRoom ();
+			isStartup = false;
+		}
 	}
 
 	void OnPhotonRandomJoinFailed() {
@@ -33,28 +42,30 @@ public class NetworkManager : MonoBehaviour {
 
 	void OnJoinedRoom() {
 		Debug.Log ("joined Room");
-
+		inLobby = false;
 		SpawnMyPlayer ();
 	}
 
-	void SpawnMyPlayer () {
+	public void SpawnMyPlayer () {
+		spawnSpots = GameObject.FindObjectsOfType<SpawnSpot>();
 		if (spawnSpots == null) {
 			Debug.Log ("no spawn spots in level");
 			return;
 		}
 
 		SpawnSpot mySpawnSpot = spawnSpots [Random.Range (0, spawnSpots.Length)];
-
-		GameObject myPlayerGO = PhotonNetwork.Instantiate ("WC", mySpawnSpot.transform.position, mySpawnSpot.transform.rotation, 0);
+		
+		//StandbyCamera.SetActive(false);
+		myPlayerGO = PhotonNetwork.Instantiate ("WC", mySpawnSpot.transform.position, mySpawnSpot.transform.rotation, 0);
 
 		((MonoBehaviour) myPlayerGO.GetComponent ("ThirdPersonController")).enabled = true;
 		((MonoBehaviour) myPlayerGO.GetComponent ("ThirdPersonCamera")).enabled = true;
-
-		Debug.Log ("stuff happened");
+		
 	}
 
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
+
 }
