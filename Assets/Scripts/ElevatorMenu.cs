@@ -145,7 +145,7 @@ public class ElevatorMenu : MonoBehaviour {
 		headers.Add ("X-User-Token", userAuthKey);
 		
 		// TODO
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": " + newRoomName + ",\"genre\": " + newRoomGenre + "} }");
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\"} }");
 
 		StringBuilder data = new StringBuilder();
 		data.Append("{\n");
