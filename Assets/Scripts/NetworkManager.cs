@@ -30,14 +30,10 @@ public class NetworkManager : MonoBehaviour {
 		Debug.Log ("OnJoinedLobby Called");
 		inLobby = true;
 		if (isStartup){
-			PhotonNetwork.JoinRandomRoom ();
+			RoomOptions testRO = new RoomOptions();
+			PhotonNetwork.JoinOrCreateRoom ("starting room", testRO, PhotonNetwork.lobby);
 			isStartup = false;
 		}
-	}
-
-	void OnPhotonRandomJoinFailed() {
-		Debug.Log ("OnPhotonRandomJoinFailed");
-		PhotonNetwork.CreateRoom (null);
 	}
 
 	void OnJoinedRoom() {

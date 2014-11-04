@@ -125,10 +125,10 @@ public class ElevatorMenu : MonoBehaviour {
 	
 	void OnJoinedLobby() {
 		RoomOptions testRO = new RoomOptions ();
-		
+		Debug.Log (nextRoom.Trim('"'));
 		// Join the room if it is already active on the server, otherwise create it
 		if (isChangingRoom){
-			PhotonNetwork.JoinOrCreateRoom (nextRoom, testRO, PhotonNetwork.lobby);
+			PhotonNetwork.JoinOrCreateRoom (nextRoom.Trim('"'), testRO, PhotonNetwork.lobby);
 			isChangingRoom = false;
 		}
 	}
