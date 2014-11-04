@@ -12028,7 +12028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentRoomObject: {fileID: 1365570921}
-  roomTemplate: {fileID: 100002, guid: 76b4100b78d0c2046aa32aa661ff2797, type: 2}
+  roomTemplate: {fileID: 100000, guid: f5178051882574f4dbe9d55fdbccd69c, type: 2}
   networkManager: {fileID: 2039934023}
   scrollPosition: {x: 0, y: 0}
   style:
