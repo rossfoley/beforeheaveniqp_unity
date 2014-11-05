@@ -59,12 +59,15 @@ public class ElevatorMenu : MonoBehaviour {
 		allRooms = new RoomData[roomsParsed["data"].AsArray.Count];
 		int roomCount = 0;
 		foreach(JSONNode data in roomsParsed["data"].AsArray){
-			RoomData roomData = new RoomData(data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, null);
+			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, null);
 			allRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		currentRoomData = new RoomData ("Start", "none", 0, new int[1]);;
+		currentRoomData = new RoomData ("0", "Start", "none", 0, new int[1]);
 		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
+		RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
+		rcm.AuthKey = userAuthKey;
+		rcm.UserEmail = userEmail;
 	}
 	
 	// Update is called once per frame
@@ -111,6 +114,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 						// Update currentRoomObject and Data
 						currentRoomObject = (GameObject) Instantiate(roomTemplate);
+						currentRoomData.RoomId = allRooms[i].RoomId;
 						currentRoomData.Name = allRooms[i].Name;
 						currentRoomData.Genre = allRooms[i].Genre;
 						currentRoomData.Visits = allRooms[i].Visits;
