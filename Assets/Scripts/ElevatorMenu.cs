@@ -9,6 +9,8 @@ public class ElevatorMenu : MonoBehaviour {
 	public GameObject currentRoomObject;
 	private RoomData currentRoomData;
 	public GameObject roomTemplate;
+	public GameObject roomMenuTemplate;
+	private GameObject roomMenu;
 	public NetworkManager networkManager;
 	private bool isChangingRoom;
 	private RoomData[] allRooms = new RoomData[0];
@@ -32,6 +34,7 @@ public class ElevatorMenu : MonoBehaviour {
 	
 	// Use this for initialization
 	IEnumerator Start () {
+
 		isChangingRoom = false;
 
 		WWWForm loginForm = new WWWForm ();
@@ -60,7 +63,8 @@ public class ElevatorMenu : MonoBehaviour {
 			allRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		currentRoomData = new RoomData ("Start", "none", 0, new int[1]);
+		currentRoomData = new RoomData ("Start", "none", 0, new int[1]);;
+		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
 	}
 	
 	// Update is called once per frame
@@ -111,6 +115,8 @@ public class ElevatorMenu : MonoBehaviour {
 						currentRoomData.Genre = allRooms[i].Genre;
 						currentRoomData.Visits = allRooms[i].Visits;
 						currentRoomData.Members = allRooms[i].Members;
+						RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
+						rcm.ThisRoom = currentRoomData;
 					}
 				}
 			}
