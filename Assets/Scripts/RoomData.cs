@@ -2,16 +2,28 @@
 using System.Collections;
 
 public class RoomData{
+
+	private string roomId;
 	private string name;
 	private string genre;
 	private int visits;
-	private int[] members;
+	private string[] members;
 
-	public RoomData(string name, string genre, int visits, int[] members){
+	public RoomData(string roomId, string name, string genre, int visits, string[] members){
+		this.roomId = roomId;
 		this.name = name;
 		this.genre = genre;
 		this.visits = visits;
 		this.members = members;
+	}
+
+	public string RoomId {
+		get {
+			return this.roomId;
+		}
+		set {
+			roomId = value;
+		}
 	}
 
 	public string Name {
@@ -41,7 +53,7 @@ public class RoomData{
 		}
 	}
 
-	public int[] Members {
+	public string[] Members {
 		get {
 			return this.members;
 		}
