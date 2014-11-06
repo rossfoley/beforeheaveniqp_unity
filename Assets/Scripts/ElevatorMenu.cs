@@ -6,19 +6,24 @@ using System.IO;
 using System;
 
 public class ElevatorMenu : MonoBehaviour {
-	
+
+	//Unity GameObject Links
 	public GameObject currentRoomObject;
-	private RoomData currentRoomData;
 	public GameObject roomTemplate;
 	public GameObject roomMenuTemplate;
+
+	private RoomData currentRoomData;
+
 	private GameObject roomMenu;
 	public NetworkManager networkManager;
 	private bool isChangingRoom;
 	private RoomData[] allRooms = new RoomData[0];
 
+	//Constant URLs
 	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/user/login";
 	private const string roomsURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	private const string roomURL = "http://beforeheaveniqp.herokuapp.com/api/room";
+	private const string roomSearchURL = "http://beforeheaveniqp.herokuapp.com/api/rooms/search/";
 
 	private string nextRoom;
 
@@ -32,6 +37,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 	private string newRoomName = "";
 	private string newRoomGenre = "";
+	private string searchField = "";
 	
 	// Use this for initialization
 	IEnumerator Start () {
@@ -54,29 +60,8 @@ public class ElevatorMenu : MonoBehaviour {
 		Debug.Log (login.text);
 	
 		// Retrieve all the rooms currently on the database
-		var headers = new Hashtable();
-		headers.Add ("Content-Type", "application/json");
-		headers.Add("X-User-Email", userEmail);
-		headers.Add("X-User-Token", userAuthKey);
-		WWW rooms = new WWW (roomsURL, null, headers);
-		yield return rooms;
-		Debug.Log (rooms.text);
-		var roomsParsed = JSON.Parse (rooms.text);
-		allRooms = new RoomData[roomsParsed["data"].AsArray.Count];
-		int roomCount = 0;
-		foreach(JSONNode data in roomsParsed["data"].AsArray){
-			string[] memberIds = new string[data["member_ids"].AsArray.Count];
-			int i = 0;
-			Debug.Log("Starting memberIds loop");
-			foreach(JSONNode members in data["member_ids"].AsArray){
-				memberIds[i] = members["$oid"];
-				Debug.Log ("Member " + i + ": " + members["$oid"]);
-				i++;
-			}
-			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
-			allRooms[roomCount] = roomData;
-			roomCount++;
-		}
+		StartCoroutine(getRooms (""));
+
 		currentRoomData = new RoomData ("0", "Start", "none", 0, null);
 		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
 		RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
@@ -99,6 +84,13 @@ public class ElevatorMenu : MonoBehaviour {
 		if (GUI.Button (new Rect (20, 20, 100, 20), "Elevator")) {
 			isElWindowVisible = !isElWindowVisible;
 		}
+		//Search field for rooms
+		GUI.SetNextControlName("search field");
+		searchField = GUI.TextField(new Rect(320, 0, 100, 20), searchField);
+		if(GUI.Button(new Rect(320, 20, 100, 20), "Search") ||
+		   Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "search field"){
+			StartCoroutine(getRooms(searchField.Trim ()));
+		}
 		if (isElWindowVisible) {
 			elevatorWindowRect = GUI.Window (0, elevatorWindowRect, ElevatorWindowFunction, "Welcome to the elevator!");
 		}
@@ -118,7 +110,7 @@ public class ElevatorMenu : MonoBehaviour {
 		                          GuiEdgeBorder, exitButtonSize, exitButtonSize), "X")) {
 			isElWindowVisible = false;
 		}
-
+		
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
 		if(allRooms.Length > 0) {
@@ -139,7 +131,6 @@ public class ElevatorMenu : MonoBehaviour {
 
 						Destroy (currentRoomObject);
 						if (roomMenu != null){
-							Debug.Log ("Destroying roomMenu");
 							Destroy (roomMenu);
 						}
 						// Update currentRoomObject and Data
@@ -150,14 +141,10 @@ public class ElevatorMenu : MonoBehaviour {
 						currentRoomData.Visits = allRooms[i].Visits;
 						currentRoomData.Members = allRooms[i].Members;
 						bool isNullArray = false;
-						Debug.Log(currentRoomData.Name + " " + currentRoomData.Members.Length);
 						if (currentRoomData.Members.Length == 0){
 							isNullArray = true;
-							Debug.Log ("Array is null");
 						}
-						Debug.Log(userId);
 						if (!isNullArray && (Array.IndexOf (currentRoomData.Members, userId) >= 0)){
-							Debug.Log ("Members array is not null: " + currentRoomData.Members[0]);
 							roomMenu = (GameObject) Instantiate(roomMenuTemplate);
 							RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
 							rcm.ThisRoom = currentRoomData;
@@ -204,14 +191,12 @@ public class ElevatorMenu : MonoBehaviour {
 		RoomOptions testRO = new RoomOptions ();
 		// Join the room if it is already active on the server, otherwise create it
 		if (isChangingRoom){
-			Debug.Log (nextRoom);
 			PhotonNetwork.JoinOrCreateRoom (nextRoom.Trim('"'), testRO, PhotonNetwork.lobby);
 			isChangingRoom = false;
 		}
 	}
 
 	IEnumerator createRoom(string newRoomName, string newRoomGenre){
-		Debug.Log ("Create Room Called");
 		WWWForm roomCreateForm = new WWWForm();
 		var newRoomData = new Hashtable();
 		newRoomData.Add ("name", newRoomName);
@@ -234,14 +219,44 @@ public class ElevatorMenu : MonoBehaviour {
 
 		roomCreateForm.AddField("room_data", data.ToString ());
 
-		Debug.Log (roomCreateForm.ToString ());
 
 		byte[] rawData = roomCreateForm.data;
 
 		WWW newRoomRequest = new WWW(roomURL, byteArray, headers);
 		yield return newRoomRequest;
-		Debug.Log(newRoomRequest.text);
 
 		isCrWindowVisible = false;
+	}
+
+	IEnumerator getRooms(string searchTerm){
+		var headers = new Hashtable();
+		headers.Add ("Content-Type", "application/json");
+		headers.Add("X-User-Email", userEmail);
+		headers.Add("X-User-Token", userAuthKey);
+		WWW rooms;
+		if(searchTerm == ""){
+			rooms = new WWW (roomsURL, null, headers);
+			yield return rooms;
+		}
+		else{
+			rooms = new WWW(roomSearchURL + searchTerm, null, headers);
+			yield return rooms;
+		}
+		Debug.Log (rooms.text);
+		var roomsParsed = JSON.Parse (rooms.text);
+		allRooms = new RoomData[roomsParsed["data"].AsArray.Count];
+		int roomCount = 0;
+		foreach(JSONNode data in roomsParsed["data"].AsArray){
+			string[] memberIds = new string[data["member_ids"].AsArray.Count];
+			int i = 0;
+			foreach(JSONNode members in data["member_ids"].AsArray){
+				memberIds[i] = members["$oid"];
+				i++;
+			}
+			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
+			allRooms[roomCount] = roomData;
+			roomCount++;
+		}
+
 	}
 }

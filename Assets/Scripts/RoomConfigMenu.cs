@@ -53,10 +53,13 @@ public class RoomConfigMenu : MonoBehaviour {
 		GUI.Label (new Rect (10, 30, 100, 20), thisRoom.Genre);
 		GUI.Label (new Rect (10, 50, 100, 20), thisRoom.Visits.ToString());
 		GUI.Label (new Rect (10, 70, 100, 20), "New member email");
+		GUI.SetNextControlName ("email field");
 		newMemberEmail = GUI.TextField (new Rect (100, 70, 100, 20), newMemberEmail);
-		if (GUI.Button (new Rect (30, 90, 50, 20), "Submit")){
+		if (GUI.Button (new Rect (30, 90, 50, 20), "Submit") || 
+		    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
 			// If no email is entered, do not go through with the request
 			if (newMemberEmail.Trim() == ""){
+				//TODO Error
 				Debug.Log("Email not entered");
 			}
 			// Put request for a new band member
@@ -67,8 +70,6 @@ public class RoomConfigMenu : MonoBehaviour {
 				roomId = thisRoom.RoomId;
 
 				var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/room/" + roomId + "/add_band_member/" + newMemberEmail) as System.Net.HttpWebRequest;
-
-				Debug.Log ("http://beforeheaveniqp.herokuapp.com/api/room/" + roomId + "/add_band_member/" + newMemberEmail);
 
 				request.KeepAlive = true;
 				
@@ -87,6 +88,7 @@ public class RoomConfigMenu : MonoBehaviour {
 					}
 				}
 				catch(WebException e){
+					//TODO Error
 					Debug.Log ("Invalid email entered");
 				}
 			}
