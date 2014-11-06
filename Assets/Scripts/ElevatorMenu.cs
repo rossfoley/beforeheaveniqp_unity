@@ -61,8 +61,14 @@ public class ElevatorMenu : MonoBehaviour {
 		Debug.Log (login.text);
 	
 		// Retrieve all the rooms currently on the database
-		Debug.Log ("About to call getRooms");
 		StartCoroutine(getRooms (""));
+
+		currentRoomData = new RoomData ("0", "Start", "none", 0, null);
+		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
+		RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
+		rcm.AuthKey = userAuthKey;
+		rcm.UserEmail = userEmail;
+		rcm.ThisRoom = currentRoomData;
 	}
 	
 	// Update is called once per frame
@@ -90,13 +96,16 @@ public class ElevatorMenu : MonoBehaviour {
 				}
 			}
 		}
+		//Search field for rooms
+		GUI.SetNextControlName("search field");
+		searchField = GUI.TextField(new Rect(320, 0, 100, 20), searchField);
+		if(GUI.Button(new Rect(320, 20, 100, 20), "Search") ||
+		   Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "search field"){
+			StartCoroutine(getRooms(searchField.Trim ()));
+		}
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
 		if(allRooms.Length > 0){
-			searchField = GUI.TextField(new Rect(320, 0, 100, 20), searchField);
-			if(GUI.Button(new Rect(320, 20, 100, 20), "Search")){
-				StartCoroutine(getRooms(searchField.Trim ()));
-			}
 			scrollPosition = GUI.BeginScrollView(new Rect(20, 20, 220, 100), scrollPosition, new Rect(0, 0, 220, 20*allRooms.Length));
 			for (int i = 0; i < allRooms.Length; i++){
 				// If the current room has the same name as the next room, do not create the button for that room
@@ -213,11 +222,6 @@ public class ElevatorMenu : MonoBehaviour {
 			allRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		currentRoomData = new RoomData ("0", "Start", "none", 0, null);
-		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
-		RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
-		rcm.AuthKey = userAuthKey;
-		rcm.UserEmail = userEmail;
-		rcm.ThisRoom = currentRoomData;
+
 	}
 }
