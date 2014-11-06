@@ -11,7 +11,7 @@ public class RoomConfigMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		thisRoom = new RoomData ("0", "Starting Room", "N/A", 0, null);
+	
 	}
 
 	public RoomData ThisRoom {

@@ -3,6 +3,7 @@ using System.Collections;
 using SimpleJSON;
 using System.Text;
 using System.IO;
+using System;
 
 public class ElevatorMenu : MonoBehaviour {
 	
@@ -26,6 +27,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 	private string userEmail;
 	private string userAuthKey;
+	private string userId;
 
 	private bool createRoomClicked = false;
 
@@ -37,6 +39,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 		isChangingRoom = false;
 
+		// Login to get an authentication token
 		WWWForm loginForm = new WWWForm ();
 		loginForm.AddField ("email", "awhan@wpi.edu");
 		loginForm.AddField ("password", "hiandy257");
@@ -44,10 +47,14 @@ public class ElevatorMenu : MonoBehaviour {
 		yield return login;
 		var parsed = JSON.Parse (login.text);
 
-		// Save the user email and auth key
+		// Save the user email, auth key and userId
 		userEmail = (parsed ["data"] ["email"]).ToString().Trim('"');
 		userAuthKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
+		userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
 
+		Debug.Log (login.text);
+	
+		// Retrieve all the rooms currently on the database
 		var headers = new Hashtable();
 		headers.Add ("Content-Type", "application/json");
 		headers.Add("X-User-Email", userEmail);
@@ -59,15 +66,24 @@ public class ElevatorMenu : MonoBehaviour {
 		allRooms = new RoomData[roomsParsed["data"].AsArray.Count];
 		int roomCount = 0;
 		foreach(JSONNode data in roomsParsed["data"].AsArray){
-			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, null);
+			string[] memberIds = new string[data["member_ids"].AsArray.Count];
+			int i = 0;
+			Debug.Log("Starting memberIds loop");
+			foreach(JSONNode members in data["member_ids"].AsArray){
+				memberIds[i] = members["$oid"];
+				Debug.Log ("Member " + i + ": " + members["$oid"]);
+				i++;
+			}
+			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
 			allRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		currentRoomData = new RoomData ("0", "Start", "none", 0, new int[1]);
+		currentRoomData = new RoomData ("0", "Start", "none", 0, null);
 		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
 		RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
 		rcm.AuthKey = userAuthKey;
 		rcm.UserEmail = userEmail;
+		rcm.ThisRoom = currentRoomData;
 	}
 	
 	// Update is called once per frame
@@ -111,7 +127,10 @@ public class ElevatorMenu : MonoBehaviour {
 						nextRoom = allRooms[i].Name;
 
 						Destroy (currentRoomObject);
-
+						if (roomMenu != null){
+							Debug.Log ("Destroying roomMenu");
+							Destroy (roomMenu);
+						}
 						// Update currentRoomObject and Data
 						currentRoomObject = (GameObject) Instantiate(roomTemplate);
 						currentRoomData.RoomId = allRooms[i].RoomId;
@@ -119,8 +138,22 @@ public class ElevatorMenu : MonoBehaviour {
 						currentRoomData.Genre = allRooms[i].Genre;
 						currentRoomData.Visits = allRooms[i].Visits;
 						currentRoomData.Members = allRooms[i].Members;
-						RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
-						rcm.ThisRoom = currentRoomData;
+						bool isNullArray = false;
+						Debug.Log(currentRoomData.Name + " " + currentRoomData.Members.Length);
+						if (currentRoomData.Members.Length == 0){
+							isNullArray = true;
+							Debug.Log ("Array is null");
+						}
+						Debug.Log(userId);
+						if (!isNullArray && (Array.IndexOf (currentRoomData.Members, userId) >= 0)){
+							Debug.Log ("Members array is not null: " + currentRoomData.Members[0]);
+							roomMenu = (GameObject) Instantiate(roomMenuTemplate);
+							RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
+							rcm.ThisRoom = currentRoomData;
+						}
+						else {
+							roomMenu = null;
+						}
 					}
 				}
 			}
