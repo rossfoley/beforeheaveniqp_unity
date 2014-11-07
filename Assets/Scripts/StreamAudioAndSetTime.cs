@@ -10,13 +10,14 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	private IWavePlayer nWaveOutDevice;
 	private WaveStream nMainOutputStream;
 	private WaveChannel32 nVolumeStream;
+	private MemoryStream tmpStr;
 
 	public string o_username;
 	public string o_password;
 
 	private bool LoadAudioFromData(byte[] data){
 		try{
-			MemoryStream tmpStr = new MemoryStream(data);
+			tmpStr = new MemoryStream(data);
 			nMainOutputStream = new Mp3FileReader(tmpStr);
 			nVolumeStream = new WaveChannel32(nMainOutputStream);
 
@@ -124,5 +125,14 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	
+	void OnDisconnectedFromPhoton(){
+		Debug.Log ("Disconnected from photon called");
+		nMainOutputStream.Close ();
+		nVolumeStream.Close ();
+		tmpStr.Close ();
+		nWaveOutDevice.Stop ();
 	}
 }
