@@ -14,7 +14,7 @@ public class LoginScript : MonoBehaviour {
 	private static string userId;
 	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/user/login";
 	private bool successfulLogin = false;
-	private bool loggingIn = false;
+	private int loginStatus = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -46,15 +46,20 @@ public class LoginScript : MonoBehaviour {
 				userPassword = "hiandy257";
 				StartCoroutine(login ());
 			}
-			if (loggingIn){
+			switch(loginStatus){
+			case 1:
 				GUI.Label (new Rect (120, 40, 150, 20), "Logging in...");
+				break;
+			case -1:
+				GUI.Label (new Rect(120, 40, 150, 20), "Error");
+				break;
 			}
 			GUI.EndGroup ();
 		}
 	}
 
 	IEnumerator login(){
-		loggingIn = true;
+		loginStatus = 1;
 		WWW login;
 		// Login to get an authentication token
 		WWWForm loginForm = new WWWForm ();
@@ -62,20 +67,28 @@ public class LoginScript : MonoBehaviour {
 		loginForm.AddField ("password", userPassword);
 		login = new WWW(loginURL, loginForm);
 		yield return login;
-		var parsed = JSON.Parse (login.text);
-
-		if ((parsed["status"]).ToString ().Trim('"') == "ok"){
-			successfulLogin = true;
-			authKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
-			userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
-			// After a successful login, activate the networkManager
-			startingRoom.SetActive(true);
-			elevator.SetActive(true);
-			networkManager.SetActive(true);
+		if (!string.IsNullOrEmpty(login.error)) {
+			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
+			//with the switch statement in OnGUI()
+			Debug.Log ("login error");
+			loginStatus = -1;
 		}
-		else {
-			// TODO Error Messages
-			Debug.Log("Invalid login credentials");
+		else{
+			var parsed = JSON.Parse (login.text);
+
+			if ((parsed["status"]).ToString ().Trim('"') == "ok"){
+				successfulLogin = true;
+				authKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
+				userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
+				// After a successful login, activate the networkManager
+				startingRoom.SetActive(true);
+				elevator.SetActive(true);
+				networkManager.SetActive(true);
+			}
+			else {
+				// TODO Error Messages
+				Debug.Log("Invalid login credentials");
+			}
 		}
 	}
 
