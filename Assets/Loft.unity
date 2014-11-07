@@ -11697,7 +11697,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: f0bac9125e452944682ea917da246585, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f0bac9125e452944682ea917da246585, type: 2}
@@ -11993,7 +11993,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 0c1c735ac5b98ad428f564386ebb50c9, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0c1c735ac5b98ad428f564386ebb50c9, type: 2}
@@ -12069,10 +12069,10 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Padding:
-      m_Left: 0
-      m_Right: 0
-      m_Top: 0
-      m_Bottom: 0
+      m_Left: 15
+      m_Right: 15
+      m_Top: 15
+      m_Bottom: 15
     m_Overflow:
       m_Left: 0
       m_Right: 0
@@ -12091,6 +12091,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
+  GuiEdgeBorder: 20
 --- !u!4 &1798192977
 Transform:
   m_ObjectHideFlags: 0
@@ -12286,6 +12287,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamId: 0
+--- !u!1 &2028826293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2028826295}
+  - 114: {fileID: 2028826294}
+  m_Layer: 0
+  m_Name: AudioStream
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &2028826294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2028826293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d14d73b63678f4f80b0f40959b9fa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  o_username: 
+  o_password: 
+--- !u!4 &2028826295
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2028826293}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4, y: 4, z: 21.5100002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
 --- !u!1 &2039934022
 GameObject:
   m_ObjectHideFlags: 0
