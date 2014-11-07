@@ -275,8 +275,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkManager: {fileID: 2039934022}
-  elevator: {fileID: 0}
-  startingRoom: {fileID: 0}
+  elevator: {fileID: 1798192975}
+  startingRoom: {fileID: 1365570921}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0

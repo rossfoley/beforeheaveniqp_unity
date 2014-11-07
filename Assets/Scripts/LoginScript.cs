@@ -38,14 +38,12 @@ public class LoginScript : MonoBehaviour {
 					Debug.Log ("No user email or password inputted");
 				}
 				else {
-					//loggingIn = true;
 					StartCoroutine(login ());
 				}
 			}
 			if (GUI.Button (new Rect(0, 60, 50, 20), "Bypass")){
 				userEmail = "awhan@wpi.edu";
 				userPassword = "hiandy257";
-				//loggingIn = true;
 				StartCoroutine(login ());
 			}
 			if (loggingIn){
