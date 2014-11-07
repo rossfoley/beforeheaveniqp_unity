@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using SimpleJSON;
 using System.Text;
@@ -29,7 +29,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 	public Vector2 scrollPosition = Vector2.zero;
 	public GUIStyle style;
-	public int GuiEdgeBorder = 20;
+	public int guiEdgeBorder = 20;
 
 	private string userEmail;
 	private string userAuthKey;
@@ -79,20 +79,46 @@ public class ElevatorMenu : MonoBehaviour {
 	private bool isElWindowVisible = false;
 	private bool isCrWindowVisible = false;
 
-	// Creates the main elevator window
+	// Creates the elevator window and create room buttons
 	void OnGUI() {
-		if (GUI.Button (new Rect (20, 20, 100, 20), "Elevator")) {
-			isElWindowVisible = !isElWindowVisible;
-		}
-		//Search field for rooms
-		GUI.SetNextControlName("search field");
-		searchField = GUI.TextField(new Rect(320, 0, 100, 20), searchField);
-		if(GUI.Button(new Rect(320, 20, 100, 20), "Search") ||
-		   Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "search field"){
-			StartCoroutine(getRooms(searchField.Trim ()));
-		}
+
+		GUILayout.BeginArea (new Rect (guiEdgeBorder, guiEdgeBorder, 400, 60));
+
 		if (isElWindowVisible) {
 			elevatorWindowRect = GUI.Window (0, elevatorWindowRect, ElevatorWindowFunction, "Welcome to the elevator!");
+		}
+
+		GUILayout.BeginHorizontal();
+
+		if (GUILayout.Button ("Elevator")) {
+			isElWindowVisible = !isElWindowVisible;
+		}
+		// Create Room button
+		if (GUILayout.Button ("Create Room")) {
+			isCrWindowVisible = !isCrWindowVisible;
+		}
+
+		GUILayout.EndHorizontal();
+		GUILayout.EndArea();
+
+		if (isCrWindowVisible) {
+			int topLay = 25;
+			GUI.BeginGroup (new Rect (guiEdgeBorder, guiEdgeBorder, Screen.width/3 - guiEdgeBorder, Screen.height - 2*guiEdgeBorder));
+			newRoomName = GUI.TextField(new Rect(100, topLay, Screen.width/4 - 100, 20), newRoomName, 20);
+			newRoomGenre = GUI.TextField (new Rect(100, 2*topLay, Screen.width/4 - 100, 20), newRoomGenre, 20);
+			GUI.Label (new Rect(0, topLay, 100, 20), "Room Name: ");
+			GUI.Label (new Rect(0, 2*topLay, 100, 20), "Room Genre: ");
+			if (GUI.Button (new Rect(100, 3*topLay, 100, 20), "Submit Room")) {
+				Debug.Log("Submit clicked");
+				if (newRoomName.Trim() == "" || newRoomGenre.Trim() == "") {
+					Debug.Log("Invalid Strings");
+				}
+				else {
+					Debug.Log("Calling createRoom");
+					StartCoroutine (createRoom (newRoomName, newRoomGenre));
+				}
+			}
+			GUI.EndGroup();
 		}
 	}
 
@@ -101,21 +127,35 @@ public class ElevatorMenu : MonoBehaviour {
 		int exitButtonSize = 23;
 		float width = elevatorWindowRect.width;
 		float height = elevatorWindowRect.height;
-		Rect createWindowRect = new Rect (width + GuiEdgeBorder, 
-		                                  height + GuiEdgeBorder,
-		                                  width * 1/3, height - 2*GuiEdgeBorder);
+		Rect createWindowRect = new Rect (width + guiEdgeBorder, 
+		                                  height + guiEdgeBorder,
+		                                  width * 1/3, height - 2*guiEdgeBorder);
 
 		// Exit button
-		if (GUI.Button (new Rect (elevatorWindowRect.width - GuiEdgeBorder - exitButtonSize,
-		                          GuiEdgeBorder, exitButtonSize, exitButtonSize), "X")) {
+		if (GUI.Button (new Rect (elevatorWindowRect.width - guiEdgeBorder - exitButtonSize,
+		                          guiEdgeBorder, exitButtonSize, exitButtonSize), "X")) {
 			isElWindowVisible = false;
 		}
+
+		//Search field for rooms
+		GUILayout.BeginArea(new Rect(guiEdgeBorder, guiEdgeBorder, elevatorWindowRect.width/3 - guiEdgeBorder, 50));
+		GUILayout.BeginVertical();
+
+		GUI.SetNextControlName("search field");
+		searchField = GUILayout.TextField(searchField);
+		if(GUILayout.Button("Search") ||
+		   Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "search field"){
+			StartCoroutine(getRooms(searchField.Trim ()));
+		}
+
+		GUILayout.EndVertical();
+		GUILayout.EndArea();
 		
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
 		if(allRooms.Length > 0) {
 			scrollPosition = GUI.BeginScrollView (
-				new Rect (width / 3, 2 * GuiEdgeBorder, width / 2, height - GuiEdgeBorder),
+				new Rect (width / 3, 2 * guiEdgeBorder, width / 2, height - guiEdgeBorder),
 				scrollPosition, 
 				new Rect(0, 0, width / 2, 20*allRooms.Length));
 			for (int i = 0; i < allRooms.Length; i++) {
@@ -156,30 +196,6 @@ public class ElevatorMenu : MonoBehaviour {
 				}
 			}
 			GUI.EndScrollView();
-		}
-
-		// Create Room button
-		if (GUI.Button (new Rect(GuiEdgeBorder, GuiEdgeBorder, 100, 20), "Create Room")) {
-			isCrWindowVisible = !isCrWindowVisible;
-		}
-		if (isCrWindowVisible) {
-			int topLay = 25;
-			GUI.BeginGroup (new Rect (GuiEdgeBorder, GuiEdgeBorder, width/3 - GuiEdgeBorder, height - 2*GuiEdgeBorder));
-			newRoomName = GUI.TextField(new Rect(100, topLay, width/4 - 100, 20), newRoomName, 20);
-			newRoomGenre = GUI.TextField (new Rect(100, 2*topLay, width/4 - 100, 20), newRoomGenre, 20);
-			GUI.Label (new Rect(0, topLay, 100, 20), "Room Name: ");
-			GUI.Label (new Rect(0, 2*topLay, 100, 20), "Room Genre: ");
-			if (GUI.Button (new Rect(100, 3*topLay, 100, 20), "Submit Room")) {
-				Debug.Log("Submit clicked");
-				if (newRoomName.Trim() == "" || newRoomGenre.Trim() == "") {
-					Debug.Log("Invalid Strings");
-				}
-				else {
-					Debug.Log("Calling createRoom");
-					StartCoroutine (createRoom (newRoomName, newRoomGenre));
-				}
-			}
-			GUI.EndGroup();
 		}
 	}
 

@@ -12091,7 +12091,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
-  GuiEdgeBorder: 20
+  guiEdgeBorder: 20
 --- !u!4 &1798192977
 Transform:
   m_ObjectHideFlags: 0
