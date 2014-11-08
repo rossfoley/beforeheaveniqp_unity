@@ -15,6 +15,9 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	public string o_username;
 	public string o_password;
 	public Texture2D soundcloud_icon;
+	string[] mp3link = new string[16];
+
+	bool isPlaying = false;
 
 	private bool LoadAudioFromData(byte[] data){
 		try{
@@ -45,7 +48,7 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 			Debug.LogError("Couldn't load Audio bytes");
 		}
 		
-		nWaveOutDevice.Play();
+		//
 		Resources.UnloadUnusedAssets();
 	}
 
@@ -76,20 +79,15 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 		var mp3parsed = JSON.Parse(mp3stream.text); 
 		Debug.Log(mp3parsed);
 
-		string[] mp3link = new string[16];
 		int counter = 0;
 		foreach(JSONNode data in mp3parsed["data"].AsArray){
 			Debug.Log(data.ToString());
-			mp3link[counter] = data["current_song"].ToString();
+			mp3link[counter] = data["current_song"].ToString().Trim('"');
 			counter++;
 		}
+
+		LoadAudio(mp3link[0]);
 		Debug.Log(mp3link[0]);
-
-		//ElevatorMenu em = gameObject.GetComponent<ElevatorMenu>();
-		//RoomData rd = em.getCurrentRoom();
-		GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), 100, 50), new GUIContent("Current Room: "));
-
-		LoadAudio(mp3link[0].ToString().Trim('"'));
 	}
 
 	// Use this for initialization
@@ -107,6 +105,21 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	void OnGUI(){
 		GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
 		GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
+		GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), 100, 50), new GUIContent("Current Room: "));
+		if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Play")){
+			if(!isPlaying){
+				nWaveOutDevice.Play();
+			}
+			isPlaying = !isPlaying;
+		}
+
+		if(GUI.Button(new Rect(170, Screen.height - (Screen.height / 8) + 20, 50, 50), "Pause")){
+			if(isPlaying){
+				nWaveOutDevice.Pause();
+			}
+			isPlaying = !isPlaying;
+		}
+
 	}
 	
 	void OnDisconnectedFromPhoton(){
