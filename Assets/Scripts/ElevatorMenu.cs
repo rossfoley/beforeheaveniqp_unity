@@ -38,20 +38,12 @@ public class ElevatorMenu : MonoBehaviour {
 
 		isChangingRoom = false;
 
-		// Login to get an authentication token
-		WWWForm loginForm = new WWWForm ();
-		loginForm.AddField ("email", "awhan@wpi.edu");
-		loginForm.AddField ("password", "hiandy257");
-		WWW login = new WWW(loginURL, loginForm);
-		yield return login;
-		var parsed = JSON.Parse (login.text);
+		userEmail = LoginScript.UserEmail;
+		userAuthKey = LoginScript.AuthKey;
+		userId = LoginScript.UserId;
 
-		// Save the user email, auth key and userId
-		userEmail = (parsed ["data"] ["email"]).ToString().Trim('"');
-		userAuthKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
-		userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
-
-		Debug.Log (login.text);
+		Debug.Log (userEmail);
+		Debug.Log (userId);
 	
 		// Retrieve all the rooms currently on the database
 		var headers = new Hashtable();
