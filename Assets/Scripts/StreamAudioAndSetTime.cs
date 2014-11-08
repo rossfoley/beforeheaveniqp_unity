@@ -27,8 +27,7 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 
 			nWaveOutDevice = new WaveOut();
 			nWaveOutDevice.Init(nVolumeStream);
-
-			nMainOutputStream.Seek(2000000,SeekOrigin.Begin);
+			//nMainOutputStream.Seek(2000000,SeekOrigin.Begin);
 
 			return true;
 			}
@@ -103,9 +102,14 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	}
 
 	void OnGUI(){
+		/*
+		ElevatorMenu em = gameObject.GetComponent<ElevatorMenu>();
+		RoomData rd = em.getCurrentRoom();
+		*/
+
 		GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
 		GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
-		GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), 100, 50), new GUIContent("Current Room: "));
+		GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + mp3link[0]));
 		if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Play")){
 			if(!isPlaying){
 				nWaveOutDevice.Play();
@@ -113,13 +117,28 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 			isPlaying = !isPlaying;
 		}
 
-		if(GUI.Button(new Rect(170, Screen.height - (Screen.height / 8) + 20, 50, 50), "Pause")){
+		if(GUI.Button(new Rect(175, Screen.height - (Screen.height / 8) + 20, 50, 50), "Pause")){
 			if(isPlaying){
 				nWaveOutDevice.Pause();
 			}
 			isPlaying = !isPlaying;
 		}
 
+		if(GUI.Button(new Rect(230, Screen.height - (Screen.height / 8) + 20, 50, 50), "V++")){
+			if(nVolumeStream.Volume >= 1.0f){
+				nVolumeStream.Volume = 1.0f;
+			}
+			nVolumeStream.Volume += 0.1f;
+			Debug.Log(nVolumeStream.Volume);
+		}
+
+		if(GUI.Button(new Rect(285, Screen.height - (Screen.height / 8) + 20, 50, 50), "V--")){
+			if(nVolumeStream.Volume <= 0.0f){
+				nVolumeStream.Volume = 0.0f;
+			}
+			nVolumeStream.Volume -= 0.1f;
+			Debug.Log(nVolumeStream.Volume);
+		}
 	}
 	
 	void OnDisconnectedFromPhoton(){
