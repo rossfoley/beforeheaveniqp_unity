@@ -14,6 +14,7 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 
 	public string o_username;
 	public string o_password;
+	public Texture2D soundcloud_icon;
 
 	private bool LoadAudioFromData(byte[] data){
 		try{
@@ -24,6 +25,8 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 			nWaveOutDevice = new WaveOut();
 			nWaveOutDevice.Init(nVolumeStream);
 
+			nMainOutputStream.Seek(2000000,SeekOrigin.Begin);
+
 			return true;
 			}
 		catch(System.Exception ex){
@@ -32,27 +35,11 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 		return false;
 	}
 
-	private void DebugLoadAudio(){
-		//WWW www = new WWW("https://ia802508.us.archive.org/5/items/testmp3testfile/mpthreetest.mp3");
-		WWW www = new WWW("https://ec-media.soundcloud.com/g4Xt6e05MIcR.128.mp3?f10880d39085a94a0418a7ef69b03d522cd6dfee9399eeb9a52200996ffdb9349ddb954ba046f08712a18829fd04ed9574d7111478fe44bdfdfa96d2f7f5267555de5d6e28&AWSAccessKeyId=AKIAJNIGGLK7XA7YZSNQ&Expires=1415057882&Signature=0I%2F1rQNJwi7KZ0xyYbHb4Md%2B4CM%3D");
-		while(!www.isDone);
-		Debug.Log("URL Found");
-
-		byte[] imageData = www.bytes;
-		if(!LoadAudioFromData(imageData)){
-			Debug.LogError("Couldn't load Audio bytes");
-		}
-
-		nWaveOutDevice.Play();
-		Resources.UnloadUnusedAssets();
-	}
-
 	private void LoadAudio(string input_url){
-		//WWW www = new WWW("https://api.soundcloud.com/tracks/174468803/stream?client_id=0cb45a6052596ee086177b11b29e8809");
 		WWW www = new WWW(input_url);
 		while(!www.isDone);
 		Debug.Log("URL Found");
-		
+
 		byte[] imageData = www.bytes;
 		if(!LoadAudioFromData(imageData)){
 			Debug.LogError("Couldn't load Audio bytes");
@@ -65,22 +52,18 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	IEnumerator LoginUser(string username, string enteredPassword){
 		string url = "http://beforeheaveniqp.herokuapp.com/api/user/login";
 		string roomsUrl = "http://beforeheaveniqp.herokuapp.com/api/rooms";
-		string songUrl = "http://beforeheaveniqp.herokuapp.com/api/rooms/:room_id/current_song";
 
 		WWWForm form = new WWWForm();
 		form.AddField("email", username);
 		form.AddField("password", enteredPassword);
-
 		WWW login = new WWW(url, form);
 
 		yield return login;
 		var parsed = JSON.Parse(login.text); Debug.Log(parsed);
 
-		//headers = form.headers;
-
 		string userEmail = (parsed ["data"] ["email"]).ToString().Trim('"');
 		string userAuthKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
-		Debug.Log(userEmail + "" + userAuthKey);
+		//Debug.Log(userEmail + "" + userAuthKey);
 
 		Hashtable headers = new Hashtable();
 		headers.Add("Content-Type", "application/json");
@@ -90,7 +73,8 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 
 		yield return mp3stream;
 
-		var mp3parsed = JSON.Parse(mp3stream.text); Debug.Log(mp3parsed);
+		var mp3parsed = JSON.Parse(mp3stream.text); 
+		Debug.Log(mp3parsed);
 
 		string[] mp3link = new string[16];
 		int counter = 0;
@@ -100,20 +84,13 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 			counter++;
 		}
 		Debug.Log(mp3link[0]);
+
+		//ElevatorMenu em = gameObject.GetComponent<ElevatorMenu>();
+		//RoomData rd = em.getCurrentRoom();
+		GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), 100, 50), new GUIContent("Current Room: "));
+
 		LoadAudio(mp3link[0].ToString().Trim('"'));
 	}
-
-	IEnumerator WaitForRequest(WWW www){
-		yield return www;
-		Debug.Log(www.text);
-		// check for errors
-		if (www.error == null){
-			Debug.Log("WWW Ok!: " + www.text);
-			Debug.Log("WWW Ok!: " + www.data);
-		} else {
-			Debug.Log("WWW Error: " + www.error);
-		}
-	} 
 
 	// Use this for initialization
 	void Start () {
@@ -127,6 +104,10 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	
 	}
 
+	void OnGUI(){
+		GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
+		GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
+	}
 	
 	void OnDisconnectedFromPhoton(){
 		Debug.Log ("Disconnected from photon called");
