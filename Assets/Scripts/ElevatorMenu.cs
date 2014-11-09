@@ -16,7 +16,7 @@ public class ElevatorMenu : MonoBehaviour {
 	private bool isChangingRoom;
 	private RoomData[] allRooms = new RoomData[0];
 
-	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/user/login";
+	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/users/login";
 	private const string roomsURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	private const string roomURL = "http://beforeheaveniqp.herokuapp.com/api/room";
 
@@ -230,7 +230,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 		byte[] rawData = roomCreateForm.data;
 
-		WWW newRoomRequest = new WWW(roomURL, byteArray, headers);
+		WWW newRoomRequest = new WWW(roomsURL, byteArray, headers);
 		yield return newRoomRequest;
 		Debug.Log(newRoomRequest.text);
 

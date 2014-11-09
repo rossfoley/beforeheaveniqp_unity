@@ -12,7 +12,7 @@ public class LoginScript : MonoBehaviour {
 	private string userPassword = "";
 	private static string authKey;
 	private static string userId;
-	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/user/login";
+	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/users/login";
 	private bool successfulLogin = false;
 	private int loginStatus = 0;
 
