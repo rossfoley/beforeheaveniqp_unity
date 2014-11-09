@@ -50,6 +50,10 @@ public class RoomConfigMenu : MonoBehaviour {
 	}
 
 	void OnGUI() {
+		// Grabs the login credentials from LoginScript
+		authKey = LoginScript.AuthKey;
+		userEmail = LoginScript.UserEmail;
+
 		// Sets up the GUI components of the window
 		GUI.BeginGroup (new Rect(500, 300, 500, 300));
 		GUI.Box (new Rect (0, 0, 500, 300), "Room Management");
@@ -74,7 +78,7 @@ public class RoomConfigMenu : MonoBehaviour {
 				roomId = thisRoom.RoomId;
 
 				// Create the put request for adding the new band member
-				var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/room/" + roomId + "/add_band_member/" + newMemberEmail) as System.Net.HttpWebRequest;
+				var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + roomId + "/add_band_member/") as System.Net.HttpWebRequest;
 
 				request.KeepAlive = true;
 				
@@ -83,8 +87,13 @@ public class RoomConfigMenu : MonoBehaviour {
 				request.ContentType = "application/json";
 				request.Headers.Add("x-user-email", userEmail);
 				request.Headers.Add("x-user-token", authKey);
-				request.ContentLength = 0;
+				byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_member_email\": \"" + newMemberEmail + "\"}");
+				request.ContentLength = byteArray.Length;
+				using (var writer = request.GetRequestStream()){
+					writer.Write(byteArray, 0, byteArray.Length);
+				}
 				string responseContent=null;
+				Debug.Log (newMemberEmail);
 				try {
 					using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
 						using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {

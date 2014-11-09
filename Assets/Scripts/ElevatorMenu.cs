@@ -20,7 +20,7 @@ public class ElevatorMenu : MonoBehaviour {
 	private RoomData[] allRooms = new RoomData[0];
 
 	//Constant URLs
-	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/user/login";
+	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/users/login";
 	private const string roomsURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	private const string roomSearchURL = "http://beforeheaveniqp.herokuapp.com/api/rooms/search/";
 
