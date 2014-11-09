@@ -44,7 +44,7 @@ public class ElevatorMenu : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	IEnumerator Start () {
+	void Start () {
 
 		isChangingRoom = false;
 
