@@ -138,7 +138,7 @@ public class ElevatorMenu : MonoBehaviour {
 		}
 
 		//Search field for rooms
-		GUILayout.BeginArea(new Rect(guiEdgeBorder, guiEdgeBorder, elevatorWindowRect.width/3 - guiEdgeBorder, 50));
+		GUILayout.BeginArea(new Rect(guiEdgeBorder, 2*guiEdgeBorder, elevatorWindowRect.width/3 - 2*guiEdgeBorder, 50));
 		GUILayout.BeginVertical();
 
 		GUI.SetNextControlName("search field");
