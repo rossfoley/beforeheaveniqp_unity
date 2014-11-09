@@ -32,7 +32,11 @@ public class ElevatorMenu : MonoBehaviour {
 
 	private string newRoomName = "";
 	private string newRoomGenre = "";
-	
+
+	public RoomData getCurrentRoom(){
+		return currentRoomData;
+	}
+
 	// Use this for initialization
 	IEnumerator Start () {
 
