@@ -97,6 +97,11 @@ public class ElevatorMenu : MonoBehaviour {
 
 		// When the elevator button is clicked, switch the visibility of the elevator menu
 		if (GUILayout.Button ("Elevator")) {
+			// If the elevator window is going to appear, update allRooms by getting all the rooms with no search string
+			if (!isElWindowVisible){
+				Debug.Log("Calling getRooms");
+				StartCoroutine(getRooms (""));
+			}
 			isElWindowVisible = !isElWindowVisible;
 		}
 		// Create Room button
