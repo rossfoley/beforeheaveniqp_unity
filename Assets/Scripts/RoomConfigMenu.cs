@@ -16,6 +16,7 @@ public class RoomConfigMenu : MonoBehaviour {
 	
 	}
 
+	// ThisRoom getter and setter
 	public RoomData ThisRoom {
 		get {
 			return this.thisRoom;
@@ -25,6 +26,7 @@ public class RoomConfigMenu : MonoBehaviour {
 		}
 	}
 
+	// AuthKey getter and setter
 	public string AuthKey {
 		get {
 			return this.authKey;
@@ -34,6 +36,7 @@ public class RoomConfigMenu : MonoBehaviour {
 		}
 	}
 
+	// UserEmail getter and setter
 	public string UserEmail {
 		get {
 			return this.userEmail;
@@ -49,8 +52,11 @@ public class RoomConfigMenu : MonoBehaviour {
 	}
 
 	void OnGUI() {
+		// Grabs the login credentials from LoginScript
 		authKey = LoginScript.AuthKey;
 		userEmail = LoginScript.UserEmail;
+
+		// Sets up the GUI components of the window
 		GUI.BeginGroup (new Rect(500, 300, 500, 300));
 		GUI.Box (new Rect (0, 0, 500, 300), "Room Management");
 		GUI.Label (new Rect (10, 10, 100, 20), thisRoom.Name);
@@ -72,9 +78,10 @@ public class RoomConfigMenu : MonoBehaviour {
 				addMemberStatus = 1;
 				string roomId;
 
-				// TODO get roomId from database
+				// Get roomId from database
 				roomId = thisRoom.RoomId;
 
+				// Create the put request for adding the new band member
 				var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + roomId + "/add_band_member/") as System.Net.HttpWebRequest;
 
 				request.KeepAlive = true;
@@ -98,8 +105,9 @@ public class RoomConfigMenu : MonoBehaviour {
 						}
 					}
 				}
+				// If a WebException is caught, display an error message
 				catch(WebException e){
-					//TODO Error
+					//TODO Error message
 					Debug.Log ("Invalid email entered");
 					addMemberStatus = -2;
 				}

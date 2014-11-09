@@ -26,6 +26,7 @@ public class NetworkManager : MonoBehaviour {
 		PhotonNetwork.ConnectUsingSettings ("BefoHev V001");
 	}
 
+	// When the lobby is joined and it is in startUp, join the starting room
 	void OnJoinedLobby() {
 		inLobby = true;
 		if (isStartup){
@@ -35,11 +36,13 @@ public class NetworkManager : MonoBehaviour {
 		}
 	}
 
+	// When a room is joined, spawn the player
 	void OnJoinedRoom() {
 		inLobby = false;
 		SpawnMyPlayer ();
 	}
 
+	// Spawns the player character in one of the spawn spots
 	public void SpawnMyPlayer () {
 		spawnSpots = GameObject.FindObjectsOfType<SpawnSpot>();
 		if (spawnSpots == null) {
