@@ -17,6 +17,7 @@ public class RoomData{
 		this.members = members;
 	}
 
+	// RoomId getter and setter
 	public string RoomId {
 		get {
 			return this.roomId;
@@ -26,6 +27,7 @@ public class RoomData{
 		}
 	}
 
+	// Name getter and setter
 	public string Name {
 		get {
 			return this.name;
@@ -35,6 +37,7 @@ public class RoomData{
 		}
 	}
 
+	// Genre getter and setter
 	public string Genre {
 		get {
 			return this.genre;
@@ -44,6 +47,7 @@ public class RoomData{
 		}
 	}
 
+	// Visits getter and setter
 	public int Visits {
 		get {
 			return this.visits;
@@ -53,6 +57,7 @@ public class RoomData{
 		}
 	}
 
+	// Members getter and setter
 	public string[] Members {
 		get {
 			return this.members;
