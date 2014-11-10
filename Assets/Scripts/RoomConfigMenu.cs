@@ -9,6 +9,8 @@ public class RoomConfigMenu : MonoBehaviour {
 	private string userEmail;
 	private string newMemberEmail = "";
 
+	private int addMemberStatus;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -67,11 +69,13 @@ public class RoomConfigMenu : MonoBehaviour {
 		    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
 			// If no email is entered, do not go through with the request
 			if (newMemberEmail.Trim() == ""){
+				addMemberStatus = -1;
 				//TODO Error
 				Debug.Log("Email not entered");
 			}
 			// Put request for a new band member
 			else {
+				addMemberStatus = 1;
 				string roomId;
 
 				// Get roomId from database
@@ -93,11 +97,11 @@ public class RoomConfigMenu : MonoBehaviour {
 					writer.Write(byteArray, 0, byteArray.Length);
 				}
 				string responseContent=null;
-				Debug.Log (newMemberEmail);
 				try {
 					using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
 						using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
 							responseContent = reader.ReadToEnd();
+							addMemberStatus = 2;
 						}
 					}
 				}
@@ -105,9 +109,29 @@ public class RoomConfigMenu : MonoBehaviour {
 				catch(WebException e){
 					//TODO Error message
 					Debug.Log ("Invalid email entered");
+					addMemberStatus = -2;
 				}
 			}
 		}
+		string status;
+		switch(addMemberStatus){
+			case 1: 
+				status = "Adding...";
+				break;
+			case 2:
+				status = "Added";
+				break;
+			case -1:
+				status = "Email not entered";
+				break;
+			case -2:
+				status = "Invalid email entered";
+				break;
+			default:
+				status = "";
+				break;
+		}
+		GUI.Label (new Rect (10, 110, 200, 20), status);
 		GUI.EndGroup();
 	}
 }
