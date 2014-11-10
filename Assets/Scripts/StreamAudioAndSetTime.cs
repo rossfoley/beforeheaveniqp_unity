@@ -15,7 +15,7 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	public string o_username;
 	public string o_password;
 	public Texture2D soundcloud_icon;
-	string[] mp3link = new string[16];
+	string[] mp3link = new string[32];
 
 	bool isPlaying = false;
 
@@ -52,8 +52,9 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 	}
 
 	IEnumerator LoginUser(string username, string enteredPassword){
-		string url = "http://beforeheaveniqp.herokuapp.com/api/user/login";
+		string url = "http://beforeheaveniqp.herokuapp.com/api/users/login";
 		string roomsUrl = "http://beforeheaveniqp.herokuapp.com/api/rooms";
+		string sampleRoom = "http://beforeheaveniqp.herokuapp.com/api/rooms/5457ff1a6161380002000000/current_song";
 
 		WWWForm form = new WWWForm();
 		form.AddField("email", username);
@@ -74,9 +75,13 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 		WWW mp3stream = new WWW (roomsUrl, null, headers);
 
 		yield return mp3stream;
-
 		var mp3parsed = JSON.Parse(mp3stream.text); 
 		Debug.Log(mp3parsed);
+
+		WWW song_meta = new WWW (sampleRoom, null, headers);
+		yield return song_meta;
+		var song_meta_parsed = JSON.Parse(song_meta.text); 
+		Debug.Log(song_meta_parsed);
 
 		int counter = 0;
 		foreach(JSONNode data in mp3parsed["data"].AsArray){
@@ -113,15 +118,17 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 		if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Play")){
 			if(!isPlaying){
 				nWaveOutDevice.Play();
+				isPlaying = !isPlaying;
 			}
-			isPlaying = !isPlaying;
+
 		}
 
 		if(GUI.Button(new Rect(175, Screen.height - (Screen.height / 8) + 20, 50, 50), "Pause")){
 			if(isPlaying){
 				nWaveOutDevice.Pause();
+				isPlaying = !isPlaying;
 			}
-			isPlaying = !isPlaying;
+
 		}
 
 		if(GUI.Button(new Rect(230, Screen.height - (Screen.height / 8) + 20, 50, 50), "V++")){
