@@ -38,6 +38,8 @@ public class ElevatorMenu : MonoBehaviour {
 	private string newRoomGenre = "";
 	private string searchField = "";
 
+	private int createRoomStatus;
+
 	public RoomData getCurrentRoom(){
 		return currentRoomData;
 	}
@@ -53,8 +55,7 @@ public class ElevatorMenu : MonoBehaviour {
 		userAuthKey = LoginScript.AuthKey;
 		userId = LoginScript.UserId;
 
-		Debug.Log (userEmail);
-		Debug.Log (userId);
+		Debug.Log (userEmail + " " + userAuthKey + " " + userId);
 	
 		// Retrieve all the rooms currently on the database
 		StartCoroutine(getRooms (""));
@@ -121,14 +122,21 @@ public class ElevatorMenu : MonoBehaviour {
 			GUI.Label (new Rect(0, topLay, 100, 20), "Room Name: ");
 			GUI.Label (new Rect(0, 2*topLay, 100, 20), "Room Genre: ");
 			if (GUI.Button (new Rect(100, 3*topLay, 100, 20), "Submit Room")) {
-				Debug.Log("Submit clicked");
 				if (newRoomName.Trim() == "" || newRoomGenre.Trim() == "") {
+					//TODO Error
 					Debug.Log("Invalid Strings");
 				}
 				else {
-					Debug.Log("Calling createRoom");
 					StartCoroutine (createRoom (newRoomName, newRoomGenre));
 				}
+			}
+			switch(createRoomStatus){
+			case 1:
+				GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creating...");
+				break;
+			case -1:
+				GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creation error.");
+				break;
 			}
 			GUI.EndGroup();
 		}
@@ -229,6 +237,7 @@ public class ElevatorMenu : MonoBehaviour {
 	}
 
 	IEnumerator createRoom(string newRoomName, string newRoomGenre){
+		createRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();
 		var newRoomData = new Hashtable();
@@ -257,9 +266,19 @@ public class ElevatorMenu : MonoBehaviour {
 
 		WWW newRoomRequest = new WWW(roomsURL, byteArray, headers);
 		yield return newRoomRequest;
-
-		// After the room is created, hide the create room window
-		isCrWindowVisible = false;
+		if (!string.IsNullOrEmpty(newRoomRequest.error)) {
+			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
+			//with the switch statement in OnGUI()
+			Debug.Log ("room creation error");
+			createRoomStatus = -1;
+		}
+		else{
+			// After the room is created, hide the create room window and reset the related variables.
+			newRoomName = "";
+			newRoomGenre = "";
+			isCrWindowVisible = false;
+			createRoomStatus = 0;
+		}
 	}
 
 	// Gets all the rooms from the database
@@ -282,6 +301,7 @@ public class ElevatorMenu : MonoBehaviour {
 			rooms = new WWW(roomSearchURL + searchTerm, null, headers);
 			yield return rooms;
 		}
+		//TODO Eventually remove, but handy for debugging in the mean-time. Prints text of all the rooms and their members
 		Debug.Log (rooms.text);
 		var roomsParsed = JSON.Parse (rooms.text);
 		// Set allRooms to what was returned from the request

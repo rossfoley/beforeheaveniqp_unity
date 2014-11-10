@@ -28,7 +28,6 @@ public class NetworkManager : MonoBehaviour {
 
 	// When the lobby is joined and it is in startUp, join the starting room
 	void OnJoinedLobby() {
-		Debug.Log ("OnJoinedLobby Called");
 		inLobby = true;
 		if (isStartup){
 			RoomOptions testRO = new RoomOptions();
@@ -39,7 +38,6 @@ public class NetworkManager : MonoBehaviour {
 
 	// When a room is joined, spawn the player
 	void OnJoinedRoom() {
-		Debug.Log ("joined Room");
 		inLobby = false;
 		SpawnMyPlayer ();
 	}
