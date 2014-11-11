@@ -62,7 +62,8 @@ public class StreamAudioAndSetTime : MonoBehaviour {
 		WWW login = new WWW(url, form);
 
 		yield return login;
-		var parsed = JSON.Parse(login.text); Debug.Log(parsed);
+		var parsed = JSON.Parse(login.text); 
+		Debug.Log(parsed);
 
 		string userEmail = (parsed ["data"] ["email"]).ToString().Trim('"');
 		string userAuthKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');

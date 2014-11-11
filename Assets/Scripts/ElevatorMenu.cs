@@ -51,9 +51,9 @@ public class ElevatorMenu : MonoBehaviour {
 		isChangingRoom = false;
 
 		// Grabs the user's login information from LoginScript
-		userEmail = LoginScript.UserEmail;
-		userAuthKey = LoginScript.AuthKey;
-		userId = LoginScript.UserId;
+		userEmail = LoginModel.UserEmail;
+		userAuthKey = LoginModel.AuthKey;
+		userId = LoginModel.UserId;
 
 		Debug.Log (userEmail + " " + userAuthKey + " " + userId);
 	
