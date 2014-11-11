@@ -5,7 +5,10 @@ using System.Linq;
 public class NetworkManager : MonoBehaviour {
 
 	public GameObject StandbyCamera;
-	SpawnSpot[] spawnSpots;
+	private SpawnSpot[] spawnSpots;
+	public GameObject myPlayerGO;
+	private bool isStartup;
+	public bool	inLobby;
 
 	void OnGUI () {
 		GUILayout.Label (PhotonNetwork.connectionStateDetailed.ToString()); // show connectivity status
@@ -13,8 +16,9 @@ public class NetworkManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		spawnSpots = GameObject.FindObjectsOfType<SpawnSpot>();
-
+		PhotonNetwork.autoJoinLobby = true;
+		inLobby = false;
+		isStartup = true;
 		Connect (); // connect to photon stuff
 	}
 
@@ -22,48 +26,43 @@ public class NetworkManager : MonoBehaviour {
 		PhotonNetwork.ConnectUsingSettings ("BefoHev V001");
 	}
 
+	// When the lobby is joined and it is in startUp, join the starting room
 	void OnJoinedLobby() {
-		PhotonNetwork.JoinRandomRoom ();
+		inLobby = true;
+		if (isStartup){
+			RoomOptions testRO = new RoomOptions();
+			PhotonNetwork.JoinOrCreateRoom ("starting room", testRO, PhotonNetwork.lobby);
+			isStartup = false;
+		}
 	}
 
-	void OnPhotonRandomJoinFailed() {
-		Debug.Log ("OnPhotonRandomJoinFailed");
-		PhotonNetwork.CreateRoom (null);
-	}
-
+	// When a room is joined, spawn the player
 	void OnJoinedRoom() {
-		Debug.Log ("joined Room");
-
+		inLobby = false;
 		SpawnMyPlayer ();
 	}
 
-	void SpawnMyPlayer () {
+	// Spawns the player character in one of the spawn spots
+	public void SpawnMyPlayer () {
+		spawnSpots = GameObject.FindObjectsOfType<SpawnSpot>();
 		if (spawnSpots == null) {
 			Debug.Log ("no spawn spots in level");
 			return;
 		}
 
 		SpawnSpot mySpawnSpot = spawnSpots [Random.Range (0, spawnSpots.Length)];
-
+		
 		//StandbyCamera.SetActive(false);
-		GameObject myPlayerGO = PhotonNetwork.Instantiate ("WC", mySpawnSpot.transform.position, mySpawnSpot.transform.rotation, 0);
-
+		myPlayerGO = PhotonNetwork.Instantiate ("WC", mySpawnSpot.transform.position, mySpawnSpot.transform.rotation, 0);
 
 		((MonoBehaviour) myPlayerGO.GetComponent ("ThirdPersonController")).enabled = true;
 		((MonoBehaviour) myPlayerGO.GetComponent ("ThirdPersonCamera")).enabled = true;
-
-		//((MonoBehaviour) myPlayerGO.GetComponent ("FPSInputController")).enabled = true;
-		//((MonoBehaviour) myPlayerGO.GetComponent ("MouseLook")).enabled = true;
-		//((MonoBehaviour) myPlayerGO.GetComponent ("CharacterMotor")).enabled = true;
-
-		Debug.Log ("stuff happened");
-
-		//myPlayerGO.transform.FindChild ("Main Camera").gameObject.SetActive (true);
-
+		
 	}
 
 	// Update is called once per frame
 	void Update () {
-	
+		
 	}
+
 }
