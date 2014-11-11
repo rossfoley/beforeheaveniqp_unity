@@ -51,7 +51,7 @@ public class RoomConfigMenu : MonoBehaviour {
 	
 	}
 
-	void OnGUI() {
+	public void Display() {
 		// Grabs the login credentials from LoginScript
 		authKey = LoginScript.AuthKey;
 		userEmail = LoginScript.UserEmail;

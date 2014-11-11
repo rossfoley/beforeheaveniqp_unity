@@ -29,6 +29,7 @@ public class ElevatorMenu : MonoBehaviour {
 	public Vector2 scrollPosition = Vector2.zero;
 	public GUIStyle style;
 	public int guiEdgeBorder = 20;
+	private RoomConfigMenu rcm;
 
 	private string userEmail;
 	private string userAuthKey;
@@ -84,6 +85,9 @@ public class ElevatorMenu : MonoBehaviour {
 	// Boolean for whether or not create room group is currently visible
 	private bool isCrWindowVisible = false;
 
+	// Boolean for whether or not room management menu is currently visible
+	private bool isRmWindowVisible = false;
+
 	// Creates the elevator window and create room buttons
 	void OnGUI() {
 
@@ -110,8 +114,16 @@ public class ElevatorMenu : MonoBehaviour {
 			isCrWindowVisible = !isCrWindowVisible;
 		}
 
+		if (GUILayout.Button ("Room Management")) {
+			isRmWindowVisible = !isRmWindowVisible;
+		}
+
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
+
+		if (isRmWindowVisible) {
+			rcm.Display();
+		}
 
 		// If the create room window is visible, create + display all the GUI elements of the window
 		if (isCrWindowVisible) {
