@@ -274,6 +274,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 374acff8f2acc1f49bb66574f7c90a91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkManager: {fileID: 2039934022}
+  elevator: {fileID: 1798192975}
+  startingRoom: {fileID: 1365570921}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
