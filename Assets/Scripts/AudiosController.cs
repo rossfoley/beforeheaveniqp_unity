@@ -3,16 +3,28 @@ using System.Collections;
 
 using SimpleJSON;
 
-public class AudioController : MonoBehaviour {
-	static AudioModel[] AudioList = new AudioModel[20];
+public sealed class AudiosController : MonoBehaviour {
+	static AudiosController instance;
+	public AudioModel[] AudioList = new AudioModel[20];
 	static string RoomURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
+	static string sampleRoom = "";
+
+	static AudiosController(){
+		instance = new AudiosController();
+	}
+
+	public static AudiosController Instance{
+		get{
+			return instance;
+		}
+	}
 
 	public IEnumerator getSongData(){
 		Hashtable headers = new Hashtable();
 		headers.Add("Content-Type", "application/json");
 		headers.Add("X-User-Email", LoginModel.UserEmail);
 		headers.Add("X-User-Token", LoginModel.AuthKey);
-		WWW mp3stream = new WWW (roomURL, null, headers);
+		WWW mp3stream = new WWW (RoomURL, null, headers);
 		
 		yield return mp3stream;
 		var mp3parsed = JSON.Parse(mp3stream.text); 
@@ -33,7 +45,9 @@ public class AudioController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		StartCoroutine(getSongData());
+		if(LoginController.SuccessfulLogin){
+			StartCoroutine(getSongData());
+		}
 	}
 	
 	// Update is called once per frame
