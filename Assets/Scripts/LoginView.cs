@@ -42,13 +42,7 @@ public class LoginView : MonoBehaviour {
 			// If the login button is clicked, check for input and then call the login() function if the user 
 			// has inputted both an email and password
 			if (GUI.Button (new Rect (0, 40, 50, 20), "Login")) {
-				if (userEmail.Trim () == "" || userPassword.Trim () == ""){
-					// TODO Error message
-					Debug.Log ("No user email or password inputted");
-				}
-				else {
-					StartCoroutine(LoginController.login (userEmail, userPassword));
-				}
+				StartCoroutine(LoginController.login (userEmail, userPassword));
 			}
 			// Used for debug so logging can be done quickly
 			if (GUI.Button (new Rect(0, 60, 50, 20), "Bypass")){
@@ -57,6 +51,14 @@ public class LoginView : MonoBehaviour {
 				StartCoroutine(LoginController.login(userEmail, userPassword));
 			}
 			switch(LoginController.LoginStatus){
+			case 3: 
+				// If the user does not enter a password, display the error message
+				GUI.Label (new Rect (120, 40, 150, 20), "Enter a password");
+				break;
+			case 2:
+				// If the user does not enter a email, display the error message
+				GUI.Label (new Rect (120, 40, 150, 20), "Enter an email");
+				break;
 			case 1:
 				// If the user is currently loggin in, display the logging in message
 				GUI.Label (new Rect (120, 40, 150, 20), "Logging in...");

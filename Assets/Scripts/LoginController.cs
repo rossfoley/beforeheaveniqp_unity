@@ -16,6 +16,14 @@ public class LoginController : MonoBehaviour {
 	public static IEnumerator login(string userEmailInput, string userPasswordInput){
 		userEmail = userEmailInput;
 		userPassword = userPasswordInput;
+		if (userEmail == "") {
+			loginStatus = 2;
+			return true;
+		}
+		if (userPassword == "") {
+			loginStatus = 3;
+			return true;
+		}
 		loginStatus = 1;
 		WWW login;
 		// Login to get an authentication token
