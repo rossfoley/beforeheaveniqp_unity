@@ -65,7 +65,7 @@ public class LoginView : MonoBehaviour {
 				break;
 			case -1:
 				// If an error with login occurred, display the error message
-				GUI.Label (new Rect(120, 40, 150, 20), "Error");
+				GUI.Label (new Rect(120, 40, 150, 20), "Invalid credentials");
 				break;
 			}
 			GUI.EndGroup ();
