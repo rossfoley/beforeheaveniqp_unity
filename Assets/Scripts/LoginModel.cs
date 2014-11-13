@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LoginModel : MonoBehaviour {
 
-	private static string userEmail = "";
+	private static string userEmail;
 	private static string authKey;
 	private static string userId;
 
@@ -20,10 +20,12 @@ public class LoginModel : MonoBehaviour {
 	// UserEmail getter, is static so it can be grabbed from anywhere 
 	public static string UserEmail {
 		get {
+			Debug.Log("Model returning as userEmail: " + userEmail);
 			return userEmail;
 		}
 		set {
 			userEmail = value;
+			Debug.Log ("Model set userEmail as: " + userEmail);
 		}
 	}
 	
