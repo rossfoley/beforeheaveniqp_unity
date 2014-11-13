@@ -22,10 +22,6 @@ public class RoomModel : MonoBehaviour {
 		// Creates a dummy currentRoomData for the starting room
 		currentRoom = new RoomData ("0", "Start", "none", 0, null);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	}
 
 	public RoomData getRoom (int index){
 		return allRooms [index];
@@ -37,6 +33,8 @@ public class RoomModel : MonoBehaviour {
 		}
 		set {
 			currentRoom = value;
+			RoomConfigMenu.ThisRoom = currentRoom;
+			RoomConfigMenu.UserIsMember = userIsMember();
 		}
 	}
 

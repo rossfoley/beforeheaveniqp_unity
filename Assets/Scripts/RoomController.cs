@@ -2,6 +2,7 @@
 using System.Collections;
 using SimpleJSON;
 using System.Text;
+using System.Net;
 
 public class RoomController : MonoBehaviour {
 
@@ -13,10 +14,7 @@ public class RoomController : MonoBehaviour {
 	//Unity GameObject Links
 	public GameObject currentRoomObject;
 	public GameObject roomTemplate;
-	public GameObject roomMenuTemplate;
 
-	private GameObject roomMenu;
-	public NetworkManager networkManager;
 	private bool isChangingRoom;
 
 	private string nextRoom;
@@ -29,7 +27,6 @@ public class RoomController : MonoBehaviour {
 	}
 
 	//Constant URLs
-	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/users/login";
 	private const string roomsURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	private const string roomSearchURL = "http://beforeheaveniqp.herokuapp.com/api/rooms/search/";
 
@@ -47,13 +44,6 @@ public class RoomController : MonoBehaviour {
 		
 		// Retrieve all the rooms currently on the database
 		StartCoroutine(getRooms (""));
-
-		// Sets up the room config menu
-		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
-		RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
-		rcm.AuthKey = userAuthKey;
-		rcm.UserEmail = userEmail;
-		rcm.ThisRoom = RoomModel.getInstance().CurrentRoom;
 	}
 	
 	// Update is called once per frame
@@ -163,29 +153,44 @@ public class RoomController : MonoBehaviour {
 		nextRoom = RoomModel.getInstance().getRoom(i).Name;
 		
 		Destroy (currentRoomObject);
-		if (roomMenu != null){
-			Destroy (roomMenu);
-		}
-		// Update currentRoomObject and Data
-		if(roomTemplate == null){
-			Debug.Log ("null roomtemplate");
-		}
-		currentRoomObject = (GameObject) Instantiate(roomTemplate);
-		RoomModel.getInstance().CurrentRoom.RoomId = RoomModel.getInstance().AllRooms[i].RoomId;
-		RoomModel.getInstance().CurrentRoom.Name = RoomModel.getInstance().AllRooms[i].Name;
-		RoomModel.getInstance().CurrentRoom.Genre = RoomModel.getInstance().AllRooms[i].Genre;
-		RoomModel.getInstance().CurrentRoom.Visits = RoomModel.getInstance().AllRooms[i].Visits;
-		RoomModel.getInstance().CurrentRoom.Members = RoomModel.getInstance().AllRooms[i].Members;
 
-		// Create a new room config menu if the user is a part of the members of the room
-		if (RoomModel.getInstance().roomHasMembers() && RoomModel.getInstance ().userIsMember()){
-			roomMenu = (GameObject) Instantiate(roomMenuTemplate);
-			RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
-			rcm.ThisRoom = RoomModel.getInstance().CurrentRoom;
+		// Update currentRoomObject and Data
+		currentRoomObject = (GameObject) Instantiate(roomTemplate);
+		RoomModel.getInstance ().CurrentRoom = RoomModel.getInstance ().AllRooms [i];
+	}
+
+	public void addBandMember(string roomId, string newMemberEmail){
+		RoomConfigMenu.AddMemberStatus = 1;
+		
+		// Create the put request for adding the new band member
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + roomId + "/add_band_member/") as System.Net.HttpWebRequest;
+		
+		request.KeepAlive = true;
+		
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", userEmail);
+		request.Headers.Add("x-user-token", userAuthKey);
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_member_email\": \"" + newMemberEmail + "\"}");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()){
+			writer.Write(byteArray, 0, byteArray.Length);
 		}
-		// If the user is not a member, they can not see the room config menu
-		else {
-			roomMenu = null;
+		string responseContent=null;
+		try {
+			using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+				using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+					responseContent = reader.ReadToEnd();
+					RoomConfigMenu.AddMemberStatus = 2;
+				}
+			}
+		}
+		// If a WebException is caught, display an error message
+		catch(WebException e){
+			//TODO Error message
+			Debug.Log ("Invalid email entered");
+			RoomConfigMenu.AddMemberStatus = -2;
 		}
 	}
 	

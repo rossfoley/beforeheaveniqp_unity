@@ -26,16 +26,6 @@ public class ElevatorMenu : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
-	void Start () {
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
 	private Rect elevatorWindowRect = new Rect (50, 50, Screen.width - 100, Screen.height - 100);
 
 	// Boolean for whether or not the elevator menu is currently visible
