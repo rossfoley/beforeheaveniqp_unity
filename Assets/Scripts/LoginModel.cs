@@ -6,6 +6,7 @@ public class LoginModel : MonoBehaviour {
 	private static string userEmail = "";
 	private static string authKey;
 	private static string userId;
+	private static int[] friendIds;
 
 	// Use this for initialization
 	void Start () {

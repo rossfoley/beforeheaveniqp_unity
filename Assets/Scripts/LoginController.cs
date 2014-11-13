@@ -60,6 +60,48 @@ public class LoginController : MonoBehaviour {
 		}
 	}
 
+	// TODO Finish the getFriends function
+	public static void getFriends(){
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/user/" + LoginModel.UserId +"/get_friend/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "GET";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-token", LoginModel.AuthKey);
+		request.ContentLength = 0;
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+
+		var parsed = JSON.Parse (responseContent);
+	}
+
+	public static void addFriend(string friendEmail){
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/user/" + LoginModel.UserId +"/add_friend/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-token", LoginModel.AuthKey);
+		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_friend_email\": \"" + friendEmail + "\"}");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+	}
+
 	public static bool SuccessfulLogin {
 		get {
 			return successfulLogin;
