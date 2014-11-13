@@ -17,7 +17,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 	private static int createRoomStatus = 0;
 
-	public int CreateRoomStatus {
+	public static int CreateRoomStatus {
 		get {
 			return createRoomStatus;
 		}
