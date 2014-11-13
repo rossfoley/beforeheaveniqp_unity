@@ -277,6 +277,8 @@ MonoBehaviour:
   networkManager: {fileID: 2039934022}
   elevator: {fileID: 1798192975}
   startingRoom: {fileID: 1365570921}
+  roomController: {fileID: 2074609415}
+  roomConfigMenu: {fileID: 1987449247}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,7 +1459,7 @@ MonoBehaviour:
     width: 250
     height: 300
   IsVisible: 1
-  AlignBottom: 0
+  chatMinimized: 1
   messages: []
 --- !u!114 &426209485
 MonoBehaviour:
@@ -2530,6 +2532,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1009805315}
   m_RootOrder: 1
+--- !u!1001 &1347954189
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+  m_RootGameObject: {fileID: 1987449247}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &1364244629
 GameObject:
   m_ObjectHideFlags: 0
@@ -12364,6 +12410,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamId: 0
+--- !u!1 &1987449247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 100000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+  m_PrefabInternal: {fileID: 1347954189}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1987449249}
+  - 114: {fileID: 1987449248}
+  m_Layer: 0
+  m_Name: RoomMenu
+  m_TagString: RoomMenu
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1987449248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11400000, guid: dfdaab9c486565442bef617ea09f345a,
+    type: 2}
+  m_PrefabInternal: {fileID: 1347954189}
+  m_GameObject: {fileID: 1987449247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eaf9dd5febab904bbeaf1aa3e9195ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1987449249
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+  m_PrefabInternal: {fileID: 1347954189}
+  m_GameObject: {fileID: 1987449247}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
 --- !u!1 &2028826293
 GameObject:
   m_ObjectHideFlags: 0
@@ -12540,8 +12626,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentRoomObject: {fileID: 1365570921}
   roomTemplate: {fileID: 100000, guid: f5178051882574f4dbe9d55fdbccd69c, type: 2}
-  roomMenuTemplate: {fileID: 100000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
-  networkManager: {fileID: 2039934023}
 --- !u!4 &2074609417
 Transform:
   m_ObjectHideFlags: 0
