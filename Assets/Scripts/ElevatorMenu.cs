@@ -15,6 +15,17 @@ public class ElevatorMenu : MonoBehaviour {
 	private string newRoomGenre = "";
 	private string searchField = "";
 
+	private static int createRoomStatus = 0;
+
+	public int CreateRoomStatus {
+		get {
+			return createRoomStatus;
+		}
+		set {
+			createRoomStatus = value;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 
@@ -49,7 +60,6 @@ public class ElevatorMenu : MonoBehaviour {
 		if (GUILayout.Button ("Elevator")) {
 			// If the elevator window is going to appear, update allRooms by getting all the rooms with no search string
 			if (!isElWindowVisible){
-				Debug.Log("Calling getRooms");
 				StartCoroutine(RoomController.getInstance().getRooms(""));
 			}
 			isElWindowVisible = !isElWindowVisible;
@@ -79,18 +89,19 @@ public class ElevatorMenu : MonoBehaviour {
 					StartCoroutine (RoomController.getInstance().createRoom (newRoomName, newRoomGenre));
 				}
 			}
-			switch(RoomController.getInstance().getRoomCreationStatus()){
+			switch(createRoomStatus){
 			case 1:
 				GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creating...");
+				break;
+			case 2:
+				createRoomStatus = 0;
+				isCrWindowVisible = false;
 				break;
 			case -1:
 				GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creation error.");
 				break;
 			}
 			GUI.EndGroup();
-			if(RoomController.getInstance().getRoomCreationStatus() == 0){
-				isCrWindowVisible = false;
-			}
 		}
 	}
 

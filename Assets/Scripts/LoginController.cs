@@ -41,7 +41,6 @@ public class LoginController : MonoBehaviour {
 
 				// Sets the values of the login model
 				LoginModel.UserEmail = userEmail;
-				Debug.Log ("UserEmail set to " + userEmail);
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
 			}

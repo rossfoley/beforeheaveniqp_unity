@@ -21,9 +21,6 @@ public class RoomController : MonoBehaviour {
 
 	private string nextRoom;
 
-	private int createRoomStatus;
-
-	
 	public static RoomController getInstance(){
 		if(instance == null){
 			instance = new RoomController();
@@ -81,9 +78,6 @@ public class RoomController : MonoBehaviour {
 		WWW rooms;
 		// If the search term is empty, grab all the rooms on server
 		if(searchTerm == ""){
-			Debug.Log(headers.Count);
-			Debug.Log(userEmail);
-			Debug.Log (userAuthKey);
 			rooms = new WWW(roomsURL, null, headers);
 			yield return rooms;
 		}
@@ -98,8 +92,6 @@ public class RoomController : MonoBehaviour {
 		// Set AllRooms to what was returned from the request
 		RoomModel hi = RoomModel.getInstance ();
 		RoomModel.getInstance().AllRooms = new RoomData[roomsParsed["data"].AsArray.Count];
-		Debug.Log (roomsParsed ["data"].AsArray.Count);
-		Debug.Log (RoomModel.getInstance ().AllRooms.Length);
 		int roomCount = 0;
 		foreach(JSONNode data in roomsParsed["data"].AsArray){
 			string[] memberIds = new string[data["member_ids"].AsArray.Count];
@@ -112,13 +104,12 @@ public class RoomController : MonoBehaviour {
 			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
-			Debug.Log(roomCount);
 		}
 		
 	}
 
 	public IEnumerator createRoom(string newRoomName, string newRoomGenre){
-		createRoomStatus = 1; //Creating
+		ElevatorMenu.CreateRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();
 		var newRoomData = new Hashtable();
@@ -151,14 +142,14 @@ public class RoomController : MonoBehaviour {
 			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
 			//with the switch statement in OnGUI()
 			Debug.Log ("room creation error");
-			createRoomStatus = -1;
+			ElevatorMenu.CreateRoomStatus = -1;
 
 		}
 		else{
 			// After the room is created, hide the create room window and reset the related variables.
 			newRoomName = "";
 			newRoomGenre = "";
-			createRoomStatus = 0;
+			ElevatorMenu.CreateRoomStatus = 2;
 		}
 	}
 
@@ -176,6 +167,9 @@ public class RoomController : MonoBehaviour {
 			Destroy (roomMenu);
 		}
 		// Update currentRoomObject and Data
+		if(roomTemplate == null){
+			Debug.Log ("null roomtemplate");
+		}
 		currentRoomObject = (GameObject) Instantiate(roomTemplate);
 		RoomModel.getInstance().CurrentRoom.RoomId = RoomModel.getInstance().AllRooms[i].RoomId;
 		RoomModel.getInstance().CurrentRoom.Name = RoomModel.getInstance().AllRooms[i].Name;
@@ -207,9 +201,5 @@ public class RoomController : MonoBehaviour {
 	void Connect () {
 		PhotonNetwork.ConnectUsingSettings ("BefoHev V001");
 	}
-
-	public int getRoomCreationStatus ()
-	{
-		return createRoomStatus;
-	}
+	
 }
