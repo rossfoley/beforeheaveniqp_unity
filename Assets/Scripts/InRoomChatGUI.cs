@@ -7,7 +7,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 {
 	public Rect GuiRect;
 	public bool IsVisible = true;
-	public bool chatMinimized = true;
+	public bool chatMinimized = false;
 	public List<string> messages = new List<string>();
 	
 	private int MAXLINES = 1000;

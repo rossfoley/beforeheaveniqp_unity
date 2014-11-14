@@ -10,6 +10,7 @@ public class LoginView : MonoBehaviour {
 	public GameObject startingRoom;
 	public GameObject roomController;
 	public GameObject roomConfigMenu;
+	public GameObject chat;
 	
 	string userEmail = "";
 	string userPassword = "";
@@ -74,6 +75,7 @@ public class LoginView : MonoBehaviour {
 			// After a successful login, activate the networkManager
 			startingRoom.SetActive(true);
 			elevator.SetActive(true);
+			chat.SetActive(true);
 			networkManager.SetActive(true);
 			roomController.SetActive(true);
 			roomConfigMenu.SetActive(true);
