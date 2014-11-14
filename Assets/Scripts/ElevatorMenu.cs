@@ -99,19 +99,19 @@ public class ElevatorMenu : MonoBehaviour {
 
 	// Creates the friend's list and populates with the current user's friends
 	void createFriendList() {
+		LoginController.getFriends ();
 		GUILayout.BeginArea (new Rect (500, 100, 600, 300));
 		GUI.Label (new Rect(200, 0, 200, 20), "Friends List");
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
-		if(LoginModel.FriendIds.Length > 0) {
+		if(LoginModel.FriendData.Length > 0) {
 			scrollPosition = GUI.BeginScrollView (
 				new Rect (200, 2 * guiEdgeBorder, 200, 500 - guiEdgeBorder),
 				scrollPosition, 
-				new Rect(0, 0, 200, 20*LoginModel.FriendIds.Length));
-			Debug.Log (LoginModel.FriendIds.Length);
+				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
+			Debug.Log (LoginModel.FriendData.Length);
 			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
-				Debug.Log (i);
-				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendIds[i])) {
+				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
 					// TODO Clicking a friend in the friend's list code
 				}
 			}

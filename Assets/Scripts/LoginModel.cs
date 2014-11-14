@@ -7,6 +7,7 @@ public class LoginModel : MonoBehaviour {
 	private static string authKey;
 	private static string userId;
 	private static string[] friendIds;
+	private static UserData[] friendData;
 
 	// Use this for initialization
 	void Start () {
@@ -54,6 +55,15 @@ public class LoginModel : MonoBehaviour {
 		}
 		set {
 			friendIds = value;
+		}
+	}
+
+	public static UserData[] FriendData {
+		get {
+			return friendData;
+		}
+		set {
+			friendData = value;
 		}
 	}
 }

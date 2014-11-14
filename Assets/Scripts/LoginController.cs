@@ -62,7 +62,6 @@ public class LoginController : MonoBehaviour {
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
 				LoginModel.FriendIds = friends;
-				Debug.Log("Friend 0 = " + LoginModel.FriendIds[0]);
 			}
 			// If the login was unsuccessful, display the error message
 			else {
@@ -72,9 +71,9 @@ public class LoginController : MonoBehaviour {
 		}
 	}
 
-	// TODO Finish the getFriends function
+	// Gets friends and stores the data in the LoginModel
 	public static void getFriends(){
-		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/user/" + LoginModel.UserId +"/get_friend/") as System.Net.HttpWebRequest;
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/get_friends/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		
 		request.Method = "GET";
@@ -89,10 +88,22 @@ public class LoginController : MonoBehaviour {
 				responseContent = reader.ReadToEnd();
 			}
 		}
-
 		var parsed = JSON.Parse (responseContent);
+		LoginModel.FriendData = new UserData[parsed ["data"].AsArray.Count];
+		int i = 0;
+		string userEmail = "";
+		string currentRoomId = "";
+		string userId = "";
+		foreach(JSONNode data in (parsed ["data"]).AsArray){
+			userEmail = data ["email"];
+			currentRoomId = data ["current_room_id"];
+			userId = data ["_id"] ["$oid"];
+			UserData ud = new UserData(userId, currentRoomId, userEmail);
+			LoginModel.FriendData[i] = ud;
+			i++;
+		}
 	}
-
+	
 	// Adds the given friend email to the list of friends of the current user
 	public static void addFriend(string friendEmail){
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/add_friend/") as System.Net.HttpWebRequest;
