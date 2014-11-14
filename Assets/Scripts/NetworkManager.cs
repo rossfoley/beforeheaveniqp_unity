@@ -4,15 +4,24 @@ using System.Linq;
 
 public class NetworkManager : MonoBehaviour {
 
+	public static NetworkManager instance;
+
+	public static NetworkManager getInstance(){
+		if(instance == null){
+			instance = new NetworkManager();
+		}
+		return instance;
+	}
+
 	//Unity GameObject Links
 	public GameObject StandbyCamera;
-	public GameObject myPlayerGO;
-	public static GameObject currentRoomObject;
-	public static GameObject roomTemplate;
+	public GameObject currentRoomObject;
+	public GameObject roomTemplate;
 	private SpawnSpot[] spawnSpots;
+	private GameObject myPlayerGO;
 
 	private bool isStartup;
-	private static string nextRoom;
+	private string nextRoom;
 
 	void OnGUI () {
 		GUILayout.Label (PhotonNetwork.connectionStateDetailed.ToString()); // show connectivity status
@@ -20,6 +29,7 @@ public class NetworkManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		instance = this;
 		PhotonNetwork.autoJoinLobby = true;
 		isStartup = true;
 		Connect (); // connect to photon stuff
@@ -65,7 +75,7 @@ public class NetworkManager : MonoBehaviour {
 		
 	}
 	
-	public static void changeRoom (int i)
+	public void changeRoom (int i)
 	{
 		PhotonNetwork.LeaveRoom();
 		

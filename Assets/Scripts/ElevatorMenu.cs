@@ -159,7 +159,7 @@ public class ElevatorMenu : MonoBehaviour {
 					if(GUI.Button(new Rect(0, 20*i, width / 2, 20), allRooms[i].Name)) {
 						isElWindowVisible = false;
 
-						NetworkManager.changeRoom(i);
+						NetworkManager.getInstance().changeRoom(i);
 
 
 					}
