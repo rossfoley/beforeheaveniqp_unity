@@ -87,6 +87,8 @@ public class ElevatorMenu : MonoBehaviour {
 	// Creates the elevator window and create room buttons
 	void OnGUI() {
 
+		createFriendList ();
+
 		GUILayout.BeginArea (new Rect (guiEdgeBorder, guiEdgeBorder, 400, 60));
 
 		// If the elevator window is visible, create the GUI window
@@ -140,6 +142,29 @@ public class ElevatorMenu : MonoBehaviour {
 			}
 			GUI.EndGroup();
 		}
+	}
+
+	// Creates the friend's list and populates with the current user's friends
+	void createFriendList() {
+		GUILayout.BeginArea (new Rect (500, 100, 600, 300));
+		GUI.Label (new Rect(200, 0, 200, 20), "Friends List");
+		// Populates a scroll view with all of the rooms currently in the database
+		GUI.skin.scrollView = style;
+		if(LoginModel.FriendIds.Length > 0) {
+			scrollPosition = GUI.BeginScrollView (
+				new Rect (200, 2 * guiEdgeBorder, 200, 500 - guiEdgeBorder),
+				scrollPosition, 
+				new Rect(0, 0, 200, 20*LoginModel.FriendIds.Length));
+			Debug.Log (LoginModel.FriendIds.Length);
+			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
+				Debug.Log (i);
+				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendIds[i])) {
+					// TODO Clicking a friend in the friend's list code
+				}
+			}
+			GUI.EndScrollView();
+		}
+		GUILayout.EndArea ();
 	}
 
 	// This is the main elevator window

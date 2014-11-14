@@ -86,5 +86,6 @@ public class LoginView : MonoBehaviour {
 		if (GUI.Button (new Rect(0, 60, 50, 20), "Add Friend")){
 			LoginController.addFriend(friendEmail);
 		}
+		GUI.EndGroup ();
 	}
 }

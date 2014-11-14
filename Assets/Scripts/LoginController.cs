@@ -32,6 +32,7 @@ public class LoginController : MonoBehaviour {
 		loginForm.AddField ("password", userPassword);
 		login = new WWW(loginURL, loginForm);
 		yield return login;
+		Debug.Log (login.text);
 		if (!string.IsNullOrEmpty(login.error)) {
 			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
 			//with the switch statement in OnGUI()
@@ -47,10 +48,21 @@ public class LoginController : MonoBehaviour {
 				authKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
 				userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
 
+				// Construct the array that contains all of the friend IDs
+				string[] friends = new string[parsed ["data"] ["friend_ids"].AsArray.Count];
+				Debug.Log ("Size of friends = " + parsed ["data"] ["friend_ids"].AsArray.Count);
+				string friendId;
+				int i = 0;
+				foreach(JSONNode data in (parsed ["data"] ["friend_ids"]).AsArray){
+					friends[i] = data["$oid"];
+					i++;
+				}
 				// Sets the values of the login model
 				LoginModel.UserEmail = userEmail;
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
+				LoginModel.FriendIds = friends;
+				Debug.Log("Friend 0 = " + LoginModel.FriendIds[0]);
 			}
 			// If the login was unsuccessful, display the error message
 			else {
@@ -81,8 +93,9 @@ public class LoginController : MonoBehaviour {
 		var parsed = JSON.Parse (responseContent);
 	}
 
+	// Adds the given friend email to the list of friends of the current user
 	public static void addFriend(string friendEmail){
-		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/user/" + LoginModel.UserId +"/add_friend/") as System.Net.HttpWebRequest;
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/add_friend/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		
 		request.Method = "PUT";
