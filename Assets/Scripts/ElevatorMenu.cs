@@ -1,79 +1,29 @@
 using UnityEngine;
 using System.Collections;
-using SimpleJSON;
 using System.Text;
 using System.IO;
 using System;
 
 public class ElevatorMenu : MonoBehaviour {
-
-	//Unity GameObject Links
-	public GameObject currentRoomObject;
-	public GameObject roomTemplate;
-	public GameObject roomMenuTemplate;
-
-	private RoomData currentRoomData;
-
-	private GameObject roomMenu;
-	public NetworkManager networkManager;
-	private bool isChangingRoom;
-	private RoomData[] allRooms = new RoomData[0];
-
-	//Constant URLs
-	private const string loginURL = "http://beforeheaveniqp.herokuapp.com/api/users/login";
-	private const string roomsURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
-	private const string roomSearchURL = "http://beforeheaveniqp.herokuapp.com/api/rooms/search/";
-
-	private string nextRoom;
-
+	
 	public Vector2 scrollPosition = Vector2.zero;
 	public GUIStyle style;
 	public int guiEdgeBorder = 20;
 
-	private string userEmail;
-	private string userAuthKey;
-	private string userId;
-
+	// Text field strings
 	private string newRoomName = "";
 	private string newRoomGenre = "";
 	private string searchField = "";
 
-	private int createRoomStatus;
+	private static int createRoomStatus = 0;
 
-	public RoomData getCurrentRoom(){
-		return currentRoomData;
-	}
-
-	// Use this for initialization
-	void Start () {
-
-		// Boolean used to check if it is in the process of switching rooms
-		isChangingRoom = false;
-
-		// Grabs the user's login information from LoginScript
-		userEmail = LoginModel.UserEmail;
-		userAuthKey = LoginModel.AuthKey;
-		userId = LoginModel.UserId;
-
-		Debug.Log (userEmail + " " + userAuthKey + " " + userId);
-	
-		// Retrieve all the rooms currently on the database
-		StartCoroutine(getRooms (""));
-
-		// Creates a dummy currentRoomData for the starting room
-		currentRoomData = new RoomData ("0", "Start", "none", 0, null);
-
-		// Sets up the room config menu
-		roomMenu = (GameObject)Instantiate (roomMenuTemplate);
-		RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
-		rcm.AuthKey = userAuthKey;
-		rcm.UserEmail = userEmail;
-		rcm.ThisRoom = currentRoomData;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+	public static int CreateRoomStatus {
+		get {
+			return createRoomStatus;
+		}
+		set {
+			createRoomStatus = value;
+		}
 	}
 
 	private Rect elevatorWindowRect = new Rect (50, 50, Screen.width - 100, Screen.height - 100);
@@ -102,8 +52,7 @@ public class ElevatorMenu : MonoBehaviour {
 		if (GUILayout.Button ("Elevator")) {
 			// If the elevator window is going to appear, update allRooms by getting all the rooms with no search string
 			if (!isElWindowVisible){
-				Debug.Log("Calling getRooms");
-				StartCoroutine(getRooms (""));
+				StartCoroutine(RoomController.getInstance().getRooms(""));
 			}
 			isElWindowVisible = !isElWindowVisible;
 		}
@@ -129,12 +78,16 @@ public class ElevatorMenu : MonoBehaviour {
 					Debug.Log("Invalid Strings");
 				}
 				else {
-					StartCoroutine (createRoom (newRoomName, newRoomGenre));
+					StartCoroutine (RoomController.getInstance().createRoom (newRoomName, newRoomGenre));
 				}
 			}
 			switch(createRoomStatus){
 			case 1:
 				GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creating...");
+				break;
+			case 2:
+				createRoomStatus = 0;
+				isCrWindowVisible = false;
 				break;
 			case -1:
 				GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creation error.");
@@ -191,7 +144,7 @@ public class ElevatorMenu : MonoBehaviour {
 		searchField = GUILayout.TextField(searchField);
 		if(GUILayout.Button("Search") ||
 		   Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "search field"){
-			StartCoroutine(getRooms(searchField.Trim ()));
+			StartCoroutine(RoomController.getInstance().getRooms(searchField.Trim ()));
 		}
 
 		GUILayout.EndVertical();
@@ -199,48 +152,21 @@ public class ElevatorMenu : MonoBehaviour {
 		
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
-		if(allRooms.Length > 0) {
+		if(RoomModel.getInstance().AllRooms.Length > 0) {
 			scrollPosition = GUI.BeginScrollView (
 				new Rect (width / 3, 2 * guiEdgeBorder, width / 2, height - guiEdgeBorder),
 				scrollPosition, 
-				new Rect(0, 0, width / 2, 20*allRooms.Length));
-			for (int i = 0; i < allRooms.Length; i++) {
+				new Rect(0, 0, width / 2, 20*RoomModel.getInstance().AllRooms.Length));
+			for (int i = 0; i < RoomModel.getInstance().AllRooms.Length; i++) {
 				// If the current room has the same name as the next room, do not create the button for that room
-				if (currentRoomData.Name != allRooms[i].Name) {
+				if (RoomModel.getInstance().CurrentRoom.Name != RoomModel.getInstance().AllRooms[i].Name) {
 					// If one of the room buttons is pressed, join that room
-					if(GUI.Button(new Rect(0, 20*i, width / 2, 20), allRooms[i].Name)) {
-						isChangingRoom = true;
+					if(GUI.Button(new Rect(0, 20*i, width / 2, 20), RoomModel.getInstance().AllRooms[i].Name)) {
 						isElWindowVisible = false;
-						PhotonNetwork.LeaveRoom();
 
-						nextRoom = allRooms[i].Name;
+						RoomController.getInstance().changeRoom(i);
 
-						Destroy (currentRoomObject);
-						if (roomMenu != null){
-							Destroy (roomMenu);
-						}
-						// Update currentRoomObject and Data
-						currentRoomObject = (GameObject) Instantiate(roomTemplate);
-						currentRoomData.RoomId = allRooms[i].RoomId;
-						currentRoomData.Name = allRooms[i].Name;
-						currentRoomData.Genre = allRooms[i].Genre;
-						currentRoomData.Visits = allRooms[i].Visits;
-						currentRoomData.Members = allRooms[i].Members;
-						bool isNullArray = false;
-						if (currentRoomData.Members.Length == 0){
-							isNullArray = true;
-						}
 
-						// Create a new room config menu if the user is a part of the members of the room
-						if (!isNullArray && (Array.IndexOf (currentRoomData.Members, userId) >= 0)){
-							roomMenu = (GameObject) Instantiate(roomMenuTemplate);
-							RoomConfigMenu rcm = roomMenu.GetComponent("RoomConfigMenu") as RoomConfigMenu;
-							rcm.ThisRoom = currentRoomData;
-						}
-						// If the user is not a member, they can not see the room config menu
-						else {
-							roomMenu = null;
-						}
 					}
 				}
 			}
@@ -248,102 +174,6 @@ public class ElevatorMenu : MonoBehaviour {
 		}
 	}
 
-	void Connect () {
-		PhotonNetwork.ConnectUsingSettings ("BefoHev V001");
-	}
-	
-	void OnJoinedLobby() {
-		RoomOptions testRO = new RoomOptions ();
-		// Join the room if it is already active on the server, otherwise create it
-		if (isChangingRoom){
-			PhotonNetwork.JoinOrCreateRoom (nextRoom.Trim('"'), testRO, PhotonNetwork.lobby);
-			isChangingRoom = false;
-		}
-	}
-
-	IEnumerator createRoom(string newRoomName, string newRoomGenre){
-		createRoomStatus = 1; //Creating
-		// Set up the request
-		WWWForm roomCreateForm = new WWWForm();
-		var newRoomData = new Hashtable();
-		newRoomData.Add ("name", newRoomName);
-		newRoomData.Add ("genre", newRoomGenre);
-		var headers = new Hashtable();
-		headers.Add ("Content-Type", "application/json");
-		headers.Add ("X-User-Email", userEmail);
-		headers.Add ("X-User-Token", userAuthKey);
-		
-		// TODO
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\"} }");
-
-		StringBuilder data = new StringBuilder();
-		data.Append("{\n");
-		data.Append("\t\"name\":");
-		data.Append(" \"" + newRoomName + "\",\n");
-		data.Append("\t\"genre\":");
-		data.Append(" \"" + newRoomGenre + "\"\n");
-		data.Append("}");
-
-		roomCreateForm.AddField("room_data", data.ToString ());
 
 
-		byte[] rawData = roomCreateForm.data;
-
-		WWW newRoomRequest = new WWW(roomsURL, byteArray, headers);
-		yield return newRoomRequest;
-		if (!string.IsNullOrEmpty(newRoomRequest.error)) {
-			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
-			//with the switch statement in OnGUI()
-			Debug.Log ("room creation error");
-			createRoomStatus = -1;
-		}
-		else{
-			// After the room is created, hide the create room window and reset the related variables.
-			newRoomName = "";
-			newRoomGenre = "";
-			isCrWindowVisible = false;
-			createRoomStatus = 0;
-		}
-	}
-
-	// Gets all the rooms from the database
-	// string searchTerm - The search term that is passed to the database, if it is an empty string,
-	// all the rooms are returned
-	IEnumerator getRooms(string searchTerm){
-		// Set up the request
-		var headers = new Hashtable();
-		headers.Add ("Content-Type", "application/json");
-		headers.Add("X-User-Email", userEmail);
-		headers.Add("X-User-Token", userAuthKey);
-		WWW rooms;
-		// If the search term is empty, grab all the rooms on server
-		if(searchTerm == ""){
-			rooms = new WWW (roomsURL, null, headers);
-			yield return rooms;
-		}
-		// If there is a search term, send the request to the search URL with the search term
-		else{
-			rooms = new WWW(roomSearchURL + searchTerm, null, headers);
-			yield return rooms;
-		}
-		//TODO Eventually remove, but handy for debugging in the mean-time. Prints text of all the rooms and their members
-		Debug.Log (rooms.text);
-		var roomsParsed = JSON.Parse (rooms.text);
-		// Set allRooms to what was returned from the request
-		allRooms = new RoomData[roomsParsed["data"].AsArray.Count];
-		int roomCount = 0;
-		foreach(JSONNode data in roomsParsed["data"].AsArray){
-			string[] memberIds = new string[data["member_ids"].AsArray.Count];
-			int i = 0;
-			foreach(JSONNode members in data["member_ids"].AsArray){
-				memberIds[i] = members["$oid"];
-				i++;
-			}
-			// Build the roomData and place it in the allRooms array
-			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
-			allRooms[roomCount] = roomData;
-			roomCount++;
-		}
-
-	}
 }
