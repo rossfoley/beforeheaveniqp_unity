@@ -47,8 +47,8 @@ public sealed class AudiosController : MonoBehaviour {
 		foreach(JSONNode data in mp3parsed["data"].AsArray){
 			Debug.Log(counter);
 			Debug.Log(data.ToString());
-			AudioList[counter] = new AudioModel("A","B","C",data["current_song"].ToString().Trim('"'), 0);
-			Debug.Log(AudioList[counter].Url);
+			AudioList[counter] = new AudioModel("A","B","C",data["current_song"].ToString().Trim('"'), data["_id"]["$oid"], 0);
+			Debug.Log(AudioList[counter].Url + AudioList[counter].Room_id);
 			counter++;
 		}
 		//printAudioList(AudioList);

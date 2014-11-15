@@ -6,14 +6,16 @@ public class AudioModel : MonoBehaviour {
 	string owner;
 	string genre;
 	string url;
+	string room_id;
 	int elapsed_time;
 
 	public AudioModel(string name, string owner, 
-	                  string genre, string url, int elapsed_time){
+	                  string genre, string url, string room_id, int elapsed_time){
 		this.name = name;
 		this.owner = owner;
 		this.genre = genre;
 		this.url = url;
+		this.room_id = room_id;
 		this.elapsed_time = elapsed_time;
 	}
 
@@ -55,6 +57,15 @@ public class AudioModel : MonoBehaviour {
 		}
 		set {
 			url = value;
+		}
+	}
+
+	public string Room_id {
+		get {
+			return room_id;
+		}
+		set {
+			room_id = value;
 		}
 	}
 
