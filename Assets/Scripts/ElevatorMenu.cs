@@ -133,14 +133,18 @@ public class ElevatorMenu : MonoBehaviour {
 				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
 					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
 					RoomController.getInstance().getRooms("");
+					RoomData friendRD = null;
 					int j = 0;
 					foreach (RoomData rd in RoomModel.getInstance().AllRooms){
 						if (rd.Name == roomName){
+							friendRD = rd;
 							break;
 						}
 						j++;
 					}
-					NetworkManager.getInstance().changeRoom(j);
+					if (friendRD != null){
+						NetworkManager.getInstance().changeRoom(friendRD);
+					}
 				}
 			}
 			GUI.EndScrollView();
@@ -192,7 +196,7 @@ public class ElevatorMenu : MonoBehaviour {
 					if(GUI.Button(new Rect(0, 20*i, width / 2, 20), allRooms[i].Name)) {
 						isElWindowVisible = false;
 
-						NetworkManager.getInstance().changeRoom(i);
+						NetworkManager.getInstance().changeRoom(allRooms[i]);
 
 
 					}

@@ -127,6 +127,26 @@ public class RoomController : MonoBehaviour {
 		}
 	}
 
+	public void deleteRoom(){
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "DELETE";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", userEmail);
+		request.Headers.Add("x-user-token", userAuthKey);
+		request.ContentLength = 0;
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+
+		//NetworkManager.getInstance().changeRoom(
+	}
+
 	public void addBandMember(string roomId, string newMemberEmail){
 		RoomConfigMenu.AddMemberStatus = 1;
 		
