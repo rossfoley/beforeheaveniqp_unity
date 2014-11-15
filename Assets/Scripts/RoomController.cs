@@ -144,7 +144,7 @@ public class RoomController : MonoBehaviour {
 			}
 		}
 
-		//NetworkManager.getInstance().changeRoom(
+		NetworkManager.getInstance().kickAll();
 	}
 
 	public void addBandMember(string roomId, string newMemberEmail){
