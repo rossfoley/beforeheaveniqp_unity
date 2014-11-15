@@ -14,6 +14,7 @@ public class ElevatorMenu : MonoBehaviour {
 	private string newRoomName = "";
 	private string newRoomGenre = "";
 	private string searchField = "";
+	private int updateCounter = 250;
 
 	private static int createRoomStatus = 0;
 	private static RoomData[] allRooms;
@@ -119,7 +120,13 @@ public class ElevatorMenu : MonoBehaviour {
 
 	// Creates the friend's list and populates with the current user's friends
 	void createFriendList() {
-		LoginController.getFriends ();
+		if (updateCounter == 0){
+			LoginController.getFriends ();
+			updateCounter = 250;
+		}
+		else {
+			updateCounter--;
+		}
 		GUILayout.BeginArea (new Rect (500, 100, 600, 300));
 		GUI.Label (new Rect(200, 0, 200, 20), "Friends List");
 		// Populates a scroll view with all of the rooms currently in the database
