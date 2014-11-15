@@ -151,9 +151,9 @@ public class LoginController : MonoBehaviour {
 	}
 
 	public static string getCurrentRoomOfUser(string userId){
-		var request = System.Net.WebRequest.Create ("http://beforeheaveniqp.herokuapp.com/api/users/" + userId + "/get_current_room/") as System.Net.HttpWebRequest;
+		var request = System.Net.WebRequest.Create ("http://beforeheaveniqp.herokuapp.com/api/users/" + userId + "/current_room/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
-
+		Debug.Log ("http://beforeheaveniqp.herokuapp.com/api/users/" + userId + "/get_current_room/");
 		request.Method = "GET";
 		
 		request.ContentType = "application/json";
