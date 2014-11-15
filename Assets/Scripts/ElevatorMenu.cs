@@ -14,7 +14,7 @@ public class ElevatorMenu : MonoBehaviour {
 	private string newRoomName = "";
 	private string newRoomGenre = "";
 	private string searchField = "";
-	private int updateCounter = 250;
+	private int updateCounter = 0;
 
 	private static int createRoomStatus = 0;
 	private static RoomData[] allRooms;
