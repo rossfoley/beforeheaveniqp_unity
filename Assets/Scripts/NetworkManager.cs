@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Linq;
 
-public class NetworkManager : MonoBehaviour {
+public class NetworkManager : Photon.MonoBehaviour {
 
 	public static NetworkManager instance;
 
@@ -86,5 +86,15 @@ public class NetworkManager : MonoBehaviour {
 		// Update currentRoomObject and Data
 		currentRoomObject = (GameObject) Instantiate(roomTemplate);
 		RoomModel.getInstance ().CurrentRoom = toRoom;
+	}
+
+	public void kickAll(){
+		photonView.RPC ("kickToStart", PhotonTargets.All, "");
+	}
+
+	[RPC] void kickToStart(string email){
+		if(email == "" || email == LoginModel.UserEmail.Trim('"')){
+			changeRoom(RoomModel.getInstance().getRoom("starting room"));
+		}
 	}
 }
