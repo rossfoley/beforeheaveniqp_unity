@@ -1459,7 +1459,7 @@ MonoBehaviour:
     width: 250
     height: 300
   IsVisible: 1
-  chatMinimized: 1
+  AlignBottom: 0
   messages: []
 --- !u!114 &426209485
 MonoBehaviour:
@@ -2570,6 +2570,10 @@ Prefab:
     - target: {fileID: 400000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
       propertyPath: m_RootOrder
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dfdaab9c486565442bef617ea09f345a, type: 2}
@@ -12425,7 +12429,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1987449248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12520,8 +12524,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StandbyCamera: {fileID: 858580294}
-  myPlayerGO: {fileID: 0}
-  inLobby: 0
+  currentRoomObject: {fileID: 1365570921}
+  roomTemplate: {fileID: 100000, guid: f5178051882574f4dbe9d55fdbccd69c, type: 2}
 --- !u!4 &2039934024
 Transform:
   m_ObjectHideFlags: 0
@@ -12624,8 +12628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d55c6a66f9060834c8ff8a9dacbc72e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentRoomObject: {fileID: 1365570921}
-  roomTemplate: {fileID: 100000, guid: f5178051882574f4dbe9d55fdbccd69c, type: 2}
 --- !u!4 &2074609417
 Transform:
   m_ObjectHideFlags: 0

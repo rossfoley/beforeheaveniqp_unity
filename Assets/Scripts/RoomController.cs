@@ -10,14 +10,8 @@ public class RoomController : MonoBehaviour {
 	private string userEmail;
 	private string userAuthKey;
 	private string userId;
-
-	//Unity GameObject Links
-	public GameObject currentRoomObject;
-	public GameObject roomTemplate;
-
+	
 	private bool isChangingRoom;
-
-	private string nextRoom;
 
 	public static RoomController getInstance(){
 		if(instance == null){
@@ -45,21 +39,11 @@ public class RoomController : MonoBehaviour {
 		// Retrieve all the rooms currently on the database
 		StartCoroutine(getRooms (""));
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 
 	// Gets all the rooms from the database
 	// string searchTerm - The search term that is passed to the database, if it is an empty string,
 	// all the rooms are returned
 	public IEnumerator getRooms(string searchTerm){
-		//Set credentials
-		userEmail = LoginModel.UserEmail;
-		userAuthKey = LoginModel.AuthKey;
-		userId = LoginModel.UserId;
-
 		// Set up the request
 		Hashtable headers = new Hashtable();
 		headers.Add ("Content-Type", "application/json");
@@ -76,11 +60,11 @@ public class RoomController : MonoBehaviour {
 			rooms = new WWW(roomSearchURL + searchTerm, null, headers);
 			yield return rooms;
 		}
+
 		//TODO Eventually remove, but handy for debugging in the mean-time. Prints text of all the rooms and their members
 		Debug.Log (rooms.text);
 		var roomsParsed = JSON.Parse (rooms.text);
 		// Set AllRooms to what was returned from the request
-		RoomModel hi = RoomModel.getInstance ();
 		RoomModel.getInstance().AllRooms = new RoomData[roomsParsed["data"].AsArray.Count];
 		int roomCount = 0;
 		foreach(JSONNode data in roomsParsed["data"].AsArray){
@@ -143,22 +127,6 @@ public class RoomController : MonoBehaviour {
 		}
 	}
 
-
-	// TODO Split out into location manager?
-	public void changeRoom (int i)
-	{
-		isChangingRoom = true;
-		PhotonNetwork.LeaveRoom();
-		
-		nextRoom = RoomModel.getInstance().getRoom(i).Name;
-		
-		Destroy (currentRoomObject);
-
-		// Update currentRoomObject and Data
-		currentRoomObject = (GameObject) Instantiate(roomTemplate);
-		RoomModel.getInstance ().CurrentRoom = RoomModel.getInstance ().AllRooms [i];
-	}
-
 	public void addBandMember(string roomId, string newMemberEmail){
 		RoomConfigMenu.AddMemberStatus = 1;
 		
@@ -193,18 +161,4 @@ public class RoomController : MonoBehaviour {
 			RoomConfigMenu.AddMemberStatus = -2;
 		}
 	}
-	
-	void OnJoinedLobby() {
-		RoomOptions testRO = new RoomOptions ();
-		// Join the room if it is already active on the server, otherwise create it
-		if (isChangingRoom){
-			PhotonNetwork.JoinOrCreateRoom (nextRoom.Trim('"'), testRO, PhotonNetwork.lobby);
-			isChangingRoom = false;
-		}
-	}
-
-	void Connect () {
-		PhotonNetwork.ConnectUsingSettings ("BefoHev V001");
-	}
-	
 }

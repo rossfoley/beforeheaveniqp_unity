@@ -4,11 +4,24 @@ using System.Linq;
 
 public class NetworkManager : MonoBehaviour {
 
+	public static NetworkManager instance;
+
+	public static NetworkManager getInstance(){
+		if(instance == null){
+			instance = new NetworkManager();
+		}
+		return instance;
+	}
+
+	//Unity GameObject Links
 	public GameObject StandbyCamera;
+	public GameObject currentRoomObject;
+	public GameObject roomTemplate;
 	private SpawnSpot[] spawnSpots;
-	public GameObject myPlayerGO;
+	private GameObject myPlayerGO;
+
 	private bool isStartup;
-	public bool	inLobby;
+	private string nextRoom;
 
 	void OnGUI () {
 		GUILayout.Label (PhotonNetwork.connectionStateDetailed.ToString()); // show connectivity status
@@ -16,8 +29,8 @@ public class NetworkManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		instance = this;
 		PhotonNetwork.autoJoinLobby = true;
-		inLobby = false;
 		isStartup = true;
 		Connect (); // connect to photon stuff
 	}
@@ -26,19 +39,21 @@ public class NetworkManager : MonoBehaviour {
 		PhotonNetwork.ConnectUsingSettings ("BefoHev V001");
 	}
 
-	// When the lobby is joined and it is in startUp, join the starting room
+	// When the lobby is joined and it is in startUp, join the starting room, else join the room being changed to
 	void OnJoinedLobby() {
-		inLobby = true;
+		RoomOptions testRO = new RoomOptions();
 		if (isStartup){
-			RoomOptions testRO = new RoomOptions();
 			PhotonNetwork.JoinOrCreateRoom ("starting room", testRO, PhotonNetwork.lobby);
 			isStartup = false;
+		}
+		else{
+			// Join the room if it is already active on the server, otherwise create it
+			PhotonNetwork.JoinOrCreateRoom (nextRoom.Trim('"'), testRO, PhotonNetwork.lobby);
 		}
 	}
 
 	// When a room is joined, spawn the player
 	void OnJoinedRoom() {
-		inLobby = false;
 		SpawnMyPlayer ();
 	}
 
@@ -59,10 +74,17 @@ public class NetworkManager : MonoBehaviour {
 		((MonoBehaviour) myPlayerGO.GetComponent ("ThirdPersonCamera")).enabled = true;
 		
 	}
-
-	// Update is called once per frame
-	void Update () {
+	
+	public void changeRoom (int i)
+	{
+		PhotonNetwork.LeaveRoom();
 		
+		nextRoom = RoomModel.getInstance().getRoom(i).Name;
+		
+		Destroy (currentRoomObject);
+		
+		// Update currentRoomObject and Data
+		currentRoomObject = (GameObject) Instantiate(roomTemplate);
+		RoomModel.getInstance ().CurrentRoom = RoomModel.getInstance ().AllRooms [i];
 	}
-
 }

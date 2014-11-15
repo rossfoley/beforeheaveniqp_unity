@@ -16,6 +16,8 @@ public class ElevatorMenu : MonoBehaviour {
 	private string searchField = "";
 
 	private static int createRoomStatus = 0;
+	private static RoomData[] allRooms;
+	private static RoomData currentRoom;
 
 	public static int CreateRoomStatus {
 		get {
@@ -23,6 +25,24 @@ public class ElevatorMenu : MonoBehaviour {
 		}
 		set {
 			createRoomStatus = value;
+		}
+	}
+
+	public static RoomData[] AllRooms {
+		get {
+			return allRooms;
+		}
+		set {
+			allRooms = value;
+		}
+	}
+
+	public static RoomData CurrentRoom {
+		get {
+			return currentRoom;
+		}
+		set {
+			currentRoom = value;
 		}
 	}
 
@@ -152,19 +172,19 @@ public class ElevatorMenu : MonoBehaviour {
 		
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
-		if(RoomModel.getInstance().AllRooms.Length > 0) {
+		if(allRooms.Length > 0) {
 			scrollPosition = GUI.BeginScrollView (
 				new Rect (width / 3, 2 * guiEdgeBorder, width / 2, height - guiEdgeBorder),
 				scrollPosition, 
-				new Rect(0, 0, width / 2, 20*RoomModel.getInstance().AllRooms.Length));
-			for (int i = 0; i < RoomModel.getInstance().AllRooms.Length; i++) {
+				new Rect(0, 0, width / 2, 20*allRooms.Length));
+			for (int i = 0; i < allRooms.Length; i++) {
 				// If the current room has the same name as the next room, do not create the button for that room
-				if (RoomModel.getInstance().CurrentRoom.Name != RoomModel.getInstance().AllRooms[i].Name) {
+				if (RoomModel.getInstance().CurrentRoom.Name != allRooms[i].Name) {
 					// If one of the room buttons is pressed, join that room
-					if(GUI.Button(new Rect(0, 20*i, width / 2, 20), RoomModel.getInstance().AllRooms[i].Name)) {
+					if(GUI.Button(new Rect(0, 20*i, width / 2, 20), allRooms[i].Name)) {
 						isElWindowVisible = false;
 
-						RoomController.getInstance().changeRoom(i);
+						NetworkManager.getInstance().changeRoom(i);
 
 
 					}
