@@ -86,6 +86,9 @@ public class RoomConfigMenu : MonoBehaviour {
 					break;
 			}
 			GUI.Label (new Rect (10, 110, 200, 20), status);
+			if(GUI.Button (new Rect(10, 130, 100, 20), "Delete Room")){
+				RoomController.getInstance().deleteRoom();
+			}
 			GUI.EndGroup();
 		}
 	}
