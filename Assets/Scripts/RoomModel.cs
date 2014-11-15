@@ -6,7 +6,8 @@ public class RoomModel : MonoBehaviour {
 
 	private static RoomModel instance = null;
 	private RoomData currentRoom;
-	private RoomData[] allRooms = new RoomData[0];
+	private RoomData[] defaultRooms = new RoomData[1];
+	private RoomData[] serverRooms = new RoomData[0];
 	private GameObject currentPhysicalRoom;
 
 	public static RoomModel getInstance(){
@@ -19,12 +20,13 @@ public class RoomModel : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		instance = this;
+		defaultRooms[0] = new RoomData("DefaultStart", "starting room", "N/A", 0, null);
 		// Creates a dummy currentRoomData
 		currentRoom = new RoomData ("0", "dummy", "none", 0, null);
 	}
 
 	public RoomData getRoom (string name){
-		foreach(RoomData room in allRooms){
+		foreach(RoomData room in serverRooms){
 			if(room.Name.Trim ('"') == name){
 				return room;
 			}
@@ -44,13 +46,19 @@ public class RoomModel : MonoBehaviour {
 		}
 	}
 
-	public RoomData[] AllRooms {
+	public RoomData[] ServerRooms {
 		get {
-			return this.allRooms;
+			return this.serverRooms;
 		}
 		set {
-			allRooms = value;
-			ElevatorMenu.AllRooms = allRooms;
+			serverRooms = value;
+			ElevatorMenu.AllRooms = defaultRooms + serverRooms;
+		}
+	}
+
+	public RoomData[] AllRooms{
+		get {
+			return this.defaultRooms + this.serverRooms;
 		}
 	}
 

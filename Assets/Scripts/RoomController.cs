@@ -65,7 +65,7 @@ public class RoomController : MonoBehaviour {
 		Debug.Log (rooms.text);
 		var roomsParsed = JSON.Parse (rooms.text);
 		// Set AllRooms to what was returned from the request
-		RoomModel.getInstance().AllRooms = new RoomData[roomsParsed["data"].AsArray.Count];
+		RoomModel.getInstance().ServerRooms = new RoomData[roomsParsed["data"].AsArray.Count];
 		int roomCount = 0;
 		foreach(JSONNode data in roomsParsed["data"].AsArray){
 			string[] memberIds = new string[data["member_ids"].AsArray.Count];
@@ -76,10 +76,10 @@ public class RoomController : MonoBehaviour {
 			}
 			// Build the roomData and place it in the allRooms array
 			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
-			RoomModel.getInstance().AllRooms[roomCount] = roomData;
+			RoomModel.getInstance().ServerRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		
+
 	}
 
 	public IEnumerator createRoom(string newRoomName, string newRoomGenre){
