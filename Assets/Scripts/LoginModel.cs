@@ -8,12 +8,11 @@ public class LoginModel : MonoBehaviour {
 	private static string userId;
 	private static string[] friendIds;
 	private static UserData[] friendData;
-
-	private static string currentRoomId = "";
+	private static string currentRoomId;
 
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
@@ -71,7 +70,7 @@ public class LoginModel : MonoBehaviour {
 
 	public static string CurrentRoomId {
 		get {
-			return this.currentRoomId;
+			return currentRoomId;
 		}
 		set {
 			currentRoomId = value;

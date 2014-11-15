@@ -86,5 +86,8 @@ public class NetworkManager : MonoBehaviour {
 		// Update currentRoomObject and Data
 		currentRoomObject = (GameObject) Instantiate(roomTemplate);
 		RoomModel.getInstance ().CurrentRoom = RoomModel.getInstance ().AllRooms [i];
+
+		LoginController.updateCurrentRoom ();
+
 	}
 }

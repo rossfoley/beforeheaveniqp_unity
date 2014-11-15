@@ -131,7 +131,16 @@ public class ElevatorMenu : MonoBehaviour {
 				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
 			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
 				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
-					// TODO Clicking a friend in the friend's list code
+					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
+					RoomController.getInstance().getRooms("");
+					int j = 0;
+					foreach (RoomData rd in RoomModel.getInstance().AllRooms){
+						if (rd.Name == roomName){
+							break;
+						}
+						j++;
+					}
+					NetworkManager.getInstance().changeRoom(j);
 				}
 			}
 			GUI.EndScrollView();
