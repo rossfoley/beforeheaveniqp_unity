@@ -9,6 +9,8 @@ public class LoginModel : MonoBehaviour {
 	private static string[] friendIds;
 	private static UserData[] friendData;
 
+	private static string currentRoomId = "";
+
 	// Use this for initialization
 	void Start () {
 	
@@ -64,6 +66,15 @@ public class LoginModel : MonoBehaviour {
 		}
 		set {
 			friendData = value;
+		}
+	}
+
+	public static string CurrentRoomId {
+		get {
+			return this.currentRoomId;
+		}
+		set {
+			currentRoomId = value;
 		}
 	}
 }

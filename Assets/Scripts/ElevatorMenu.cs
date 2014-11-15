@@ -129,7 +129,6 @@ public class ElevatorMenu : MonoBehaviour {
 				new Rect (200, 2 * guiEdgeBorder, 200, 500 - guiEdgeBorder),
 				scrollPosition, 
 				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
-			Debug.Log (LoginModel.FriendData.Length);
 			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
 				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
 					// TODO Clicking a friend in the friend's list code
