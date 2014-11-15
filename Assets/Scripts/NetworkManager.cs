@@ -75,16 +75,16 @@ public class NetworkManager : MonoBehaviour {
 		
 	}
 	
-	public void changeRoom (int i)
+	public void changeRoom (RoomData toRoom)
 	{
 		PhotonNetwork.LeaveRoom();
 		
-		nextRoom = RoomModel.getInstance().getRoom(i).Name;
+		nextRoom = toRoom.Name;
 		
 		Destroy (currentRoomObject);
 		
 		// Update currentRoomObject and Data
 		currentRoomObject = (GameObject) Instantiate(roomTemplate);
-		RoomModel.getInstance ().CurrentRoom = RoomModel.getInstance ().AllRooms [i];
+		RoomModel.getInstance ().CurrentRoom = toRoom;
 	}
 }

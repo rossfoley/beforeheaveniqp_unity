@@ -19,8 +19,8 @@ public class RoomModel : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		instance = this;
-		// Creates a dummy currentRoomData for the starting room
-		currentRoom = new RoomData ("0", "Start", "none", 0, null);
+		// Creates a dummy currentRoomData
+		currentRoom = new RoomData ("0", "dummy", "none", 0, null);
 	}
 
 	public RoomData getRoom (int index){
