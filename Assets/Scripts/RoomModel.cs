@@ -23,8 +23,13 @@ public class RoomModel : MonoBehaviour {
 		currentRoom = new RoomData ("0", "dummy", "none", 0, null);
 	}
 
-	public RoomData getRoom (int index){
-		return allRooms [index];
+	public RoomData getRoom (string name){
+		foreach(RoomData room in allRooms){
+			if(room.Name.Trim ('"') == name){
+				return room;
+			}
+		}
+		return null;
 	}
 
 	public RoomData CurrentRoom {
