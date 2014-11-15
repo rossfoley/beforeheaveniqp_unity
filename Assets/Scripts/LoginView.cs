@@ -8,6 +8,8 @@ public class LoginView : MonoBehaviour {
 	public GameObject networkManager;
 	public GameObject elevator;
 	public GameObject startingRoom;
+	public GameObject roomController;
+	public GameObject roomConfigMenu;
 	
 	string userEmail = "";
 	string userPassword = "";
@@ -73,6 +75,8 @@ public class LoginView : MonoBehaviour {
 			startingRoom.SetActive(true);
 			elevator.SetActive(true);
 			networkManager.SetActive(true);
+			roomController.SetActive(true);
+			roomConfigMenu.SetActive(true);
 			loggedIn = true;
 		}
 	}

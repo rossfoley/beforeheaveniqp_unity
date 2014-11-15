@@ -64,6 +64,7 @@ public class AudioView : MonoBehaviour {
 			LoadAudio(ac.audioList[0].Url);
 			isActive = false;
 		}
+
 	}
 
 	void OnGUI(){

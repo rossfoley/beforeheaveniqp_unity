@@ -3,7 +3,7 @@ using System.Collections;
 
 public class LoginModel : MonoBehaviour {
 
-	private static string userEmail = "";
+	private static string userEmail;
 	private static string authKey;
 	private static string userId;
 
