@@ -28,7 +28,6 @@ public class AudioView : MonoBehaviour {
 
 			nWaveOutDevice = new WaveOut();
 			nWaveOutDevice.Init(nVolumeStream);
-			//nMainOutputStream.Seek(2000000,SeekOrigin.Begin);
 
 			return true;
 			}

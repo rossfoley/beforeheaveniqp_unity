@@ -277,11 +277,8 @@ MonoBehaviour:
   networkManager: {fileID: 2039934022}
   elevator: {fileID: 1798192975}
   startingRoom: {fileID: 1365570921}
-<<<<<<< HEAD
-=======
   roomController: {fileID: 2074609415}
   roomConfigMenu: {fileID: 1987449247}
->>>>>>> d7116b8d30076dd59ca4f4dbd175145c61d6d53b
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
@@ -12497,7 +12494,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 2028826295}
   - 114: {fileID: 2028826294}
-  - 114: {fileID: 2028826296}
   m_Layer: 0
   m_Name: AudioStream
   m_TagString: Untagged
@@ -12516,27 +12512,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1c044c64e33d43439dba3b7c37810b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AudioList:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!4 &2028826295
 Transform:
   m_ObjectHideFlags: 0
@@ -12548,23 +12523,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-<<<<<<< HEAD
-  m_RootOrder: 8
---- !u!114 &2028826296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2028826293}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca1f6d49095dc82489573cb9bb1f9dc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  soundcloud_icon: {fileID: 0}
-=======
   m_RootOrder: 2
->>>>>>> d7116b8d30076dd59ca4f4dbd175145c61d6d53b
 --- !u!1 &2039934022
 GameObject:
   m_ObjectHideFlags: 0
@@ -12581,7 +12540,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2039934023
 MonoBehaviour:
   m_ObjectHideFlags: 0
