@@ -11,11 +11,14 @@ public class AudioView : MonoBehaviour {
 	private WaveStream nMainOutputStream;
 	private WaveChannel32 nVolumeStream;
 	private MemoryStream tmpStr;
-	
+
+	AudiosController ac;
+
 	public Texture2D soundcloud_icon;
 	string[] mp3link = new string[32];
 
 	bool isPlaying = false;
+	bool isActive= false;
 
 	private bool LoadAudioFromData(byte[] data){
 		try{
@@ -50,14 +53,17 @@ public class AudioView : MonoBehaviour {
 	}
 
 	void Start(){
-		AudiosController ac = AudiosController.Instance;
-		Debug.Log(ac.AudioList[0].Url);
-		LoadAudio(ac.AudioList[0].Url);
+		ac = AudiosController.getInstance();
+		isActive = true;
 	}
 
 	// Update is called once per frame
 	void Update () {
-	
+		if(AudiosController.SuccessfulLoad && isActive){
+			Debug.Log(ac.audioList[0].Url);
+			LoadAudio(ac.audioList[0].Url);
+			isActive = false;
+		}
 	}
 
 	void OnGUI(){

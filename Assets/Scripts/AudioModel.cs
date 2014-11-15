@@ -9,11 +9,17 @@ public class AudioModel : MonoBehaviour {
 	int elapsed_time;
 
 	public AudioModel(string name, string owner, 
-	                  string genre, int elapsed_time){
+	                  string genre, string url, int elapsed_time){
 		this.name = name;
 		this.owner = owner;
 		this.genre = genre;
+		this.url = url;
 		this.elapsed_time = elapsed_time;
+	}
+
+	public override string ToString ()
+	{
+		return string.Format ("[AudioModel: Name={0}, Owner={1}, Genre={2}, Url={3}, Elapsed_time={4}]", Name, Owner, Genre, Url, Elapsed_time);
 	}
 
 	public string Name {
