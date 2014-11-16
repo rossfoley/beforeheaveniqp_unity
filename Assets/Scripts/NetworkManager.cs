@@ -43,7 +43,22 @@ public class NetworkManager : MonoBehaviour {
 	void OnJoinedLobby() {
 		RoomOptions testRO = new RoomOptions();
 		if (isStartup){
+			RoomController.getInstance().getRooms("");
+			RoomData startingRoom = null;
+			foreach (RoomData rd in RoomModel.getInstance().AllRooms){
+				if (rd.Name.Trim('"') == "starting room"){
+					startingRoom = rd;
+					break;
+				}
+			}
 			PhotonNetwork.JoinOrCreateRoom ("starting room", testRO, PhotonNetwork.lobby);
+
+			LoginModel.CurrentRoomId = startingRoom.RoomId;
+			
+			RoomModel.getInstance ().CurrentRoom = startingRoom;
+			
+			LoginController.updateCurrentRoom ();
+
 			isStartup = false;
 		}
 		else{
