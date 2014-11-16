@@ -12509,12 +12509,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2028826293}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9d14d73b63678f4f80b0f40959b9fa8, type: 3}
+  m_Script: {fileID: 11500000, guid: a1c044c64e33d43439dba3b7c37810b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  o_username: 
-  o_password: 
-  soundcloud_icon: {fileID: 0}
 --- !u!4 &2028826295
 Transform:
   m_ObjectHideFlags: 0
