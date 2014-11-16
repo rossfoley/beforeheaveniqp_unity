@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UserData : MonoBehaviour {
+public class UserData{
 
 	private string userId;
 	private string currentRoomId;
