@@ -50,7 +50,6 @@ public class LoginController : MonoBehaviour {
 
 				// Construct the array that contains all of the friend IDs
 				string[] friends = new string[parsed ["data"] ["friend_ids"].AsArray.Count];
-				Debug.Log ("Size of friends = " + parsed ["data"] ["friend_ids"].AsArray.Count);
 				string friendId;
 				int i = 0;
 				foreach(JSONNode data in (parsed ["data"] ["friend_ids"]).AsArray){
@@ -129,8 +128,6 @@ public class LoginController : MonoBehaviour {
 	public static void updateCurrentRoom(){
 
 		LoginModel.CurrentRoomId = RoomModel.getInstance ().CurrentRoom.RoomId;
-
-		Debug.Log ("Current Room ID " + RoomModel.getInstance ().CurrentRoom.RoomId);
 
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId + "/current_room/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;

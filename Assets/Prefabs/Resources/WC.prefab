@@ -66,10 +66,6 @@ GameObject:
   - 114: {fileID: 11400010}
   - 114: {fileID: 11400012}
   - 82: {fileID: 8200000}
-  - 114: {fileID: 11400014}
-  - 114: {fileID: 11400016}
-  - 114: {fileID: 11400018}
-  - 114: {fileID: 11400020}
   - 114: {fileID: 11400022}
   - 114: {fileID: 11400036}
   - 114: {fileID: 11400038}
@@ -2865,94 +2861,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82f855c865f703c4e8b7259afe8a2946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11400014
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d64f5920c14ba2845a5eca6df731f38f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fileLines: []
-  startTime: 0
-  seekTime: 0
-  noteObject1: {fileID: 400000, guid: 72d16cf903c0d459589b9f080cf250fb, type: 2}
-  noteObject2: {fileID: 400000, guid: a2152f40da5204692b2afeefbe4754c4, type: 2}
-  noteObject3: {fileID: 400000, guid: deeaafce2fa344eb9a30f1a6aba2e678, type: 2}
-  noteObject4: {fileID: 400000, guid: 44d9be8ffab9a4c76a23b5e06979b604, type: 2}
-  noteObject5: {fileID: 400000, guid: ef898bfca336545fd9ec5ddd1d2df549, type: 2}
-  noteObject6: {fileID: 400000, guid: f05deb934f1a94d0385bff99eff0e917, type: 2}
-  noteObject7: {fileID: 400000, guid: 28e12eedd705a4956905e359a77811cf, type: 2}
-  noteObject8: {fileID: 400000, guid: d57014e0a13d74085964294a98809514, type: 2}
-  noteBar: {fileID: 100148}
-  recordingText: {fileID: 0}
-  secs: 0
-  mins: 0
-  hours: 0
-  loadedAccompaniment: {fileID: 0}
-  tranceSystem1: {fileID: 19800002}
-  tranceSystem2: {fileID: 19800014}
-  tranceSystem3: {fileID: 19800008}
-  tranceSystem4: {fileID: 19800006}
-  tranceSystem5: {fileID: 19800010}
-  tranceSystem6: {fileID: 19800004}
-  tranceSystem7: {fileID: 19800000}
-  tranceSystem8: {fileID: 19800012}
-  performanceCamera: {fileID: 400084}
-  inProgress: 0
---- !u!114 &11400016
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dfd9ce1dbc094e54a38020c864478d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fileLines: []
-  recordedLines: []
-  sortedLines: []
-  startTime: 0
-  noteTime: 0
-  lineCount: 0
-  recordingText: {fileID: 0}
-  secs: 0
-  mins: 0
-  hours: 0
-  performanceCamera: {fileID: 400084}
-  inProgress: 0
---- !u!114 &11400018
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc874f8f9911c41dfaa3bb64d411b8ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  performanceCamera: {fileID: 400084}
-  inProgress: 0
---- !u!114 &11400020
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db72647d5c5fa4ffba1ee4f8d6456e5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  compositionCamera: {fileID: 100088}
-  inProgress: 0
-  cursorMode: 0
 --- !u!114 &11400022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3002,12 +2910,12 @@ MonoBehaviour:
   panelMarginHorizontalInstrument: -190
   panelMarginVerticalInstrument: 200
   instrumentIcons:
-  - {fileID: 2800000, guid: f5cb394ffe7ab4046838b0e9162b42d1, type: 3}
-  - {fileID: 2800000, guid: 2dc9169bbe1074eb4ad40dd50b8286ef, type: 3}
-  - {fileID: 2800000, guid: 633c260c9767c435994876b9d045be11, type: 3}
-  - {fileID: 2800000, guid: c600e81ad14f7434dbd79f7a9af50d3c, type: 3}
-  - {fileID: 2800000, guid: 1ab406172649e4247b41ec17fc3cb01e, type: 3}
-  - {fileID: 2800000, guid: 50814ff919ac24ae689da1bf5f91c5e6, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   iconHeightClothing: 70
   iconWidthClothing: 70
   iconHeightSpacingClothing: 15
