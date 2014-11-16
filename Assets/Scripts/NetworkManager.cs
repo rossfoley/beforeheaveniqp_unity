@@ -43,7 +43,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 	void OnJoinedLobby() {
 		RoomOptions testRO = new RoomOptions();
 		if (isStartup){
-			PhotonNetwork.JoinOrCreateRoom ("starting room", testRO, PhotonNetwork.lobby);
+			PhotonNetwork.JoinOrCreateRoom ("Starting Room", testRO, PhotonNetwork.lobby);
 			isStartup = false;
 		}
 		else{
