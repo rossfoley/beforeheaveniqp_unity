@@ -77,6 +77,8 @@ public class NetworkManager : MonoBehaviour {
 	
 	public void changeRoom (RoomData toRoom)
 	{
+		Debug.Log("Changing room");
+
 		PhotonNetwork.LeaveRoom();
 
 		nextRoom = toRoom.Name;
@@ -89,9 +91,9 @@ public class NetworkManager : MonoBehaviour {
 		Debug.Log ("Changing room to " + toRoom.RoomId);
 		
 		LoginModel.CurrentRoomId = toRoom.RoomId;
-		
-		LoginController.updateCurrentRoom ();
-		
+
 		RoomModel.getInstance ().CurrentRoom = toRoom;
+
+		LoginController.updateCurrentRoom ();
 	}
 }
