@@ -66,10 +66,6 @@ GameObject:
   - 114: {fileID: 11400010}
   - 114: {fileID: 11400012}
   - 82: {fileID: 8200000}
-  - 114: {fileID: 11400014}
-  - 114: {fileID: 11400016}
-  - 114: {fileID: 11400018}
-  - 114: {fileID: 11400020}
   - 114: {fileID: 11400022}
   - 148: {fileID: 14800000}
   m_Layer: 0
@@ -2864,50 +2860,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82f855c865f703c4e8b7259afe8a2946, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11400014
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d64f5920c14ba2845a5eca6df731f38f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11400016
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dfd9ce1dbc094e54a38020c864478d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11400018
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc874f8f9911c41dfaa3bb64d411b8ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &11400020
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db72647d5c5fa4ffba1ee4f8d6456e5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11400022
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2957,12 +2909,12 @@ MonoBehaviour:
   panelMarginHorizontalInstrument: -190
   panelMarginVerticalInstrument: 200
   instrumentIcons:
-  - {fileID: 2800000, guid: f5cb394ffe7ab4046838b0e9162b42d1, type: 3}
-  - {fileID: 2800000, guid: 2dc9169bbe1074eb4ad40dd50b8286ef, type: 3}
-  - {fileID: 2800000, guid: 633c260c9767c435994876b9d045be11, type: 3}
-  - {fileID: 2800000, guid: c600e81ad14f7434dbd79f7a9af50d3c, type: 3}
-  - {fileID: 2800000, guid: 1ab406172649e4247b41ec17fc3cb01e, type: 3}
-  - {fileID: 2800000, guid: 50814ff919ac24ae689da1bf5f91c5e6, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   iconHeightClothing: 70
   iconWidthClothing: 70
   iconHeightSpacingClothing: 15
