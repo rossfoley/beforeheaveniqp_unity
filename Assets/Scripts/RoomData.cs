@@ -8,13 +8,15 @@ public class RoomData{
 	private string genre;
 	private int visits;
 	private string[] members;
+	private bool defaultRoom;
 
-	public RoomData(string roomId, string name, string genre, int visits, string[] members){
+	public RoomData(string roomId, string name, string genre, int visits, string[] members, bool defaultRoom){
 		this.roomId = roomId;
 		this.name = name;
 		this.genre = genre;
 		this.visits = visits;
 		this.members = members;
+		this.defaultRoom = defaultRoom;
 	}
 
 	// RoomId getter and setter
@@ -67,4 +69,12 @@ public class RoomData{
 		}
 	}
 
+	public bool DefaultRoom {
+		get {
+			return this.defaultRoom;
+		}
+		set {
+			defaultRoom = value;
+		}
+	}
 }

@@ -68,7 +68,7 @@ public class ElevatorMenu : MonoBehaviour {
 
 		// When the elevator button is clicked, switch the visibility of the elevator menu
 		if (GUILayout.Button ("Elevator")) {
-			// If the elevator window is going to appear, update allRooms by getting all the rooms with no search string
+			// If the elevator window is going to appear, update serverRooms by getting all the rooms with no search string
 			if (!isElWindowVisible){
 				StartCoroutine(RoomController.getInstance().getRooms(""));
 			}
@@ -165,8 +165,8 @@ public class ElevatorMenu : MonoBehaviour {
 					}
 				}
 			}
-			GUI.EndScrollView();
 		}
+		GUI.EndScrollView();
 	}
 
 

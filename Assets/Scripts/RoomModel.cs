@@ -6,6 +6,8 @@ public class RoomModel : MonoBehaviour {
 
 	private static RoomModel instance = null;
 	private RoomData currentRoom;
+	private RoomData[] defaultRooms = new RoomData[4];
+	private RoomData[] serverRooms = new RoomData[0];
 	private RoomData[] allRooms = new RoomData[0];
 	private GameObject currentPhysicalRoom;
 
@@ -19,12 +21,16 @@ public class RoomModel : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		instance = this;
+		defaultRooms[0] = new RoomData("DefaultStart", "Starting Room", "N/A", 0, null, true);
+		defaultRooms[1] = new RoomData("DefaultRock", "Rock", "Rock", 0, null, true);
+		defaultRooms[2] = new RoomData("DefaultJazz", "Jazz", "Jazz", 0, null, true);
+		defaultRooms[3] = new RoomData("DefaultPop", "Pop", "Pop", 0, null, true);
 		// Creates a dummy currentRoomData
-		currentRoom = new RoomData ("0", "dummy", "none", 0, null);
+		currentRoom = defaultRooms[0];
 	}
 
 	public RoomData getRoom (string name){
-		foreach(RoomData room in allRooms){
+		foreach(RoomData room in serverRooms){
 			if(room.Name.Trim ('"') == name){
 				return room;
 			}
@@ -44,19 +50,33 @@ public class RoomModel : MonoBehaviour {
 		}
 	}
 
-	public RoomData[] AllRooms {
+	public RoomData[] ServerRooms {
 		get {
-			return this.allRooms;
+			return this.serverRooms;
 		}
 		set {
-			allRooms = value;
-			ElevatorMenu.AllRooms = allRooms;
+			serverRooms = value;
+			ElevatorMenu.AllRooms = AllRooms;
+		}
+	}
+
+	public RoomData[] AllRooms{
+		get {
+			allRooms = new RoomData[defaultRooms.Length + serverRooms.Length];
+			defaultRooms.CopyTo(allRooms, 0);
+			serverRooms.CopyTo(allRooms, defaultRooms.Length);
+			return allRooms;
 		}
 	}
 
 	public bool userIsMember ()
 	{
-		return Array.IndexOf (currentRoom.Members, LoginModel.UserId) >= 0;
+		if(currentRoom.Members != null){
+			return Array.IndexOf (currentRoom.Members, LoginModel.UserId) >= 0;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	public bool roomHasMembers ()
