@@ -43,7 +43,22 @@ public class NetworkManager : Photon.MonoBehaviour {
 	void OnJoinedLobby() {
 		RoomOptions testRO = new RoomOptions();
 		if (isStartup){
+			RoomController.getInstance().getRooms("");
+			RoomData startingRoom = null;
+			foreach (RoomData rd in RoomModel.getInstance().AllRooms){
+				if (rd.Name.Trim('"') == "starting room"){
+					startingRoom = rd;
+					break;
+				}
+			}
 			PhotonNetwork.JoinOrCreateRoom ("starting room", testRO, PhotonNetwork.lobby);
+
+			LoginModel.CurrentRoomId = startingRoom.RoomId;
+			
+			RoomModel.getInstance ().CurrentRoom = startingRoom;
+			
+			LoginController.updateCurrentRoom ();
+
 			isStartup = false;
 		}
 		else{
@@ -77,15 +92,24 @@ public class NetworkManager : Photon.MonoBehaviour {
 	
 	public void changeRoom (RoomData toRoom)
 	{
+		Debug.Log("Changing room");
+
 		PhotonNetwork.LeaveRoom();
-		
+
 		nextRoom = toRoom.Name;
 		
 		Destroy (currentRoomObject);
-		
+
 		// Update currentRoomObject and Data
 		currentRoomObject = (GameObject) Instantiate(roomTemplate);
+
+		Debug.Log ("Changing room to " + toRoom.RoomId);
+		
+		LoginModel.CurrentRoomId = toRoom.RoomId;
+
 		RoomModel.getInstance ().CurrentRoom = toRoom;
+
+		LoginController.updateCurrentRoom ();
 	}
 
 	public void kickAll(){

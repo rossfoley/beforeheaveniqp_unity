@@ -6,10 +6,13 @@ public class LoginModel : MonoBehaviour {
 	private static string userEmail;
 	private static string authKey;
 	private static string userId;
+	private static string[] friendIds;
+	private static UserData[] friendData;
+	private static string currentRoomId;
 
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
@@ -44,6 +47,33 @@ public class LoginModel : MonoBehaviour {
 		}
 		set {
 			userId = value;
+		}
+	}
+
+	public static string[] FriendIds {
+		get {
+			return friendIds;
+		}
+		set {
+			friendIds = value;
+		}
+	}
+
+	public static UserData[] FriendData {
+		get {
+			return friendData;
+		}
+		set {
+			friendData = value;
+		}
+	}
+
+	public static string CurrentRoomId {
+		get {
+			return currentRoomId;
+		}
+		set {
+			currentRoomId = value;
 		}
 	}
 }

@@ -14,6 +14,7 @@ public class ElevatorMenu : MonoBehaviour {
 	private string newRoomName = "";
 	private string newRoomGenre = "";
 	private string searchField = "";
+	private int updateCounter = 0;
 
 	private static int createRoomStatus = 0;
 	private static RoomData[] allRooms;
@@ -56,6 +57,8 @@ public class ElevatorMenu : MonoBehaviour {
 
 	// Creates the elevator window and create room buttons
 	void OnGUI() {
+
+		createFriendList ();
 
 		GUILayout.BeginArea (new Rect (guiEdgeBorder, guiEdgeBorder, 400, 60));
 
@@ -113,6 +116,51 @@ public class ElevatorMenu : MonoBehaviour {
 			}
 			GUI.EndGroup();
 		}
+	}
+
+	// Creates the friend's list and populates with the current user's friends
+	void createFriendList() {
+		if (updateCounter == 0){
+			LoginController.getFriends ();
+			updateCounter = 250;
+		}
+		else {
+			updateCounter--;
+		}
+		GUILayout.BeginArea (new Rect (500, 100, 600, 300));
+		GUI.Label (new Rect(200, 0, 200, 20), "Friends List");
+		// Populates a scroll view with all of the rooms currently in the database
+		GUI.skin.scrollView = style;
+		if(LoginModel.FriendData.Length > 0) {
+			scrollPosition = GUI.BeginScrollView (
+				new Rect (200, 2 * guiEdgeBorder, 200, 500 - guiEdgeBorder),
+				scrollPosition, 
+				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
+			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
+				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
+					// TODO yield return?
+					Debug.Log ("Button pressed");
+					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
+					Debug.Log ("Friend room name " + roomName);
+					RoomController.getInstance().getRooms("");
+					RoomData friendRD = null;
+					int j = 0;
+					foreach (RoomData rd in RoomModel.getInstance().AllRooms){
+						if (rd.Name.Trim ('"').Equals(roomName)){
+							friendRD = rd;
+							Debug.Log ("friendRD = " + friendRD.RoomId);
+							break;
+						}
+						j++;
+					}
+					if (friendRD != null){
+						NetworkManager.getInstance().changeRoom(friendRD);
+					}
+				}
+			}
+			GUI.EndScrollView();
+		}
+		GUILayout.EndArea ();
 	}
 
 	// This is the main elevator window

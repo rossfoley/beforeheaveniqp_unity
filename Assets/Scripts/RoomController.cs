@@ -76,6 +76,7 @@ public class RoomController : MonoBehaviour {
 			}
 			// Build the roomData and place it in the allRooms array
 			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
+			Debug.Log("RoomData ID = " + data["_id"]["$oid"]);
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
 		}

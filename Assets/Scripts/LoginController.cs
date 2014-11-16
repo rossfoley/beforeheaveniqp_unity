@@ -16,6 +16,14 @@ public class LoginController : MonoBehaviour {
 	public static IEnumerator login(string userEmailInput, string userPasswordInput){
 		userEmail = userEmailInput;
 		userPassword = userPasswordInput;
+		if (userEmail == "") {
+			loginStatus = 2;
+			return true;
+		}
+		if (userPassword == "") {
+			loginStatus = 3;
+			return true;
+		}
 		loginStatus = 1;
 		WWW login;
 		// Login to get an authentication token
@@ -24,6 +32,7 @@ public class LoginController : MonoBehaviour {
 		loginForm.AddField ("password", userPassword);
 		login = new WWW(loginURL, loginForm);
 		yield return login;
+		Debug.Log (login.text);
 		if (!string.IsNullOrEmpty(login.error)) {
 			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
 			//with the switch statement in OnGUI()
@@ -39,10 +48,20 @@ public class LoginController : MonoBehaviour {
 				authKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
 				userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
 
+				// Construct the array that contains all of the friend IDs
+				string[] friends = new string[parsed ["data"] ["friend_ids"].AsArray.Count];
+				Debug.Log ("Size of friends = " + parsed ["data"] ["friend_ids"].AsArray.Count);
+				string friendId;
+				int i = 0;
+				foreach(JSONNode data in (parsed ["data"] ["friend_ids"]).AsArray){
+					friends[i] = data["$oid"];
+					i++;
+				}
 				// Sets the values of the login model
 				LoginModel.UserEmail = userEmail;
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
+				LoginModel.FriendIds = friends;
 			}
 			// If the login was unsuccessful, display the error message
 			else {
@@ -50,6 +69,107 @@ public class LoginController : MonoBehaviour {
 				Debug.Log("Invalid login credentials");
 			}
 		}
+	}
+
+	// Gets friends and stores the data in the LoginModel
+	public static void getFriends(){
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/get_friends/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "GET";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-token", LoginModel.AuthKey);
+		request.ContentLength = 0;
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+		var parsed = JSON.Parse (responseContent);
+		LoginModel.FriendData = new UserData[parsed ["data"].AsArray.Count];
+		int i = 0;
+		string userEmail = "";
+		string currentRoomId = "";
+		string userId = "";
+		foreach(JSONNode data in (parsed ["data"]).AsArray){
+			userEmail = data ["email"];
+			currentRoomId = data ["current_room_id"];
+			userId = data ["_id"] ["$oid"];
+			UserData ud = new UserData(userId, currentRoomId, userEmail);
+			LoginModel.FriendData[i] = ud;
+			i++;
+		}
+	}
+	
+	// Adds the given friend email to the list of friends of the current user
+	public static void addFriend(string friendEmail){
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/add_friend/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-token", LoginModel.AuthKey);
+		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_friend_email\": \"" + friendEmail + "\"}");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+	}
+
+	public static void updateCurrentRoom(){
+
+		LoginModel.CurrentRoomId = RoomModel.getInstance ().CurrentRoom.RoomId;
+
+		Debug.Log ("Current Room ID " + RoomModel.getInstance ().CurrentRoom.RoomId);
+
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId + "/current_room/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-token", LoginModel.AuthKey);
+		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_id\": \"" + LoginModel.CurrentRoomId + "\"}");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+	}
+
+	public static string getCurrentRoomOfUser(string userId){
+		var request = System.Net.WebRequest.Create ("http://beforeheaveniqp.herokuapp.com/api/users/" + userId + "/current_room/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+	
+		request.Method = "GET";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add ("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add ("x-user-token", LoginModel.AuthKey);
+		request.ContentLength = 0;
+		string responseContent = null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+					responseContent = reader.ReadToEnd ();
+			}
+		}
+		var parsed = JSON.Parse (responseContent);
+		return parsed ["data"] ["name"];
 	}
 
 	public static bool SuccessfulLogin {
