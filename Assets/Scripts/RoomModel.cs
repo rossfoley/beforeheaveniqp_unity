@@ -35,6 +35,7 @@ public class RoomModel : MonoBehaviour {
 			currentRoom = value;
 			RoomConfigMenu.ThisRoom = currentRoom;
 			RoomConfigMenu.UserIsMember = userIsMember();
+			ElevatorMenu.CurrentRoom = currentRoom;
 		}
 	}
 
@@ -44,6 +45,7 @@ public class RoomModel : MonoBehaviour {
 		}
 		set {
 			allRooms = value;
+			ElevatorMenu.AllRooms = allRooms;
 		}
 	}
 
