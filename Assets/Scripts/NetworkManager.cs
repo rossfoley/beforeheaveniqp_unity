@@ -78,18 +78,20 @@ public class NetworkManager : MonoBehaviour {
 	public void changeRoom (RoomData toRoom)
 	{
 		PhotonNetwork.LeaveRoom();
-		
+
 		nextRoom = toRoom.Name;
 		
 		Destroy (currentRoomObject);
-		
+
 		// Update currentRoomObject and Data
 		currentRoomObject = (GameObject) Instantiate(roomTemplate);
 
+		Debug.Log ("Changing room to " + toRoom.RoomId);
+		
+		LoginModel.CurrentRoomId = toRoom.RoomId;
+		
 		LoginController.updateCurrentRoom ();
 		
 		RoomModel.getInstance ().CurrentRoom = toRoom;
-
-		LoginModel.CurrentRoomId = toRoom.RoomId;
 	}
 }

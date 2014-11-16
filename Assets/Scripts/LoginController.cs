@@ -130,14 +130,16 @@ public class LoginController : MonoBehaviour {
 
 		LoginModel.CurrentRoomId = RoomModel.getInstance ().CurrentRoom.RoomId;
 
-		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId + "/update_current_room/") as System.Net.HttpWebRequest;
+		Debug.Log ("Current Room ID " + RoomModel.getInstance ().CurrentRoom.RoomId);
+
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId + "/current_room/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		
 		request.Method = "PUT";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", "\"" + LoginModel.UserEmail + "\"");
-		request.Headers.Add("x-user-token", "\"" + LoginModel.AuthKey + "\"");
+		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-token", LoginModel.AuthKey);
 		
 		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_id\": \"" + LoginModel.CurrentRoomId + "\"}");
 		request.ContentLength = byteArray.Length;
@@ -153,12 +155,12 @@ public class LoginController : MonoBehaviour {
 	public static string getCurrentRoomOfUser(string userId){
 		var request = System.Net.WebRequest.Create ("http://beforeheaveniqp.herokuapp.com/api/users/" + userId + "/current_room/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
-		Debug.Log ("http://beforeheaveniqp.herokuapp.com/api/users/" + userId + "/get_current_room/");
+	
 		request.Method = "GET";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add ("x-user-email", "\"" + LoginModel.UserEmail + "\"");
-		request.Headers.Add ("x-user-token", "\"" + LoginModel.AuthKey + "\"");
+		request.Headers.Add ("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add ("x-user-token", LoginModel.AuthKey);
 		request.ContentLength = 0;
 		string responseContent = null;
 		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {

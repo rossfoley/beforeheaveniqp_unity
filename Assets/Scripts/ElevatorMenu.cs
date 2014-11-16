@@ -139,13 +139,16 @@ public class ElevatorMenu : MonoBehaviour {
 			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
 				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
 					// TODO yield return?
+					Debug.Log ("Button pressed");
 					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
+					Debug.Log ("Friend room name " + roomName);
 					RoomController.getInstance().getRooms("");
 					RoomData friendRD = null;
 					int j = 0;
 					foreach (RoomData rd in RoomModel.getInstance().AllRooms){
-						if (rd.Name == roomName){
+						if (rd.Name.Trim ('"').Equals(roomName)){
 							friendRD = rd;
+							Debug.Log ("friendRD = " + friendRD.RoomId);
 							break;
 						}
 						j++;
