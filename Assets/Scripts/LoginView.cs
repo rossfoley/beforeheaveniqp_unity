@@ -82,14 +82,5 @@ public class LoginView : MonoBehaviour {
 			roomConfigMenu.SetActive(true);
 			loggedIn = true;
 		}
-
-		// Add friend text field and button
-		GUI.BeginGroup (new Rect (200, 200, 500, 500));
-
-		friendEmail = GUI.TextField (new Rect (110, 0, 200, 20), friendEmail);
-		if (GUI.Button (new Rect(0, 60, 50, 20), "Add Friend")){
-			LoginController.addFriend(friendEmail);
-		}
-		GUI.EndGroup ();
 	}
 }
