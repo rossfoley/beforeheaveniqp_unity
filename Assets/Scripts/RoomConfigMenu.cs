@@ -7,8 +7,12 @@ public class RoomConfigMenu : MonoBehaviour {
 	private static RoomData thisRoom;
 	private static bool userIsMember;
 	private string newMemberEmail = "";
+	private string newRoomName = ""; //RoomModel.getInstance().CurrentRoom.Name;
+	private string newRoomGenre = ""; //RoomModel.getInstance().CurrentRoom.Genre;
 
 	private static int addMemberStatus;
+	private static int updateRoomStatus;
+
 
 	// ThisRoom getter and setter
 	public static RoomData ThisRoom {
@@ -52,8 +56,13 @@ public class RoomConfigMenu : MonoBehaviour {
 			GUI.Label (new Rect (10, 30, 100, 20), thisRoom.Genre);
 			GUI.Label (new Rect (10, 50, 100, 20), thisRoom.Visits.ToString());
 			GUI.Label (new Rect (10, 70, 100, 20), "New member email");
+			GUI.Label (new Rect (100, 140, 100, 20), "New room name");
+			GUI.Label (new Rect (100, 180, 100, 20), "New room genre");
 			GUI.SetNextControlName ("email field");
 			newMemberEmail = GUI.TextField (new Rect (100, 70, 100, 20), newMemberEmail);
+			newRoomName = GUI.TextField (new Rect (200, 140, 100, 20), newRoomName);
+			newRoomGenre = GUI.TextField (new Rect (200, 180, 100, 20), newRoomGenre);
+
 			if (GUI.Button (new Rect (30, 90, 50, 20), "Submit") || 
 			    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
 				// If no email is entered, do not go through with the request
@@ -65,6 +74,18 @@ public class RoomConfigMenu : MonoBehaviour {
 				// Put request for a new band member
 				else {
 					RoomController.getInstance().addBandMember(thisRoom.RoomId, newMemberEmail);
+				}
+			}
+
+			if (GUI.Button (new Rect (150, 220, 100, 20), "Update Room") || 
+			    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
+				Debug.Log ("Update Button Clicked");
+
+				if (newRoomName.Trim() == "" && newRoomGenre.Trim() == "") {
+					updateRoomStatus = -1;
+					Debug.Log ("no room name");
+				} else {
+					RoomController.getInstance().updateRoom(newRoomName, newRoomGenre, "");
 				}
 			}
 			string status;

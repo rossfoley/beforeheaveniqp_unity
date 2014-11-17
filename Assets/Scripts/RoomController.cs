@@ -182,4 +182,25 @@ public class RoomController : MonoBehaviour {
 			RoomConfigMenu.AddMemberStatus = -2;
 		}
 	}
+
+	public void updateRoom (string newRoomName, string newRoomGenre, string newRoomData) {
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId + "/update") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("CURRENT ROOMAROO! " + RoomModel.getInstance ().CurrentRoom.RoomId);
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail );
+		request.Headers.Add("x-user-token", LoginModel.AuthKey );
+		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\" } }");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+	}
 }
