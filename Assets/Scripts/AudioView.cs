@@ -59,11 +59,10 @@ public class AudioView : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(AudiosController.SuccessfulLoad && isActive){
-			Debug.Log(ac.audioList[0].Url);
-			LoadAudio(ac.audioList[0].Url);
+			Debug.Log(ac.audioList[8].Url);
+			LoadAudio(ac.audioList[8].Url);
 			isActive = false;
 		}
-
 	}
 
 	void OnGUI(){
@@ -108,7 +107,7 @@ public class AudioView : MonoBehaviour {
 			}
 		}
 	}
-	
+
 	void OnDisconnectedFromPhoton(){
 		Debug.Log ("Disconnected from photon called");
 		nMainOutputStream.Close ();
