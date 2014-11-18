@@ -284,6 +284,7 @@ MonoBehaviour:
   startingRoom: {fileID: 1365570921}
   roomController: {fileID: 2074609415}
   roomConfigMenu: {fileID: 1987449247}
+  chat: {fileID: 426209483}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,7 +1446,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &426209484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1454,15 +1455,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 426209483}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 043bd8ce63fde7c41a9ee103809fa981, type: 3}
+  m_Script: {fileID: 11500000, guid: 5066ea0048c6e524098064373257c4c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   GuiRect:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 250
-    height: 300
+    width: 0
+    height: 0
   IsVisible: 1
   AlignBottom: 0
   messages: []
