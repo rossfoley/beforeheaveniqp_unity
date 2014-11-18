@@ -6,6 +6,7 @@ using System.Collections;
 public class InRoomChatGUI : Photon.MonoBehaviour 
 {
 	public Rect GuiRect;
+	public Rect chatButtonRect;
 	public bool IsVisible = true;
 	public bool chatMinimized = false;
 	public List<string> messages = new List<string>();
@@ -22,6 +23,9 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 	{
 		this.GuiRect = new Rect(Screen.width / 3*2, Screen.height / 3*2, 
 		                        Screen.width/3, Screen.height/3);
+		this.chatButtonRect = new Rect(0, 0, 200, 20);
+		this.chatButtonRect.x = Screen.width - chatButtonRect.width - BUFFER;
+		this.chatButtonRect.y = Screen.height - chatButtonRect.height - BUFFER;
 	}
 	
 	public void OnGUI()
@@ -30,9 +34,11 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 			GUI.Window(2, this.GuiRect, ChatWindowFunction, "Chat");
 		}
 		else {
+			GUILayout.BeginArea(chatButtonRect);
 			if (GUILayout.Button("Chat")) {
 				chatMinimized = false;
 			}
+			GUILayout.EndArea();
 		}
 	}
 	
@@ -87,9 +93,11 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 		inputLine = GUILayout.TextField(inputLine);
 		if (GUILayout.Button("Send", GUILayout.ExpandWidth(false)))
 		{
-			this.photonView.RPC("Chat", PhotonTargets.All, this.inputLine);
-			this.inputLine = "";
-			GUI.FocusControl("");
+			if (!string.IsNullOrEmpty(this.inputLine)) {
+				this.photonView.RPC("Chat", PhotonTargets.All, this.inputLine);
+				this.inputLine = "";
+				GUI.FocusControl("");
+			}
 		}
 		GUILayout.EndHorizontal();
 		GUILayout.EndArea();
