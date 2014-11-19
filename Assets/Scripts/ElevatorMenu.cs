@@ -14,6 +14,7 @@ public class ElevatorMenu : MonoBehaviour {
 	private string newRoomName = "";
 	private string newRoomGenre = "";
 	private string searchField = "";
+	private string friendEmail = "";
 	private int updateCounter = 0;
 
 	private static int createRoomStatus = 0;
@@ -127,13 +128,13 @@ public class ElevatorMenu : MonoBehaviour {
 		else {
 			updateCounter--;
 		}
-		GUILayout.BeginArea (new Rect (500, 100, 600, 300));
+		GUILayout.BeginArea (new Rect (500, 100, 600, 500));
 		GUI.Label (new Rect(200, 0, 200, 20), "Friends List");
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
 		if(LoginModel.FriendData.Length > 0) {
 			scrollPosition = GUI.BeginScrollView (
-				new Rect (200, 2 * guiEdgeBorder, 200, 500 - guiEdgeBorder),
+				new Rect (200, 2 * guiEdgeBorder, 200, 200),
 				scrollPosition, 
 				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
 			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
@@ -159,6 +160,10 @@ public class ElevatorMenu : MonoBehaviour {
 				}
 			}
 			GUI.EndScrollView();
+		}
+		friendEmail = GUI.TextField (new Rect (200, 220, 200, 20), friendEmail);
+		if (GUI.Button (new Rect(400, 220, 100, 20), "Add Friend")){
+			LoginController.addFriend(friendEmail);
 		}
 		GUILayout.EndArea ();
 	}

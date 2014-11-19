@@ -10,6 +10,7 @@ public class LoginView : MonoBehaviour {
 	public GameObject startingRoom;
 	public GameObject roomController;
 	public GameObject roomConfigMenu;
+	public GameObject chat;
 	
 	string userEmail = "";
 	string userPassword = "";
@@ -77,19 +78,11 @@ public class LoginView : MonoBehaviour {
 			// After a successful login, activate the networkManager
 			startingRoom.SetActive(true);
 			elevator.SetActive(true);
+			chat.SetActive(true);
 			networkManager.SetActive(true);
 			roomController.SetActive(true);
 			roomConfigMenu.SetActive(true);
 			loggedIn = true;
 		}
-
-		// Add friend text field and button
-		GUI.BeginGroup (new Rect (200, 200, 500, 500));
-
-		friendEmail = GUI.TextField (new Rect (110, 0, 200, 20), friendEmail);
-		if (GUI.Button (new Rect(0, 60, 50, 20), "Add Friend")){
-			LoginController.addFriend(friendEmail);
-		}
-		GUI.EndGroup ();
 	}
 }
