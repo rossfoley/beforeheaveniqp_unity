@@ -86,6 +86,11 @@ public class RoomConfigMenu : MonoBehaviour {
 					Debug.Log ("no room name");
 				} else {
 					RoomController.getInstance().updateRoom(newRoomName, newRoomGenre, "");
+					thisRoom.Name = newRoomName;
+					thisRoom.Genre = newRoomGenre;
+					RoomModel.getInstance().CurrentRoom = thisRoom;
+					newRoomName = "";
+					newRoomGenre = "";
 				}
 			}
 			string status;

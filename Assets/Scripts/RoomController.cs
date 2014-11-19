@@ -184,7 +184,7 @@ public class RoomController : MonoBehaviour {
 	}
 
 	public void updateRoom (string newRoomName, string newRoomGenre, string newRoomData) {
-		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId + "/update") as System.Net.HttpWebRequest;
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId) as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		Debug.Log ("CURRENT ROOMAROO! " + RoomModel.getInstance ().CurrentRoom.RoomId);
 		request.Method = "PUT";
