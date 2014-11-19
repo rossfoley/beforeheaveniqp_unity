@@ -1464,8 +1464,14 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
+  chatButtonRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   IsVisible: 1
-  AlignBottom: 0
+  chatMinimized: 0
   messages: []
 --- !u!114 &426209485
 MonoBehaviour:
@@ -12424,13 +12430,14 @@ GameObject:
   m_Component:
   - 4: {fileID: 2028826295}
   - 114: {fileID: 2028826294}
+  - 114: {fileID: 2028826296}
   m_Layer: 0
   m_Name: AudioStream
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2028826294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12454,6 +12461,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+--- !u!114 &2028826296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2028826293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca1f6d49095dc82489573cb9bb1f9dc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundcloud_icon: {fileID: 0}
 --- !u!1 &2039934022
 GameObject:
   m_ObjectHideFlags: 0

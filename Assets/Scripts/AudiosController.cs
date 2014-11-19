@@ -36,6 +36,12 @@ public sealed class AudiosController : MonoBehaviour {
 		}
 	}
 
+	public static bool Successful_Load {
+		get {
+			return SuccessfulLoad;
+		}
+	}
+
 	public IEnumerator getSongData(){
 		Hashtable headers = new Hashtable();
 		headers.Add("Content-Type", "application/json");
@@ -52,6 +58,15 @@ public sealed class AudiosController : MonoBehaviour {
 			Debug.Log(counter);
 			Debug.Log(data.ToString());
 			AudioList[counter] = new AudioModel("A","B","C",data["current_song"].ToString().Trim('"'), data["_id"]["$oid"], 0);
+
+			if(AudioList[counter].Url == null){
+				AudioList[counter].Url = "";
+			}
+
+			if(AudioList[counter].Room_id == null){
+				AudioList[counter].Room_id = "0";
+			}
+
 			Debug.Log(AudioList[counter].Url);
 			Debug.Log(AudioList[counter].Room_id);
 			counter++;
@@ -84,12 +99,10 @@ public sealed class AudiosController : MonoBehaviour {
 		}
 	}
 
-
-
 	// Use this for initialization
 	void Start () {
 		isActive = true;
-		current_song = null;
+		current_song = new AudioModel("Empty", "Empty", "Empty", "Empty", "Empty", 0);
 	}
 
 	void Awake(){
@@ -97,24 +110,31 @@ public sealed class AudiosController : MonoBehaviour {
 	}
 
 	void OnJoinedLobby(){
+		StartCoroutine(getSongData());
 		Debug.Log("AudioController : Changed Rooms");
-		int i = 0;
-		while(!AudioList[i].Room_id.Equals(ElevatorMenu.CurrentRoom.RoomId)){
-			if(i > AudioList.Length){
-				break;
+
+		if(SuccessfulLoad){
+			int i = 0;
+			Debug.Log("DEBUG: " + AudioList[0].ToString());
+			while(!AudioList[i].Room_id.Equals(ElevatorMenu.CurrentRoom.RoomId)){
+				if(i > AudioList.Length){
+					break;
+				}
+				i++;
 			}
-			i++;
+			Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
+			current_song = AudioList[i];
+			Debug.Log("Current Song: " + current_song.Url);
+			StartCoroutine(getSongMeta());
+
 		}
-		Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
-		current_song = AudioList[i];
-		StartCoroutine(getSongMeta());
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if(LoginController.SuccessfulLogin && isActive){
 			//AudioList = new AudioModel[20];
-			StartCoroutine(getSongData());
+			//StartCoroutine(getSongData());
 			isActive = false;
 		}
 	}

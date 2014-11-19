@@ -59,8 +59,7 @@ public class AudioView : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(AudiosController.SuccessfulLoad && isActive){
-			Debug.Log(ac.audioList[8].Url);
-			LoadAudio(ac.audioList[8].Url);
+
 			isActive = false;
 		}
 	}
@@ -105,6 +104,29 @@ public class AudioView : MonoBehaviour {
 				nVolumeStream.Volume -= 0.1f;
 				Debug.Log(nVolumeStream.Volume);
 			}
+		}
+	}
+
+	void OnJoinedLobby(){
+
+		if(AudiosController.Successful_Load){
+			ac = AudiosController.getInstance();
+			if(ac.Current_song.Url != null){
+				//Load current song
+				Debug.Log("Current Song is not Null");
+				Debug.Log(ac.Current_song.Url);
+				LoadAudio(ac.Current_song.Url);
+			}
+
+			//Stop previous song
+			nMainOutputStream.Close();
+			nVolumeStream.Close();
+			tmpStr.Close();
+			nWaveOutDevice.Stop();
+
+			//Load current song
+			Debug.Log(ac.Current_song.Url);
+			LoadAudio(ac.Current_song.Url);
 		}
 	}
 
