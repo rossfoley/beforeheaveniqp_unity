@@ -6,7 +6,7 @@ using SimpleJSON;
 public sealed class AudiosController : MonoBehaviour {
 	static AudiosController instance = null;
 	private static AudioModel[] AudioList;
-	private AudioModel current_song;
+	private static AudioModel current_song;
 
 	static string RoomURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	static string sampleRoom = "";
@@ -90,6 +90,7 @@ public sealed class AudiosController : MonoBehaviour {
 		WWW song_url = new WWW(song_str, null, headers);
 		yield return song_url;
 		var song_parsed = JSON.Parse(song_url.text);
+
 		Debug.Log(song_parsed);
 	}
 
