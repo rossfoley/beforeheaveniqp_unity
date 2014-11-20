@@ -110,23 +110,31 @@ public class AudioView : MonoBehaviour {
 	void OnJoinedLobby(){
 
 		if(AudiosController.Successful_Load){
+			Debug.Log ("Successful Load");
+			//Stop previous song
+			if (nMainOutputStream != null){
+				nMainOutputStream.Close();
+			}
+			if (nVolumeStream != null){
+				nVolumeStream.Close();
+			}
+			if (tmpStr != null){
+				tmpStr.Close();
+			}
+			if (nWaveOutDevice != null){
+				nWaveOutDevice.Stop();
+			}
+
+			isPlaying = false;
+		
 			ac = AudiosController.getInstance();
 			if(ac.Current_song.Url != null){
 				//Load current song
 				Debug.Log("Current Song is not Null");
 				Debug.Log(ac.Current_song.Url);
 				LoadAudio(ac.Current_song.Url);
+				nWaveOutDevice.Play();
 			}
-
-			//Stop previous song
-			nMainOutputStream.Close();
-			nVolumeStream.Close();
-			tmpStr.Close();
-			nWaveOutDevice.Stop();
-
-			//Load current song
-			Debug.Log(ac.Current_song.Url);
-			LoadAudio(ac.Current_song.Url);
 		}
 	}
 

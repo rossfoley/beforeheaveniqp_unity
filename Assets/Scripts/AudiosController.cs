@@ -6,11 +6,13 @@ using SimpleJSON;
 public sealed class AudiosController : MonoBehaviour {
 	static AudiosController instance = null;
 	private static AudioModel[] AudioList;
-	private AudioModel current_song;
+	private static AudioModel current_song;
 
 	static string RoomURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	static string sampleRoom = "";
 	public static bool SuccessfulLoad = false;
+
+	private string currentSongURL = "";
 
 	private bool isActive= false;
 
@@ -44,33 +46,45 @@ public sealed class AudiosController : MonoBehaviour {
 
 	public IEnumerator getSongData(){
 		Hashtable headers = new Hashtable();
+		Debug.Log ("CurrentRoomID = " + RoomModel.getInstance().CurrentRoom.RoomId);
+		string getSongURL = RoomURL + "/" + RoomModel.getInstance().CurrentRoom.RoomId + "/current_song";
 		headers.Add("Content-Type", "application/json");
 		headers.Add("X-User-Email", LoginModel.UserEmail);
 		headers.Add("X-User-Token", LoginModel.AuthKey);
-		WWW mp3stream = new WWW (RoomURL, null, headers);
+		WWW mp3stream = new WWW (getSongURL, null, headers);
 		
 		yield return mp3stream;
 		var mp3parsed = JSON.Parse(mp3stream.text); 
+		Debug.Log ("mp3parsed = " + mp3stream.text);
 		Debug.Log(mp3parsed);
 
 		int counter = 0;
-		foreach(JSONNode data in mp3parsed["data"].AsArray){
-			Debug.Log(counter);
-			Debug.Log(data.ToString());
-			AudioList[counter] = new AudioModel("A","B","C",data["current_song"].ToString().Trim('"'), data["_id"]["$oid"], 0);
 
-			if(AudioList[counter].Url == null){
-				AudioList[counter].Url = "";
-			}
+		currentSongURL = mp3parsed["data"]["song"]["stream_url"].ToString().Trim ('"');
 
-			if(AudioList[counter].Room_id == null){
-				AudioList[counter].Room_id = "0";
-			}
+		current_song = new AudioModel("A", "B", "C", currentSongURL, mp3parsed["_id"]["$oid"], 0);
 
-			Debug.Log(AudioList[counter].Url);
-			Debug.Log(AudioList[counter].Room_id);
-			counter++;
-		}
+		Debug.Log ("CurrentSongURL = " + currentSongURL);
+
+//		foreach(JSONNode data in mp3parsed["data"].AsArray){
+//			Debug.Log(counter);
+//			Debug.Log("Current song url = " + data["current_song"].ToString());
+//			AudioList[counter] = new AudioModel("A","B","C", data["current_song"].ToString().Trim('"'), data["_id"]["$oid"], 0);
+//
+//			currentSongURL = data["current_song"];
+		//
+		//	if(AudioList[counter].Url == null){
+		///		AudioList[counter].Url = "";
+		//	}
+		//
+		//	if(AudioList[counter].Room_id == null){
+		//		AudioList[counter].Room_id = "0";
+		//	}
+		//
+		//	Debug.Log(AudioList[counter].Url);
+		//	Debug.Log(AudioList[counter].Room_id);
+		//	counter++;
+		//}
 		//printAudioList(AudioList);
 		SuccessfulLoad = true;
 	}
@@ -116,17 +130,16 @@ public sealed class AudiosController : MonoBehaviour {
 		if(SuccessfulLoad){
 			int i = 0;
 			Debug.Log("DEBUG: " + AudioList[0].ToString());
-			while(!AudioList[i].Room_id.Equals(ElevatorMenu.CurrentRoom.RoomId)){
+			while(!AudioList[i].Room_id.Equals(RoomModel.getInstance().CurrentRoom.RoomId)){
 				if(i > AudioList.Length){
 					break;
 				}
 				i++;
 			}
+			//current_song = AudioList[i];
 			Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
-			current_song = AudioList[i];
 			Debug.Log("Current Song: " + current_song.Url);
 			StartCoroutine(getSongMeta());
-
 		}
 	}
 	
