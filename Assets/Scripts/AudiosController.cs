@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Runtime;
 
 using SimpleJSON;
 
@@ -75,7 +76,7 @@ public sealed class AudiosController : MonoBehaviour {
 		SuccessfulLoad = true;
 	}
 
-	private IEnumerator getSongMeta(){
+	private IEnumerator getSongMeta(int index){
 
 		Hashtable headers = new Hashtable();
 		headers.Add("Content-Type", "application/json");
@@ -90,8 +91,14 @@ public sealed class AudiosController : MonoBehaviour {
 		WWW song_url = new WWW(song_str, null, headers);
 		yield return song_url;
 		var song_parsed = JSON.Parse(song_url.text);
-
 		Debug.Log(song_parsed);
+
+		AudioList[index].Elapsed_time = int.Parse(song_parsed["data"]["elapsed_time"].ToString().Trim('"'));
+		Debug.Log("AudioList[" + index +"] Elapsed Time: " + AudioList[index].Elapsed_time);
+
+		Debug.Log("DEBUG AudioList[" + index + "]: " + AudioList[index].Elapsed_time);
+		current_song = AudioList[index];
+		Debug.Log("Current Song Elapsed Time: " + current_song.Elapsed_time);
 	}
 
 	void printAudioList(AudioModel[] List){
@@ -116,7 +123,7 @@ public sealed class AudiosController : MonoBehaviour {
 
 		if(SuccessfulLoad){
 			int i = 0;
-			Debug.Log("DEBUG: " + AudioList[0].ToString());
+			//Debug.Log("DEBUG: " + AudioList[0].ToString());
 			while(!AudioList[i].Room_id.Equals(ElevatorMenu.CurrentRoom.RoomId)){
 				if(i > AudioList.Length){
 					break;
@@ -124,10 +131,7 @@ public sealed class AudiosController : MonoBehaviour {
 				i++;
 			}
 			Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
-			current_song = AudioList[i];
-			Debug.Log("Current Song: " + current_song.Url);
-			StartCoroutine(getSongMeta());
-
+			StartCoroutine(getSongMeta(i));
 		}
 	}
 	
