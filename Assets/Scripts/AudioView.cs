@@ -28,6 +28,7 @@ public class AudioView : MonoBehaviour {
 
 			nWaveOutDevice = new WaveOut();
 			nWaveOutDevice.Init(nVolumeStream);
+			nMainOutputStream.Seek(ac.Current_song.Elapsed_time * 100, SeekOrigin.Begin);
 
 			return true;
 			}
@@ -43,11 +44,11 @@ public class AudioView : MonoBehaviour {
 		Debug.Log("URL Found");
 
 		byte[] imageData = www.bytes;
+
 		if(!LoadAudioFromData(imageData)){
 			Debug.LogError("Couldn't load Audio bytes");
 		}
-		
-		//
+
 		Resources.UnloadUnusedAssets();
 	}
 
@@ -58,8 +59,16 @@ public class AudioView : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(AudiosController.SuccessfulLoad && isActive){
+		if(AudiosController.SongMeta_Load && isActive){
+			if(ac.Current_song.Url != null){
 
+				//Load current song
+				Debug.Log("Current Song is not Null, here's proof: " + AudiosController.currentSongURL);
+				LoadAudio(AudiosController.currentSongURL + "?client_id=0cb45a6052596ee086177b11b29e8809");
+				Debug.Log("Current song Elapsed Time(2): " + ac.Current_song.Elapsed_time);
+
+				nWaveOutDevice.Play();
+			}
 			isActive = false;
 		}
 	}
@@ -73,6 +82,8 @@ public class AudioView : MonoBehaviour {
 			GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
 			GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
 			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + mp3link[0]));
+
+			/*
 			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Play")){
 				if(!isPlaying){
 					nWaveOutDevice.Play();
@@ -88,7 +99,7 @@ public class AudioView : MonoBehaviour {
 				}
 
 			}
-
+			*/
 			if(GUI.Button(new Rect(230, Screen.height - (Screen.height / 8) + 20, 50, 50), "V++")){
 				if(nVolumeStream.Volume >= 1.0f){
 					nVolumeStream.Volume = 1.0f;
@@ -108,32 +119,15 @@ public class AudioView : MonoBehaviour {
 	}
 
 	void OnJoinedLobby(){
-
+		isPlaying = false;
+		isActive = true;
 		if(AudiosController.Successful_Load){
-			Debug.Log ("Successful Load");
-			//Stop previous song
-			if (nMainOutputStream != null){
+			if(nMainOutputStream != null){
+				//Stop previous song
 				nMainOutputStream.Close();
-			}
-			if (nVolumeStream != null){
 				nVolumeStream.Close();
-			}
-			if (tmpStr != null){
 				tmpStr.Close();
-			}
-			if (nWaveOutDevice != null){
 				nWaveOutDevice.Stop();
-			}
-
-			isPlaying = false;
-		
-			ac = AudiosController.getInstance();
-			if(ac.Current_song.Url != null){
-				//Load current song
-				Debug.Log("Current Song is not Null");
-				Debug.Log(ac.Current_song.Url);
-				LoadAudio(ac.Current_song.Url);
-				nWaveOutDevice.Play();
 			}
 		}
 	}
