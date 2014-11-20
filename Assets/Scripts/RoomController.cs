@@ -83,7 +83,7 @@ public class RoomController : MonoBehaviour {
 	}
 
 	public IEnumerator createRoom(string newRoomName, string newRoomGenre){
-		ElevatorMenu.CreateRoomStatus = 1; //Creating
+		RoomConfigMenu.CreateRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();
 		var newRoomData = new Hashtable();
@@ -116,14 +116,14 @@ public class RoomController : MonoBehaviour {
 			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
 			//with the switch statement in OnGUI()
 			Debug.Log ("room creation error");
-			ElevatorMenu.CreateRoomStatus = -1;
+			RoomConfigMenu.CreateRoomStatus = -1;
 
 		}
-		else{
+		else {
 			// After the room is created, hide the create room window and reset the related variables.
 			newRoomName = "";
 			newRoomGenre = "";
-			ElevatorMenu.CreateRoomStatus = 2;
+			RoomConfigMenu.CreateRoomStatus = 2;
 		}
 	}
 
