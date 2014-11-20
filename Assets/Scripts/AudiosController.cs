@@ -12,6 +12,7 @@ public sealed class AudiosController : MonoBehaviour {
 	static string RoomURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	static string sampleRoom = "";
 	public static bool SuccessfulLoad = false;
+	public static bool SongMetaLoaded = false;
 
 	private bool isActive= false;
 
@@ -40,6 +41,18 @@ public sealed class AudiosController : MonoBehaviour {
 	public static bool Successful_Load {
 		get {
 			return SuccessfulLoad;
+		}
+		set{
+			SuccessfulLoad = value;
+		}
+	}
+
+	public static bool SongMeta_Load {
+		get {
+			return SongMetaLoaded;
+		}
+		set{
+			SongMetaLoaded = value;
 		}
 	}
 
@@ -74,8 +87,19 @@ public sealed class AudiosController : MonoBehaviour {
 		}
 		//printAudioList(AudioList);
 		SuccessfulLoad = true;
-	}
 
+		int i = 0;
+		//Debug.Log("DEBUG: " + AudioList[0].ToString());
+		while(!AudioList[i].Room_id.Equals(ElevatorMenu.CurrentRoom.RoomId)){
+			if(i > AudioList.Length){
+				break;
+			}
+			i++;
+		}
+		Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
+		StartCoroutine(getSongMeta(i));
+	}
+	
 	private IEnumerator getSongMeta(int index){
 
 		Hashtable headers = new Hashtable();
@@ -99,6 +123,7 @@ public sealed class AudiosController : MonoBehaviour {
 		Debug.Log("DEBUG AudioList[" + index + "]: " + AudioList[index].Elapsed_time);
 		current_song = AudioList[index];
 		Debug.Log("Current Song Elapsed Time: " + current_song.Elapsed_time);
+		SongMetaLoaded = true;
 	}
 
 	void printAudioList(AudioModel[] List){
@@ -121,18 +146,6 @@ public sealed class AudiosController : MonoBehaviour {
 		StartCoroutine(getSongData());
 		Debug.Log("AudioController : Changed Rooms");
 
-		if(SuccessfulLoad){
-			int i = 0;
-			//Debug.Log("DEBUG: " + AudioList[0].ToString());
-			while(!AudioList[i].Room_id.Equals(ElevatorMenu.CurrentRoom.RoomId)){
-				if(i > AudioList.Length){
-					break;
-				}
-				i++;
-			}
-			Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
-			StartCoroutine(getSongMeta(i));
-		}
 	}
 	
 	// Update is called once per frame
