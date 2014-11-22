@@ -83,7 +83,7 @@ public class RoomController : MonoBehaviour {
 	}
 
 	public IEnumerator createRoom(string newRoomName, string newRoomGenre){
-		ElevatorMenu.CreateRoomStatus = 1; //Creating
+		RoomConfigMenu.CreateRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();
 		var newRoomData = new Hashtable();
@@ -116,14 +116,14 @@ public class RoomController : MonoBehaviour {
 			//TODO login.error returns the string of the error, so catch the different types of errors and do different error messages
 			//with the switch statement in OnGUI()
 			Debug.Log ("room creation error");
-			ElevatorMenu.CreateRoomStatus = -1;
+			RoomConfigMenu.CreateRoomStatus = -1;
 
 		}
-		else{
+		else {
 			// After the room is created, hide the create room window and reset the related variables.
 			newRoomName = "";
 			newRoomGenre = "";
-			ElevatorMenu.CreateRoomStatus = 2;
+			RoomConfigMenu.CreateRoomStatus = 2;
 		}
 	}
 
@@ -179,6 +179,27 @@ public class RoomController : MonoBehaviour {
 			//TODO Error message
 			Debug.Log ("Invalid email entered");
 			RoomConfigMenu.AddMemberStatus = -2;
+		}
+	}
+
+	public void updateRoom (string newRoomName, string newRoomGenre, string newRoomData) {
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("CURRENT ROOMAROO! " + RoomModel.getInstance ().CurrentRoom.RoomId);
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail );
+		request.Headers.Add("x-user-token", LoginModel.AuthKey );
+		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\" } }");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
 		}
 	}
 }
