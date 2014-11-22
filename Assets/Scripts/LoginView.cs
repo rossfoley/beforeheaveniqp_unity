@@ -6,11 +6,10 @@ using SimpleJSON;
 public class LoginView : MonoBehaviour {
 
 	public GameObject networkManager;
-	public GameObject elevator;
 	public GameObject startingRoom;
 	public GameObject roomController;
-	public GameObject roomConfigMenu;
 	public GameObject chat;
+	public GameObject guiController;
 	
 	string userEmail = "";
 	string userPassword = "";
@@ -77,11 +76,10 @@ public class LoginView : MonoBehaviour {
 		else if (!loggedIn && LoginController.SuccessfulLogin){
 			// After a successful login, activate the networkManager
 			startingRoom.SetActive(true);
-			elevator.SetActive(true);
 			chat.SetActive(true);
 			networkManager.SetActive(true);
 			roomController.SetActive(true);
-			roomConfigMenu.SetActive(true);
+			guiController.SetActive(true);
 			loggedIn = true;
 		}
 	}
