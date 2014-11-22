@@ -29,11 +29,7 @@ public class GUIController : MonoBehaviour {
 		set { guiEdgeBorder = value; }
 	}
 
-	// Creates the top-level GUI
-	void OnGUI() {
-		
-		GUILayout.BeginArea (new Rect (guiEdgeBorder, guiEdgeBorder, 400, 60));
-		
+	void Update(){
 		// If the elevator window is visible, create the GUI window
 		if (elWindowVisible) {
 			elevatorMenu.SetActive(true);
@@ -41,14 +37,22 @@ public class GUIController : MonoBehaviour {
 		else {
 			elevatorMenu.SetActive(false);
 		}
-		
+
+		roomConfigMenu.SetActive(true);
 		// If the create room window is visible, create + display all the GUI elements of the window
-		if (crWindowVisible) {
+		/*if (crWindowVisible) {
 			roomConfigMenu.SetActive(true);
 		}
 		else {
 			roomConfigMenu.SetActive(false);
-		}
+		}*/
+
+	}
+
+	// Creates the top-level GUI
+	void OnGUI() {
+		
+		GUILayout.BeginArea (new Rect (guiEdgeBorder, guiEdgeBorder, 400, 60));
 		
 		GUILayout.BeginHorizontal();
 		
