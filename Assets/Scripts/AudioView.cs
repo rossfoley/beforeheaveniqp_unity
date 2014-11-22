@@ -68,8 +68,8 @@ public class AudioView : MonoBehaviour {
 				Debug.Log("Current song Elapsed Time(2): " + ac.Current_song.Elapsed_time);
 
 				nWaveOutDevice.Play();
+				isActive = false;
 			}
-			isActive = false;
 		}
 	}
 
@@ -118,7 +118,7 @@ public class AudioView : MonoBehaviour {
 		}
 	}
 
-	void OnJoinedLobby(){
+	void OnJoinedRoom(){
 		isPlaying = false;
 		isActive = true;
 		if(nMainOutputStream != null){

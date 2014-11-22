@@ -110,13 +110,13 @@ public sealed class AudiosController : MonoBehaviour {
 
 		int i = 0;
 		Debug.Log("DEBUG: " + AudioList[0].ToString());
-		while(!AudioList[i].Room_id.Equals(ElevatorMenu.CurrentRoom.RoomId)){
+		while(!AudioList[i].Room_id.Equals(RoomModel.getInstance().CurrentRoom.RoomId)){
 			if(i > AudioList.Length){
 				break;
 			}
 			i++;
 		}
-		Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
+		Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + RoomModel.getInstance ().CurrentRoom.RoomId);
 		StartCoroutine(getSongMeta(i));
 	}
 	
@@ -127,7 +127,7 @@ public sealed class AudiosController : MonoBehaviour {
 		headers.Add("X-User-Email", LoginModel.UserEmail);
 		headers.Add("X-User-Token", LoginModel.AuthKey);
 		//Test acquisition of song meta
-		string current_id = ElevatorMenu.CurrentRoom.RoomId;
+		string current_id = RoomModel.getInstance().CurrentRoom.RoomId;
 		Debug.Log("Oid of first room:" + current_id);
 		
 		string song_str = "http://beforeheaveniqp.herokuapp.com/api/rooms/"+current_id+"/current_song";
@@ -165,7 +165,7 @@ public sealed class AudiosController : MonoBehaviour {
 		AudioList = new AudioModel[50];
 	}
 
-	void OnJoinedLobby(){
+	void OnJoinedRoom(){
 		StartCoroutine(getSongData());
 		Debug.Log("AudioController : Changed Rooms");
 		
@@ -179,12 +179,17 @@ public sealed class AudiosController : MonoBehaviour {
 				i++;
 			}
 			//current_song = AudioList[i];
-			Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + ElevatorMenu.CurrentRoom.RoomId);
+			Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + RoomModel.getInstance().CurrentRoom.RoomId);
 			Debug.Log("Current Song: " + current_song.Url);
 			StartCoroutine(getSongMeta(i));
 		}
 	}
-	
+
+	void OnJoinedLobby(){
+		currentSongURL = "";
+		SongMetaLoaded = false;
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if(LoginController.SuccessfulLogin && isActive){
