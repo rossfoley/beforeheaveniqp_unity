@@ -60,7 +60,7 @@ public class AudioView : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(AudiosController.SongMeta_Load && isActive){
-			if(ac.Current_song.Url != null){
+			if(AudiosController.currentSongURL != null || AudiosController.currentSongURL != ""){
 
 				//Load current song
 				Debug.Log("Current Song is not Null, here's proof: " + AudiosController.currentSongURL);
@@ -121,14 +121,15 @@ public class AudioView : MonoBehaviour {
 	void OnJoinedLobby(){
 		isPlaying = false;
 		isActive = true;
+		if(nMainOutputStream != null){
+			//Stop previous song
+			nMainOutputStream.Close();
+			nVolumeStream.Close();
+			tmpStr.Close();
+			nWaveOutDevice.Stop();
+		}
 		if(AudiosController.Successful_Load){
-			if(nMainOutputStream != null){
-				//Stop previous song
-				nMainOutputStream.Close();
-				nVolumeStream.Close();
-				tmpStr.Close();
-				nWaveOutDevice.Stop();
-			}
+
 		}
 	}
 
