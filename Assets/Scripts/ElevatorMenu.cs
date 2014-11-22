@@ -137,7 +137,7 @@ public class ElevatorMenu : MonoBehaviour {
 				new Rect (200, 2 * guiEdgeBorder, 220, 200),
 				scrollPosition, 
 				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
-			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
+			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
 				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
 					// TODO yield return?
 					Debug.Log ("Button pressed");
