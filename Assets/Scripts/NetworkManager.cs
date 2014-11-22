@@ -46,12 +46,12 @@ public class NetworkManager : Photon.MonoBehaviour {
 			RoomController.getInstance().getRooms("");
 			RoomData startingRoom = null;
 			foreach (RoomData rd in RoomModel.getInstance().AllRooms){
-				if (rd.Name.Trim('"') == "starting room"){
+				if (rd.Name.Trim('"') == "Starting Room"){
 					startingRoom = rd;
 					break;
 				}
 			}
-			PhotonNetwork.JoinOrCreateRoom ("starting room", testRO, PhotonNetwork.lobby);
+			PhotonNetwork.JoinOrCreateRoom ("Starting Room", testRO, PhotonNetwork.lobby);
 
 			LoginModel.CurrentRoomId = startingRoom.RoomId;
 			
