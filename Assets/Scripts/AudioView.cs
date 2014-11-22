@@ -31,7 +31,7 @@ public class AudioView : MonoBehaviour {
 			nMainOutputStream.Seek(ac.Current_song.Elapsed_time * 100, SeekOrigin.Begin);
 
 			return true;
-			}
+		}
 		catch(System.Exception ex){
 			Debug.LogWarning("Error! " + ex.Message);
 		}
@@ -60,7 +60,7 @@ public class AudioView : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(AudiosController.SongMeta_Load && isActive){
-			if(AudiosController.currentSongURL != null || AudiosController.currentSongURL != ""){
+			if(AudiosController.currentSongURL != null && AudiosController.currentSongURL != ""){
 
 				//Load current song
 				Debug.Log("Current Song is not Null, here's proof: " + AudiosController.currentSongURL);
@@ -123,10 +123,10 @@ public class AudioView : MonoBehaviour {
 		isActive = true;
 		if(nMainOutputStream != null){
 			//Stop previous song
-			nMainOutputStream.Close();
-			nVolumeStream.Close();
-			tmpStr.Close();
-			nWaveOutDevice.Stop();
+			nMainOutputStream.Dispose();
+			nVolumeStream.Dispose();
+			tmpStr.Dispose();
+			nWaveOutDevice.Dispose();
 		}
 		if(AudiosController.Successful_Load){
 
@@ -135,9 +135,9 @@ public class AudioView : MonoBehaviour {
 
 	void OnDisconnectedFromPhoton(){
 		Debug.Log ("Disconnected from photon called");
-		nMainOutputStream.Close ();
-		nVolumeStream.Close ();
-		tmpStr.Close ();
-		nWaveOutDevice.Stop ();
+		nMainOutputStream.Dispose ();
+		nVolumeStream.Dispose ();
+		tmpStr.Dispose ();
+		nWaveOutDevice.Dispose ();
 	}
 }
