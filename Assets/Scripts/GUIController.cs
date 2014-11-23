@@ -2,18 +2,26 @@
 using System.Collections;
 
 public class GUIController : MonoBehaviour {
-	
+
+	// Game objects controlled by top-level buttons
 	public GameObject elevatorMenu;
 	public GameObject roomConfigMenu;
+	public GameObject friendsListMenu;
 
+	// Visibility of elements changes when selecting their buttons
 	private static bool elWindowVisible = false;
 	private static bool crWindowVisible = false;
-	private Rect elevatorWindowRect = new Rect(50, 50, Screen.width - 100, Screen.height - 100);
+	private static bool flWindowVisible = false;
+
+	private Rect topBarRect = new Rect (guiEdgeBorder, guiEdgeBorder, 600, 60);
+
+	// Super awesome variable for distance between edges of things
 	private static int guiEdgeBorder = 20;
 
 	public Vector2 scrollPosition = Vector2.zero;
 	public GUIStyle style;
 
+	// Getters and setters
 	public static bool ElWindowVisible {
 		get { return elWindowVisible; }
 		set { elWindowVisible = value; }
@@ -24,6 +32,11 @@ public class GUIController : MonoBehaviour {
 		set { crWindowVisible = value; }
 	}
 
+	public static bool FlWindowVisible {
+		get { return flWindowVisible; }
+		set { flWindowVisible = value; }
+	}
+
 	public static int GuiEdgeBorder {
 		get { return guiEdgeBorder; }
 		set { guiEdgeBorder = value; }
@@ -31,9 +44,7 @@ public class GUIController : MonoBehaviour {
 
 	// Creates the top-level GUI
 	void OnGUI() {
-		
-		GUILayout.BeginArea (new Rect (guiEdgeBorder, guiEdgeBorder, 400, 60));
-		
+
 		// If the elevator window is visible, create the GUI window
 		if (elWindowVisible) {
 			elevatorMenu.SetActive(true);
@@ -49,10 +60,19 @@ public class GUIController : MonoBehaviour {
 		else {
 			roomConfigMenu.SetActive(false);
 		}
+
+		// If the friends list window is visible, create the GUI window
+		if (flWindowVisible) {
+			friendsListMenu.SetActive(true);
+		}
+		else {
+			friendsListMenu.SetActive(false);
+		}
 		
+		GUILayout.BeginArea (topBarRect);
 		GUILayout.BeginHorizontal();
 		
-		// When the elevator button is clicked, switch the visibility of the elevator menu
+		// Elevator top-level GUI button
 		if (GUILayout.Button ("Elevator")) {
 			// If the elevator window is going to appear, update allRooms by getting all the rooms with no search string
 			if (!elWindowVisible) {
@@ -60,9 +80,16 @@ public class GUIController : MonoBehaviour {
 			}
 			elWindowVisible = !elWindowVisible;
 		}
-		// Create Room button
+
+		// Room Edit / Room Create top-level GUI button
+		// TODO: Make the button change on whether or not user owns room
 		if (GUILayout.Button ("Create Room")) {
 			crWindowVisible = !crWindowVisible;
+		}
+
+		// Friend list top-level GUI button
+		if (GUILayout.Button ("Friends List")) {
+			flWindowVisible = !flWindowVisible;
 		}
 		
 		GUILayout.EndHorizontal();
