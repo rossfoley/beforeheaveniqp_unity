@@ -12508,7 +12508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   guiEdgeBorder: 20
-  scrollPosition: {x: 0, y: 0}
+  scrollPos: {x: 0, y: 0}
   style:
     m_Name: 
     m_Normal:

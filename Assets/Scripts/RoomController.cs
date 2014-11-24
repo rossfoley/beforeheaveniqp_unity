@@ -147,8 +147,8 @@ public class RoomController : MonoBehaviour {
 		NetworkManager.getInstance().kickAll();
 	}
 
-	public void addBandMember(string roomId, string newMemberEmail){
-		RoomConfigMenu.AddMemberStatus = 1;
+	public void addBandMember(string roomId, string newMemberEmail) {
+		RoomConfigMenu.UpdateRoomStatus = 1;
 		
 		// Create the put request for adding the new band member
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + roomId + "/add_band_member/") as System.Net.HttpWebRequest;
@@ -170,7 +170,7 @@ public class RoomController : MonoBehaviour {
 			using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
 				using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
 					responseContent = reader.ReadToEnd();
-					RoomConfigMenu.AddMemberStatus = 2;
+					RoomConfigMenu.UpdateRoomStatus = 2;
 				}
 			}
 		}
@@ -178,7 +178,7 @@ public class RoomController : MonoBehaviour {
 		catch(WebException e){
 			//TODO Error message
 			Debug.Log ("Invalid email entered");
-			RoomConfigMenu.AddMemberStatus = -2;
+			RoomConfigMenu.UpdateRoomStatus = -2;
 		}
 	}
 

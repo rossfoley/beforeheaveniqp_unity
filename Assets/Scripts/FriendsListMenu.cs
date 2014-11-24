@@ -10,12 +10,12 @@ public class FriendsListMenu : MonoBehaviour {
 
 	public int guiEdgeBorder = GUIController.GuiEdgeBorder;
 	
-	public Vector2 scrollPosition = Vector2.zero;
+	public Vector2 scrollPos = Vector2.zero;
 	public GUIStyle style;
 
 	void OnGUI () {
 		friendWindowRect = GUI.Window (5, friendWindowRect, 
-		                                 FriendWindowFunction, "Welcome to the elevator!");
+		                                 FriendWindowFunction, "Friends List");
 	}
 
 	void FriendWindowFunction (int windowID) {
@@ -32,17 +32,26 @@ public class FriendsListMenu : MonoBehaviour {
 		else {
 			updateCounter--;
 		}
-		GUILayout.BeginArea (new Rect (0, 0, 600, 500));
-		GUI.Label (new Rect(200, 0, 200, 20), "Friends List");
+		GUILayout.BeginArea (new Rect(0, guiEdgeBorder, 
+		                              friendWindowRect.width / 3, friendWindowRect.height));
+		
+		friendEmail = GUILayout.TextField (friendEmail);
+		if (GUILayout.Button ("Add Friend")) {
+			LoginController.addFriend(friendEmail);
+		}
+		
+		GUILayout.EndArea();
+
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
 		if(LoginModel.FriendData.Length > 0) {
-			scrollPosition = GUI.BeginScrollView (
-				new Rect (200, 2 * guiEdgeBorder, 200, 200),
-				scrollPosition, 
-				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
+			GUILayout.BeginArea (new Rect(friendWindowRect.width / 3, guiEdgeBorder, 
+			                              friendWindowRect.width * 2/3, friendWindowRect.height-guiEdgeBorder));
+
+			scrollPos = GUILayout.BeginScrollView (scrollPos);
+
 			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
-				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
+				if(GUILayout.Button(LoginModel.FriendData[i].UserEmail)) {
 					// TODO yield return?
 					Debug.Log ("Button pressed");
 					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
@@ -63,14 +72,8 @@ public class FriendsListMenu : MonoBehaviour {
 					}
 				}
 			}
-			GUI.EndScrollView();
+			GUILayout.EndScrollView();
+			GUILayout.EndArea ();
 		}
-		friendEmail = GUI.TextField (new Rect (200, 220, 200, 20), friendEmail);
-		if (GUI.Button (new Rect(400, 220, 100, 20), "Add Friend")) {
-			LoginController.addFriend(friendEmail);
-		}
-		GUILayout.EndArea ();
 	}
-
-
 }

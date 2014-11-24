@@ -9,9 +9,9 @@ public class GUIController : MonoBehaviour {
 	public GameObject friendsListMenu;
 
 	// Visibility of elements changes when selecting their buttons
-	private static bool elWindowVisible = false;
-	private static bool crWindowVisible = false;
-	private static bool flWindowVisible = false;
+	private static bool elWindowVisible = false; // Elevator menu
+	private static bool crWindowVisible = false; // Room config menu
+	private static bool flWindowVisible = false; // Friends list menu
 
 	private Rect topBarRect = new Rect (guiEdgeBorder, guiEdgeBorder, 600, 60);
 

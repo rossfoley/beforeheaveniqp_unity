@@ -40,10 +40,14 @@ public class ElevatorMenu : MonoBehaviour {
 		                                  width * 1/3, height - 2*guiEdgeBorder);
 
 		// Exit button
-		if (GUI.Button (new Rect (elevatorWindowRect.width - guiEdgeBorder - exitButtonSize,
-		                          guiEdgeBorder, exitButtonSize, exitButtonSize), "X")) {
-			GUIController.ElWindowVisible = false;
-		}
+		GUILayout.BeginArea (new Rect(0, 0, elevatorWindowRect.width, 23));
+		GUILayout.BeginHorizontal();
+			GUILayout.Space(elevatorWindowRect.width-23);
+			if (GUILayout.Button("X")) {
+				GUIController.ElWindowVisible = false;
+			}
+		GUILayout.EndHorizontal();
+		GUILayout.EndArea();
 
 		//Search field for rooms
 		GUILayout.BeginArea(new Rect(guiEdgeBorder, 2*guiEdgeBorder, elevatorWindowRect.width/3 - 2*guiEdgeBorder, 50));

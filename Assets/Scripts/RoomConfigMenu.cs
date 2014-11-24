@@ -11,7 +11,6 @@ public class RoomConfigMenu : MonoBehaviour {
 	private string newRoomGenre = ""; //RoomModel.getInstance().CurrentRoom.Genre;
 	
 	private static int createRoomStatus = 0;
-	private static int addMemberStatus;
 	private static int updateRoomStatus;
 
 	private Rect configWindowRect = new Rect(50, 50, Screen.width - 150, Screen.height - 150);
@@ -32,9 +31,9 @@ public class RoomConfigMenu : MonoBehaviour {
 		set { userIsMember = value; }
 	}
 	
-	public static int AddMemberStatus {
-		get { return addMemberStatus; }
-		set { addMemberStatus = value; }
+	public static int UpdateRoomStatus {
+		get { return updateRoomStatus; }
+		set { updateRoomStatus = value; }
 	}
 		
 	public static int CreateRoomStatus {
@@ -49,50 +48,77 @@ public class RoomConfigMenu : MonoBehaviour {
 
 	void ConfigWindowFunction (int windowID) {
 
+		// Exit button
+		GUILayout.BeginArea (new Rect(0, 0, configWindowRect.width, 23));
+		GUILayout.BeginHorizontal();
+			GUILayout.Space(configWindowRect.width-23);
+			if (GUILayout.Button("X")) {
+				GUIController.CrWindowVisible = false;
+			}
+		GUILayout.EndHorizontal();
+		GUILayout.EndArea();
+		
+		GUILayout.BeginArea (new Rect(configWindowRect.width/3+guiEdgeBorder,
+		                              guiEdgeBorder,
+		                              configWindowRect.width/3-guiEdgeBorder,
+		                              configWindowRect.height-guiEdgeBorder));
 		// Add a new band member to the current room
-		addMember();
+		AddMember();
 
 		// Create a new room
-		// TODO: Format create room GUI
-		//createRoom();
+		CreateRoom();
+		GUILayout.EndArea();
 	}
 
-	void addMember () {
-		GUI.BeginGroup (new Rect(0, 0, 500, 300));
-		GUI.Box (new Rect (0, 0, 500, 300), "Room Management");
-		GUI.Label (new Rect (10, 10, 100, 20), thisRoom.Name);
-		GUI.Label (new Rect (10, 30, 100, 20), thisRoom.Genre);
-		GUI.Label (new Rect (10, 50, 100, 20), thisRoom.Visits.ToString());
-		GUI.Label (new Rect (10, 70, 100, 20), "New member email");
-		GUI.Label (new Rect (100, 140, 100, 20), "New room name");
-		GUI.Label (new Rect (100, 180, 100, 20), "New room genre");
-		GUI.SetNextControlName ("email field");
-		newMemberEmail = GUI.TextField (new Rect (100, 70, 100, 20), newMemberEmail);
-		newRoomName = GUI.TextField (new Rect (200, 140, 100, 20), newRoomName);
-		newRoomGenre = GUI.TextField (new Rect (200, 180, 100, 20), newRoomGenre);
-		
-		if (GUI.Button (new Rect (30, 90, 50, 20), "Submit") || 
-		    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
-			// If no email is entered, do not go through with the request
-			if (newMemberEmail.Trim() == ""){
-				addMemberStatus = -1;
-				//TODO Error
-				Debug.Log("Email not entered");
-			}
-			// Put request for a new band member
-			else {
-				RoomController.getInstance().addBandMember(thisRoom.RoomId, newMemberEmail);
-			}
-		}
-		
-		if (GUI.Button (new Rect (150, 220, 100, 20), "Update Room") || 
+	void AddMember () {
+		GUILayout.BeginVertical();
+
+		GUILayout.BeginHorizontal();
+			GUILayout.FlexibleSpace();
+			GUILayout.Label ("Edit Room");
+			GUILayout.FlexibleSpace();
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+			GUILayout.Label ("Visits: ");
+			GUILayout.Label (thisRoom.Visits.ToString());
+			GUILayout.FlexibleSpace();
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+			GUILayout.Label ("Room Name: ");
+			newRoomName = GUILayout.TextField (thisRoom.Name.Trim());
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+			GUILayout.Label ("Room Genre: ");
+			newRoomGenre = GUILayout.TextField (thisRoom.Genre.Trim());
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+			GUILayout.Label ("New member email: ");
+			GUI.SetNextControlName ("email field");
+			newMemberEmail = GUILayout.TextField (newMemberEmail);
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+		if (GUILayout.Button ("Update Room") || 
 		    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
 			Debug.Log ("Update Button Clicked");
 			
-			if (newRoomName.Trim() == "" && newRoomGenre.Trim() == "") {
-				updateRoomStatus = -1;
-				Debug.Log ("no room name");
-			} else {
+			// Put request for a new band member
+			if (newMemberEmail.Trim() != "") {
+				RoomController.getInstance().addBandMember(thisRoom.RoomId, newMemberEmail);
+			}
+
+			// Update room name and room genre
+			if (newRoomName.Trim() != thisRoom.Name || newRoomGenre.Trim() != thisRoom.Genre) {
+				if (newRoomName.Trim() == "" && newRoomGenre.Trim() == "") {
+				updateRoomStatus = -2;
+				Debug.Log ("No room name given");
+				}
+			} 
+			else {
 				RoomController.getInstance().updateRoom(newRoomName, newRoomGenre, "");
 				thisRoom.Name = newRoomName;
 				thisRoom.Genre = newRoomGenre;
@@ -102,7 +128,7 @@ public class RoomConfigMenu : MonoBehaviour {
 			}
 		}
 		string status;
-		switch(addMemberStatus){
+		switch(updateRoomStatus) {
 		case 1: 
 			status = "Adding...";
 			break;
@@ -110,34 +136,47 @@ public class RoomConfigMenu : MonoBehaviour {
 			status = "Added";
 			break;
 		case -1:
-			status = "Email not entered";
+			status = "Invalid email entered";
 			break;
 		case -2:
-			status = "Invalid email entered";
+			status = "Invalid room name";
 			break;
 		default:
 			status = "";
 			break;
 		}
-		GUI.Label (new Rect (10, 110, 200, 20), status);
+		GUILayout.Label (status);
+		GUILayout.EndHorizontal();
 		
-		if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "starting room") {
-			if (GUI.Button (new Rect(10, 130, 100, 20), "Delete Room")) {
+		if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "Starting Room") {
+			if (GUILayout.Button ("Delete Room")) {
 				RoomController.getInstance().deleteRoom();
 			}
 		}
-		
-		GUI.EndGroup();
+
+		GUILayout.EndVertical();
+		GUILayout.FlexibleSpace();
 	}
 
-	void CreateRoom () {
-		int topLay = 25;
-		GUI.BeginGroup (new Rect (guiEdgeBorder, guiEdgeBorder, Screen.width/3 - guiEdgeBorder, Screen.height - 2*guiEdgeBorder));
-		newRoomName = GUI.TextField(new Rect(100, topLay, Screen.width/4 - 100, 20), newRoomName, 20);
-		newRoomGenre = GUI.TextField (new Rect(100, 2*topLay, Screen.width/4 - 100, 20), newRoomGenre, 20);
-		GUI.Label (new Rect(0, topLay, 100, 20), "Room Name: ");
-		GUI.Label (new Rect(0, 2*topLay, 100, 20), "Room Genre: ");
-		if (GUI.Button (new Rect(100, 3*topLay, 100, 20), "Submit Room")) {
+	void CreateRoom () {		
+		GUILayout.BeginHorizontal();
+			GUILayout.FlexibleSpace();
+			GUILayout.Label ("Create Room");
+			GUILayout.FlexibleSpace();
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+			GUILayout.Label ("Room Name: ");
+			newRoomGenre = GUILayout.TextField ("");
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+			GUILayout.Label ("Room Genre: ");
+			newRoomGenre = GUILayout.TextField ("");
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+		if (GUILayout.Button ("Submit Room")) {
 			if (newRoomName.Trim() == "" || newRoomGenre.Trim() == "") {
 				//TODO Error
 				Debug.Log("Invalid Strings");
@@ -146,19 +185,19 @@ public class RoomConfigMenu : MonoBehaviour {
 				StartCoroutine (RoomController.getInstance().createRoom (newRoomName, newRoomGenre));
 			}
 		}
-		switch(createRoomStatus){
+		switch(createRoomStatus) {
 		case 1:
-			GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creating...");
+			GUILayout.Label ("Creating...");
 			break;
 		case 2:
 			createRoomStatus = 0;
 			GUIController.CrWindowVisible = false;
 			break;
 		case -1:
-			GUI.Label (new Rect(100, 4*topLay, 100, 20), "Creation error.");
+			GUILayout.Label ("Creation error.");
 			break;
 		}
-		GUI.EndGroup();
-	}
 
+		GUILayout.EndHorizontal();
+	}
 }
