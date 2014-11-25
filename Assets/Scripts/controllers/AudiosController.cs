@@ -17,6 +17,8 @@ public sealed class AudiosController : MonoBehaviour {
 	public static string currentSongURL = "";
 
 	private bool isActive= false;
+	private static bool callGetSongMeta = false;
+	private static int songMetaIndex = -1;
 
 	public static AudiosController getInstance(){
 		if(instance == null){
@@ -58,38 +60,29 @@ public sealed class AudiosController : MonoBehaviour {
 		}
 	}
 
-	public IEnumerator getSongData(){
+	public static IEnumerator getSongData(){
 		Hashtable headers = new Hashtable();
 		Debug.Log ("CurrentRoomID = " + RoomModel.getInstance().CurrentRoom.RoomId);
-		//string getCurrentSongURL = RoomURL + "/" + RoomModel.getInstance().CurrentRoom.RoomId + "/current_song";
 		headers.Add("Content-Type", "application/json");
 		headers.Add("X-User-Email", LoginModel.UserEmail);
 		headers.Add("X-User-Token", LoginModel.AuthKey);
-		//WWW mp3stream = new WWW (getCurrentSongURL, null, headers);
-		
-		//yield return mp3stream;
 
 		WWW allSongs = new WWW (RoomURL, null, headers);
 
+		Debug.Log ("Waiting on allSongs");
+
 		yield return allSongs;
 
-		//var mp3parsed = JSON.Parse(mp3stream.text); 
 		var allSongsParsed = JSON.Parse (allSongs.text);
-		//Debug.Log ("mp3parsed = " + mp3stream.text);
-		//Debug.Log(mp3parsed);
 
 		int counter = 0;
-
-		//currentSongURL = mp3parsed["data"]["song"]["stream_url"].ToString().Trim ('"');
-
-		//current_song = new AudioModel("A", "B", "C", currentSongURL, mp3parsed["_id"]["$oid"], 0);
 
 		Debug.Log ("CurrentSongURL = " + currentSongURL);
 
 		foreach(JSONNode data in allSongsParsed["data"].AsArray){
 			Debug.Log(counter);
 			Debug.Log("Current song url = " + data["current_song"].ToString());
-			AudioList[counter] = new AudioModel("A","B","C", data["current_song"].ToString().Trim('"'), data["_id"]["$oid"], 0);
+			AudioList[counter] = new AudioModel("A","B","C", data["current_song"].ToString().Trim('"'), data["_id"]["$oid"], 0, 0);
 
 			currentSongURL = data["current_song"];
 
@@ -105,7 +98,6 @@ public sealed class AudiosController : MonoBehaviour {
 			Debug.Log(AudioList[counter].Room_id);
 			counter++;
 		}
-		//printAudioList(AudioList);
 		SuccessfulLoad = true;
 
 		int i = 0;
@@ -117,10 +109,13 @@ public sealed class AudiosController : MonoBehaviour {
 			i++;
 		}
 		Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + RoomModel.getInstance ().CurrentRoom.RoomId);
-		StartCoroutine(getSongMeta(i));
+		callGetSongMeta = true;
+		songMetaIndex = i;
+
+		//StartCoroutine(getSongMeta(i));
 	}
 	
-	private IEnumerator getSongMeta(int index){
+	public static IEnumerator getSongMeta(int index){
 
 		Hashtable headers = new Hashtable();
 		headers.Add("Content-Type", "application/json");
@@ -145,6 +140,9 @@ public sealed class AudiosController : MonoBehaviour {
 
 		Debug.Log("DEBUG AudioList[" + index + "]: " + AudioList[index].Elapsed_time);
 		current_song = AudioList[index];
+
+		current_song.Duration = song_parsed["data"]["song"]["duration"].AsInt;
+
 		Debug.Log("Current Song Elapsed Time: " + current_song.Elapsed_time);
 		SongMetaLoaded = true;
 	}
@@ -158,7 +156,7 @@ public sealed class AudiosController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		isActive = true;
-		current_song = new AudioModel("Empty", "Empty", "Empty", "Empty", "Empty", 0);
+		current_song = new AudioModel("Empty", "Empty", "Empty", "Empty", "Empty", 0, 0);
 	}
 
 	void Awake(){
@@ -196,6 +194,10 @@ public sealed class AudiosController : MonoBehaviour {
 			//AudioList = new AudioModel[20];
 			//StartCoroutine(getSongData());
 			isActive = false;
+		}
+		if (callGetSongMeta){
+			callGetSongMeta = false;
+			StartCoroutine(getSongMeta(songMetaIndex));
 		}
 	}
 }

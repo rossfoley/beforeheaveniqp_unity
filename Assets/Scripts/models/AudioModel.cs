@@ -8,15 +8,17 @@ public class AudioModel : MonoBehaviour {
 	string url;
 	string room_id;
 	int elapsed_time;
+	int duration;
 
 	public AudioModel(string name, string owner, 
-	                  string genre, string url, string room_id, int elapsed_time){
+	                  string genre, string url, string room_id, int elapsed_time, int duration){
 		this.name = name;
 		this.owner = owner;
 		this.genre = genre;
 		this.url = url;
 		this.room_id = room_id;
 		this.elapsed_time = elapsed_time;
+		this.duration = duration;
 	}
 
 	public override string ToString ()
@@ -77,4 +79,14 @@ public class AudioModel : MonoBehaviour {
 			elapsed_time = value;
 		}
 	}
+
+	public int Duration {
+		get {
+			return duration;
+		}
+		set {
+			duration = value;
+		}
+	}
+
 }
