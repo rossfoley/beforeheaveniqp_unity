@@ -64,8 +64,9 @@ public class AudioView : MonoBehaviour {
 
 	private IEnumerator loadNextSong(){
 		string currentRoomId = RoomModel.getInstance().CurrentRoom.RoomId;
-		Debug.Log ("Going to wait for " + duration/1000 + " seconds");
-		yield return new WaitForSeconds(duration/1000);
+		decimal waitTime = (duration/1000) + 1;
+
+		yield return new WaitForSeconds(waitTime);
 		if (currentRoomId == RoomModel.getInstance ().CurrentRoom.RoomId){
 			Debug.Log ("Finished waiting for song to end");
 			AudiosController.SongMeta_Load = false;
