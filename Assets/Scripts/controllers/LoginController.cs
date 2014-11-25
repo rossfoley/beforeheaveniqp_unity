@@ -48,19 +48,10 @@ public class LoginController : MonoBehaviour {
 				authKey = (parsed ["data"] ["authentication_token"]).ToString ().Trim ('"');
 				userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
 
-				// Construct the array that contains all of the friend IDs
-				string[] friends = new string[parsed ["data"] ["friend_ids"].AsArray.Count];
-				string friendId;
-				int i = 0;
-				foreach(JSONNode data in (parsed ["data"] ["friend_ids"]).AsArray){
-					friends[i] = data["$oid"];
-					i++;
-				}
 				// Sets the values of the login model
 				LoginModel.UserEmail = userEmail;
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
-				LoginModel.FriendIds = friends;
 			}
 			// If the login was unsuccessful, display the error message
 			else {
@@ -106,6 +97,27 @@ public class LoginController : MonoBehaviour {
 	// Adds the given friend email to the list of friends of the current user
 	public static void addFriend(string friendEmail){
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/add_friend/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-token", LoginModel.AuthKey);
+		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_friend_email\": \"" + friendEmail + "\"}");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+	}
+
+	public static void removeFriend(string friendEmail){
+		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/remove_friend/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		
 		request.Method = "PUT";
