@@ -135,15 +135,15 @@ public class RoomConfigMenu : MonoBehaviour {
 			updateCounter--;
 		}
 		GUILayout.BeginArea (new Rect (500, 100, 600, 500));
-		GUI.Label (new Rect(200, 0, 200, 20), "Friends List");
+		GUI.Label (new Rect(200, 0, 220, 20), "Friends List");
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
 		if(LoginModel.FriendData.Length > 0) {
 			scrollPosition = GUI.BeginScrollView (
-				new Rect (200, 2 * guiEdgeBorder, 200, 200),
+				new Rect (200, 2 * guiEdgeBorder, 220, 200),
 				scrollPosition, 
 				new Rect(0, 0, 200, 20*LoginModel.FriendData.Length));
-			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
+			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
 				if(GUI.Button(new Rect(0, 20*i, 200, 20), LoginModel.FriendData[i].UserEmail)) {
 					// TODO yield return?
 					Debug.Log ("Button pressed");
@@ -163,6 +163,9 @@ public class RoomConfigMenu : MonoBehaviour {
 					if (friendRD != null){
 						NetworkManager.getInstance().changeRoom(friendRD);
 					}
+				}
+				if(GUI.Button (new Rect(200, 20*i, 20, 20), "x")){ 	
+					LoginController.removeFriend(LoginModel.FriendData[i].UserEmail); 	
 				}
 			}
 			GUI.EndScrollView();
