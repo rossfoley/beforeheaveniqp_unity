@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Linq;
 
@@ -92,7 +92,11 @@ public class NetworkManager : Photon.MonoBehaviour {
 	
 	public void changeRoom (RoomData toRoom)
 	{
-		Debug.Log("Changing room");
+		Debug.Log("Changing room from " + LoginModel.CurrentRoomId + " to " + toRoom.RoomId);
+
+		LoginModel.CurrentRoomId = toRoom.RoomId;
+		
+		RoomModel.getInstance ().CurrentRoom = toRoom;
 
 		PhotonNetwork.LeaveRoom();
 
@@ -104,10 +108,6 @@ public class NetworkManager : Photon.MonoBehaviour {
 		currentRoomObject = (GameObject) Instantiate(roomTemplate);
 
 		Debug.Log ("Changing room to " + toRoom.RoomId);
-		
-		LoginModel.CurrentRoomId = toRoom.RoomId;
-
-		RoomModel.getInstance ().CurrentRoom = toRoom;
 
 		LoginController.updateCurrentRoom ();
 	}

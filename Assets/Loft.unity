@@ -235,8 +235,8 @@ MonoBehaviour:
   ownerId: 0
   group: 0
   prefixBackup: -1
-  observed: {fileID: 35972615}
-  synchronization: 3
+  observed: {fileID: 0}
+  synchronization: 0
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   instantiationId: 0
@@ -1487,8 +1487,8 @@ MonoBehaviour:
   ownerId: 0
   group: 0
   prefixBackup: -1
-  observed: {fileID: 426209484}
-  synchronization: 3
+  observed: {fileID: 0}
+  synchronization: 0
   onSerializeTransformOption: 3
   onSerializeRigidBodyOption: 2
   instantiationId: 0
@@ -12260,10 +12260,10 @@ MonoBehaviour:
       m_Top: 0
       m_Bottom: 0
     m_Padding:
-      m_Left: 15
-      m_Right: 15
-      m_Top: 15
-      m_Bottom: 15
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
     m_Overflow:
       m_Left: 0
       m_Right: 0
@@ -12589,13 +12589,14 @@ GameObject:
   m_Component:
   - 4: {fileID: 2028826295}
   - 114: {fileID: 2028826294}
+  - 114: {fileID: 2028826296}
   m_Layer: 0
   m_Name: AudioStream
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2028826294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12619,6 +12620,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+--- !u!114 &2028826296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2028826293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca1f6d49095dc82489573cb9bb1f9dc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundcloud_icon: {fileID: 0}
 --- !u!1 &2039934022
 GameObject:
   m_ObjectHideFlags: 0
