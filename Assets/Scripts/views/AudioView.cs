@@ -64,7 +64,7 @@ public class AudioView : MonoBehaviour {
 
 	private IEnumerator loadNextSong(){
 		string currentRoomId = RoomModel.getInstance().CurrentRoom.RoomId;
-		decimal waitTime = (duration/1000) + 1;
+		int waitTime = (duration/1000) + 1;
 
 		yield return new WaitForSeconds(waitTime);
 		if (currentRoomId == RoomModel.getInstance ().CurrentRoom.RoomId){
