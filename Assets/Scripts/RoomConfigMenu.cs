@@ -7,6 +7,8 @@ public class RoomConfigMenu : MonoBehaviour {
 	private static RoomData thisRoom;
 	private static bool userIsMember;
 	private string newMemberEmail = "";
+	private string updateRoomName = "";
+	private string updateRoomGenre = "";
 	private string newRoomName = ""; //RoomModel.getInstance().CurrentRoom.Name;
 	private string newRoomGenre = ""; //RoomModel.getInstance().CurrentRoom.Genre;
 	
@@ -39,6 +41,15 @@ public class RoomConfigMenu : MonoBehaviour {
 	public static int CreateRoomStatus {
 		get { return createRoomStatus; }
 		set { createRoomStatus = value; }
+	}
+
+	void OnEnable (){
+		Debug.Log("Enable Called");
+		newMemberEmail = "";
+		newRoomGenre = "";
+		newRoomName = "";
+		updateRoomName = RoomModel.getInstance().CurrentRoom.Name;
+		updateRoomGenre = RoomModel.getInstance().CurrentRoom.Genre;
 	}
 
 	void OnGUI() {
@@ -92,12 +103,12 @@ public class RoomConfigMenu : MonoBehaviour {
 
 		GUILayout.BeginHorizontal();
 			GUILayout.Label ("Room Name: ");
-			newRoomName = GUILayout.TextField (thisRoom.Name.Trim());
+			updateRoomName = GUILayout.TextField (updateRoomName);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
 			GUILayout.Label ("Room Genre: ");
-			newRoomGenre = GUILayout.TextField (thisRoom.Genre.Trim());
+			updateRoomGenre = GUILayout.TextField (updateRoomGenre);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
@@ -117,19 +128,20 @@ public class RoomConfigMenu : MonoBehaviour {
 			}
 
 			// Update room name and room genre
-			if (newRoomName.Trim() != thisRoom.Name || newRoomGenre.Trim() != thisRoom.Genre) {
-				if (newRoomName.Trim() == "" && newRoomGenre.Trim() == "") {
-				updateRoomStatus = -2;
-				Debug.Log ("No room name given");
+			if (updateRoomName.Trim() != thisRoom.Name || updateRoomGenre.Trim() != thisRoom.Genre) {
+				if (updateRoomName.Trim() == "" && updateRoomGenre.Trim() == "") {
+					updateRoomStatus = -2;
+					Debug.Log ("No room name given");
+				} 
+				else {
+					Debug.Log("Updating Room");
+					RoomController.getInstance().updateRoom(updateRoomName, updateRoomGenre, "");
+					thisRoom.Name = updateRoomName;
+					thisRoom.Genre = updateRoomGenre;
+					RoomModel.getInstance().CurrentRoom = thisRoom;
+					newRoomName = "";
+					newRoomGenre = "";
 				}
-			} 
-			else {
-				RoomController.getInstance().updateRoom(newRoomName, newRoomGenre, "");
-				thisRoom.Name = newRoomName;
-				thisRoom.Genre = newRoomGenre;
-				RoomModel.getInstance().CurrentRoom = thisRoom;
-				newRoomName = "";
-				newRoomGenre = "";
 			}
 		}
 		string status;
@@ -171,12 +183,12 @@ public class RoomConfigMenu : MonoBehaviour {
 
 		GUILayout.BeginHorizontal();
 			GUILayout.Label ("Room Name: ");
-			newRoomGenre = GUILayout.TextField ("");
+			newRoomName = GUILayout.TextField (newRoomName);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
 			GUILayout.Label ("Room Genre: ");
-			newRoomGenre = GUILayout.TextField ("");
+			newRoomGenre = GUILayout.TextField (newRoomGenre);
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
