@@ -62,11 +62,16 @@ public class RoomConfigMenu : MonoBehaviour {
 		                              guiEdgeBorder,
 		                              configWindowRect.width/3-guiEdgeBorder,
 		                              configWindowRect.height-guiEdgeBorder));
+		GUILayout.BeginVertical();
 		// Add a new band member to the current room
 		AddMember();
 
+		GUILayout.FlexibleSpace();
+
 		// Create a new room
 		CreateRoom();
+
+		GUILayout.EndVertical();
 		GUILayout.EndArea();
 	}
 
@@ -155,7 +160,6 @@ public class RoomConfigMenu : MonoBehaviour {
 		}
 
 		GUILayout.EndVertical();
-		GUILayout.FlexibleSpace();
 	}
 
 	void CreateRoom () {		
