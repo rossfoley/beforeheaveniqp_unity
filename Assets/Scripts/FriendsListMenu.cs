@@ -11,6 +11,7 @@ public class FriendsListMenu : MonoBehaviour {
 	public int guiEdgeBorder = GUIController.GuiEdgeBorder;
 	
 	public Vector2 scrollPos = Vector2.zero;
+
 	public GUIStyle style;
 
 	void OnGUI () {
@@ -38,6 +39,7 @@ public class FriendsListMenu : MonoBehaviour {
 		friendEmail = GUILayout.TextField (friendEmail);
 		if (GUILayout.Button ("Add Friend")) {
 			LoginController.addFriend(friendEmail);
+			friendEmail = "";
 		}
 		
 		GUILayout.EndArea();
@@ -51,6 +53,7 @@ public class FriendsListMenu : MonoBehaviour {
 			scrollPos = GUILayout.BeginScrollView (scrollPos);
 
 			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
+				GUILayout.BeginHorizontal();
 				if(GUILayout.Button(LoginModel.FriendData[i].UserEmail)) {
 					// TODO yield return?
 					Debug.Log ("Button pressed");
@@ -71,9 +74,17 @@ public class FriendsListMenu : MonoBehaviour {
 						NetworkManager.getInstance().changeRoom(friendRD);
 					}
 				}
+
+				if (GUILayout.Button("x")){
+					LoginController.removeFriend(LoginModel.FriendData[i].UserEmail); 
+				}
+				GUILayout.EndHorizontal();
+
 			}
+
 			GUILayout.EndScrollView();
 			GUILayout.EndArea ();
+
 		}
 	}
 }
