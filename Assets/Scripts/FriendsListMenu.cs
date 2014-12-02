@@ -50,7 +50,7 @@ public class FriendsListMenu : MonoBehaviour {
 
 			scrollPos = GUILayout.BeginScrollView (scrollPos);
 
-			for (int i = 0; i < LoginModel.FriendIds.Length; i++) {
+			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
 				if(GUILayout.Button(LoginModel.FriendData[i].UserEmail)) {
 					// TODO yield return?
 					Debug.Log ("Button pressed");

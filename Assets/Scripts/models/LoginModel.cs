@@ -50,15 +50,6 @@ public class LoginModel : MonoBehaviour {
 		}
 	}
 
-	public static string[] FriendIds {
-		get {
-			return friendIds;
-		}
-		set {
-			friendIds = value;
-		}
-	}
-
 	public static UserData[] FriendData {
 		get {
 			return friendData;
