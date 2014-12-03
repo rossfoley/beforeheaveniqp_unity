@@ -20,6 +20,7 @@ public class AudioView : MonoBehaviour {
 	public Texture2D soundcloud_icon;
 	string[] mp3link = new string[32];
 
+	bool isMuted = false; float temp_vol = 0.0f;
 	bool isPlaying = false;
 	bool isActive= false;
 	bool getSongs = false;
@@ -117,23 +118,19 @@ public class AudioView : MonoBehaviour {
 			GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
 			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + mp3link[0]));
 
-			/*
-			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Play")){
-				if(!isPlaying){
-					nWaveOutDevice.Play();
-					isPlaying = !isPlaying;
+
+			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Mute")){
+				if(!isMuted){
+					temp_vol = nVolumeStream.Volume;
+					nVolumeStream.Volume = 0.0f;
+					isMuted = true;
+				}else{
+					nVolumeStream.Volume = temp_vol;
+					isMuted = false;
 				}
 
 			}
 
-			if(GUI.Button(new Rect(175, Screen.height - (Screen.height / 8) + 20, 50, 50), "Pause")){
-				if(isPlaying){
-					nWaveOutDevice.Pause();
-					isPlaying = !isPlaying;
-				}
-
-			}
-			*/
 			if(GUI.Button(new Rect(230, Screen.height - (Screen.height / 8) + 20, 50, 50), "V++")){
 				if(nVolumeStream.Volume >= 1.0f){
 					nVolumeStream.Volume = 1.0f;
@@ -154,6 +151,7 @@ public class AudioView : MonoBehaviour {
 
 	void OnJoinedRoom(){
 		isPlaying = false;
+		isMuted = false;
 		isActive = true;
 		if(nMainOutputStream != null){
 			//Stop previous song
