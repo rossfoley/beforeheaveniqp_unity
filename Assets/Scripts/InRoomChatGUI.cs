@@ -54,7 +54,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 			{
 				this.photonView.RPC("Chat", PhotonTargets.All, this.inputLine);
 				this.inputLine = "";
-				GUI.FocusControl("");
+				GUI.FocusControl("ChatInput");
 				return; // printing the now modified list would result in an error. to avoid this, we just skip this single frame
 			}
 			else
@@ -96,7 +96,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 			if (!string.IsNullOrEmpty(this.inputLine)) {
 				this.photonView.RPC("Chat", PhotonTargets.All, this.inputLine);
 				this.inputLine = "";
-				GUI.FocusControl("");
+				GUI.FocusControl("ChatInput");
 			}
 		}
 		GUILayout.EndHorizontal();
@@ -106,7 +106,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 	[RPC]
 	public void Chat(string newLine, PhotonMessageInfo mi)
 	{
-		string senderName = "anonymous";
+		string senderName = LoginModel.UserEmail;
 		
 		if (mi != null && mi.sender != null)
 		{
@@ -116,7 +116,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 			}
 			else
 			{
-				senderName = "player " + mi.sender.ID;
+				senderName = LoginModel.UserEmail;
 			}
 		}
 		
@@ -132,5 +132,9 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 	public void AddLine(string newLine)
 	{
 		this.messages.Add(newLine);
+	}
+
+	private void OnJoinedRoom(){
+		messages = new List<string>();
 	}
 }
