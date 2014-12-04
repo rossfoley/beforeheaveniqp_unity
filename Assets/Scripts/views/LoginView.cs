@@ -58,6 +58,11 @@ public class LoginView : MonoBehaviour {
 				userPassword = "hiandy257";
 				StartCoroutine(LoginController.login(userEmail, userPassword));
 			}
+
+			if (GUI.Button (new Rect(0, 80, 50, 20), "Register")){
+				Application.OpenURL("http://beforeheaveniqp.herokuapp.com/users/sign_up");
+			}
+
 			switch(LoginController.LoginStatus){
 			case 3: 
 				// If the user does not enter a password, display the error message
