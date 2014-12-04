@@ -62,7 +62,7 @@ public sealed class AudiosController : MonoBehaviour {
 
 	public static IEnumerator getSongData(){
 		Hashtable headers = new Hashtable();
-		Debug.Log ("CurrentRoomID = " + RoomModel.getInstance().CurrentRoom.RoomId);
+	//	Debug.Log ("CurrentRoomID = " + RoomModel.getInstance().CurrentRoom.RoomId);
 		headers.Add("Content-Type", "application/json");
 		headers.Add("X-User-Email", LoginModel.UserEmail);
 		headers.Add("X-User-Token", LoginModel.AuthKey);
@@ -80,8 +80,8 @@ public sealed class AudiosController : MonoBehaviour {
 		Debug.Log ("CurrentSongURL = " + currentSongURL);
 
 		foreach(JSONNode data in allSongsParsed["data"].AsArray){
-			Debug.Log(counter);
-			Debug.Log("Current song url = " + data["current_song"].ToString());
+	//		Debug.Log(counter);
+	//		Debug.Log("Current song url = " + data["current_song"].ToString());
 			AudioList[counter] = new AudioModel("A","B","C", data["current_song"].ToString().Trim('"'), data["_id"]["$oid"], 0, 0);
 
 			currentSongURL = data["current_song"];
@@ -94,8 +94,8 @@ public sealed class AudiosController : MonoBehaviour {
 				AudioList[counter].Room_id = "0";
 			}
 		
-			Debug.Log(AudioList[counter].Url);
-			Debug.Log(AudioList[counter].Room_id);
+	//		Debug.Log(AudioList[counter].Url);
+	//		Debug.Log(AudioList[counter].Room_id);
 			counter++;
 		}
 		SuccessfulLoad = true;
@@ -108,7 +108,7 @@ public sealed class AudiosController : MonoBehaviour {
 			}
 			i++;
 		}
-		Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + RoomModel.getInstance ().CurrentRoom.RoomId);
+	//	Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + RoomModel.getInstance ().CurrentRoom.RoomId);
 		callGetSongMeta = true;
 		songMetaIndex = i;
 
@@ -123,27 +123,27 @@ public sealed class AudiosController : MonoBehaviour {
 		headers.Add("X-User-Token", LoginModel.AuthKey);
 		//Test acquisition of song meta
 		string current_id = RoomModel.getInstance().CurrentRoom.RoomId;
-		Debug.Log("Oid of first room:" + current_id);
+	//	Debug.Log("Oid of first room:" + current_id);
 		
 		string song_str = "http://beforeheaveniqp.herokuapp.com/api/rooms/"+current_id+"/current_song";
-		Debug.Log(song_str);
+	//	Debug.Log(song_str);
 		WWW song_url = new WWW(song_str, null, headers);
 		yield return song_url;
 		var song_parsed = JSON.Parse(song_url.text);
-		Debug.Log(song_parsed);
+	//	Debug.Log(song_parsed);
 
 		AudioList[index].Elapsed_time = int.Parse(song_parsed["data"]["elapsed_time"].ToString().Trim('"'));
-		Debug.Log("AudioList[" + index +"] Elapsed Time: " + AudioList[index].Elapsed_time);
+	//	Debug.Log("AudioList[" + index +"] Elapsed Time: " + AudioList[index].Elapsed_time);
 
 		currentSongURL = song_parsed["data"]["song"]["stream_url"];
-		Debug.Log ("Current song url from song meta = " + currentSongURL);
+	//	Debug.Log ("Current song url from song meta = " + currentSongURL);
 
-		Debug.Log("DEBUG AudioList[" + index + "]: " + AudioList[index].Elapsed_time);
+	//	Debug.Log("DEBUG AudioList[" + index + "]: " + AudioList[index].Elapsed_time);
 		current_song = AudioList[index];
 
 		current_song.Duration = song_parsed["data"]["song"]["duration"].AsInt;
 
-		Debug.Log("Current Song Elapsed Time: " + current_song.Elapsed_time);
+	//	Debug.Log("Current Song Elapsed Time: " + current_song.Elapsed_time);
 		SongMetaLoaded = true;
 	}
 
@@ -165,11 +165,11 @@ public sealed class AudiosController : MonoBehaviour {
 
 	void OnJoinedRoom(){
 		StartCoroutine(getSongData());
-		Debug.Log("AudioController : Changed Rooms");
+	//	Debug.Log("AudioController : Changed Rooms");
 		
 		if(SuccessfulLoad){
 			int i = 0;
-			Debug.Log("DEBUG: " + AudioList[0].ToString());
+	//		Debug.Log("DEBUG: " + AudioList[0].ToString());
 			while(!AudioList[i].Room_id.Equals(RoomModel.getInstance().CurrentRoom.RoomId)){
 				if(i > AudioList.Length){
 					break;
@@ -177,8 +177,8 @@ public sealed class AudiosController : MonoBehaviour {
 				i++;
 			}
 			//current_song = AudioList[i];
-			Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + RoomModel.getInstance().CurrentRoom.RoomId);
-			Debug.Log("Current Song: " + current_song.Url);
+	//		Debug.Log("AudioList ID" + AudioList[i].Room_id + ":" + RoomModel.getInstance().CurrentRoom.RoomId);
+	//		Debug.Log("Current Song: " + current_song.Url);
 			StartCoroutine(getSongMeta(i));
 		}
 	}
