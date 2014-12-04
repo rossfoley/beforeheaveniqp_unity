@@ -10,7 +10,9 @@ public class LoginView : MonoBehaviour {
 	public GameObject roomController;
 	public GameObject chat;
 	public GameObject guiController;
-	
+
+	public Texture2D loginBackground;
+
 	string userEmail = "";
 	string userPassword = "";
 	string friendEmail = "";
@@ -28,6 +30,9 @@ public class LoginView : MonoBehaviour {
 	void OnGUI() {
 		// If the user has not logged in yet, display the GUI elements of the login screen
 		if (!LoginController.SuccessfulLogin){
+
+			GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), loginBackground);
+
 			GUI.BeginGroup (new Rect (50, 50, 500, 500));
 
 			// Email label
