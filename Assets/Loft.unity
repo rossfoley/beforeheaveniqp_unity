@@ -284,6 +284,7 @@ MonoBehaviour:
   roomController: {fileID: 2074609415}
   chat: {fileID: 426209483}
   guiController: {fileID: 1330364724}
+  loginBackground: {fileID: 2800000, guid: 84764c6fb1cbd644f8c33f49a72d1e09, type: 3}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
@@ -12689,13 +12690,14 @@ GameObject:
   m_Component:
   - 4: {fileID: 2028826295}
   - 114: {fileID: 2028826294}
+  - 114: {fileID: 2028826296}
   m_Layer: 0
   m_Name: AudioStream
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2028826294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12719,6 +12721,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+--- !u!114 &2028826296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2028826293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca1f6d49095dc82489573cb9bb1f9dc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundcloud_icon: {fileID: 2800000, guid: bc0d45d5423c6894da32edba81e5d031, type: 3}
 --- !u!1 &2039934022
 GameObject:
   m_ObjectHideFlags: 0
