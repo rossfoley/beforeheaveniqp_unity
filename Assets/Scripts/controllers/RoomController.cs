@@ -10,6 +10,8 @@ public class RoomController : MonoBehaviour {
 	private string userEmail;
 	private string userAuthKey;
 	private string userId;
+	private const string defaultRoom = "defaultRoom";
+	private const string jazzRoom = "jazzRoom";
 	
 	private bool isChangingRoom;
 
@@ -18,6 +20,18 @@ public class RoomController : MonoBehaviour {
 			instance = new RoomController();
 		}
 		return instance;
+	}
+
+	public string DefaultRoom {
+		get {
+			return defaultRoom;
+		}
+	}
+
+	public string JazzRoom {
+		get {
+			return jazzRoom;
+		}
 	}
 
 	//Constant URLs
@@ -79,10 +93,9 @@ public class RoomController : MonoBehaviour {
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		
 	}
 
-	public IEnumerator createRoom(string newRoomName, string newRoomGenre){
+	public IEnumerator createRoom(string newRoomName, string newRoomGenre, string roomPreset){
 		RoomConfigMenu.CreateRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();
@@ -95,21 +108,8 @@ public class RoomController : MonoBehaviour {
 		headers.Add ("X-User-Token", userAuthKey);
 		
 		// TODO
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\"} }");
-		
-		StringBuilder data = new StringBuilder();
-		data.Append("{\n");
-		data.Append("\t\"name\":");
-		data.Append(" \"" + newRoomName + "\",\n");
-		data.Append("\t\"genre\":");
-		data.Append(" \"" + newRoomGenre + "\"\n");
-		data.Append("}");
-		
-		roomCreateForm.AddField("room_data", data.ToString ());
-		
-		
-		byte[] rawData = roomCreateForm.data;
-		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\",\"unity_data\": \"" + roomPreset + "\"} }");
+
 		WWW newRoomRequest = new WWW(roomsURL, byteArray, headers);
 		yield return newRoomRequest;
 		if (!string.IsNullOrEmpty(newRoomRequest.error)) {

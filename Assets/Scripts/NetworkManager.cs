@@ -16,7 +16,8 @@ public class NetworkManager : Photon.MonoBehaviour {
 	//Unity GameObject Links
 	public GameObject StandbyCamera;
 	public GameObject currentRoomObject;
-	public GameObject roomTemplate;
+	public GameObject defaultRoomTemplate;
+	public GameObject jazzRoomTemplate;
 	private SpawnSpot[] spawnSpots;
 	private GameObject myPlayerGO;
 
@@ -105,7 +106,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 		Destroy (currentRoomObject);
 
 		// Update currentRoomObject and Data
-		currentRoomObject = (GameObject) Instantiate(roomTemplate);
+		currentRoomObject = (GameObject) Instantiate(defaultRoomTemplate);
 
 		Debug.Log ("Changing room to " + toRoom.RoomId);
 

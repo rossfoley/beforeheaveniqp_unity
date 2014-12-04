@@ -9,8 +9,9 @@ public class RoomConfigMenu : MonoBehaviour {
 	private string newMemberEmail = "";
 	private string updateRoomName = "";
 	private string updateRoomGenre = "";
-	private string newRoomName = ""; //RoomModel.getInstance().CurrentRoom.Name;
-	private string newRoomGenre = ""; //RoomModel.getInstance().CurrentRoom.Genre;
+	private string newRoomName = "";
+	private string newRoomGenre = "";
+	private string roomPreset = ""; 
 	
 	private static int createRoomStatus = 0;
 	private static int updateRoomStatus;
@@ -198,7 +199,8 @@ public class RoomConfigMenu : MonoBehaviour {
 				Debug.Log("Invalid Strings");
 			}
 			else {
-				StartCoroutine (RoomController.getInstance().createRoom (newRoomName, newRoomGenre));
+				StartCoroutine (RoomController.getInstance().createRoom (newRoomName, newRoomGenre, 
+				                                                         RoomController.getInstance().JazzRoom));
 			}
 		}
 		switch(createRoomStatus) {
