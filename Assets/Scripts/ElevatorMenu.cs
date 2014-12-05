@@ -75,13 +75,15 @@ public class ElevatorMenu : MonoBehaviour {
 				// If the current room has the same name as the next room, do not create the button for that room
 				if (RoomModel.getInstance().CurrentRoom.Name != allRooms[i].Name) {
 					// If one of the room buttons is pressed, join that room
-					if(GUI.Button(new Rect(0, 20*i, width / 2, 20), allRooms[i].Name)) {
+					GUILayout.BeginArea(new Rect(0, 40*i, width/2, 40));
+					if(GUI.Button(new Rect(0, 0, width / 2, 20), allRooms[i].Name)) {
 						GUIController.ElWindowVisible = false;
 
 						NetworkManager.getInstance().changeRoom(allRooms[i]);
 
 
 					}
+					GUILayout.EndArea();
 				}
 			}
 			GUI.EndScrollView();
