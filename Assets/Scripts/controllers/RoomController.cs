@@ -10,8 +10,11 @@ public class RoomController : MonoBehaviour {
 	private string userEmail;
 	private string userAuthKey;
 	private string userId;
-	private const string defaultRoom = "defaultRoom";
-	private const string jazzRoom = "jazzRoom";
+
+	public enum roomPresets {
+		defaultRoom = 0,
+		jazzRoom = 1,
+	}
 	
 	private bool isChangingRoom;
 
@@ -22,17 +25,7 @@ public class RoomController : MonoBehaviour {
 		return instance;
 	}
 
-	public string DefaultRoom {
-		get {
-			return defaultRoom;
-		}
-	}
 
-	public string JazzRoom {
-		get {
-			return jazzRoom;
-		}
-	}
 
 	//Constant URLs
 	private const string roomsURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
@@ -89,13 +82,13 @@ public class RoomController : MonoBehaviour {
 				i++;
 			}
 			// Build the roomData and place it in the allRooms array
-			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
+			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds, data["unity_data"].AsInt);
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
 		}
 	}
 
-	public IEnumerator createRoom(string newRoomName, string newRoomGenre, string roomPreset){
+	public IEnumerator createRoom(string newRoomName, string newRoomGenre, int roomPreset){
 		RoomConfigMenu.CreateRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();

@@ -200,7 +200,7 @@ public class RoomConfigMenu : MonoBehaviour {
 			}
 			else {
 				StartCoroutine (RoomController.getInstance().createRoom (newRoomName, newRoomGenre, 
-				                                                         RoomController.getInstance().JazzRoom));
+				                                                         (int) RoomController.roomPresets.jazzRoom));
 			}
 		}
 		switch(createRoomStatus) {

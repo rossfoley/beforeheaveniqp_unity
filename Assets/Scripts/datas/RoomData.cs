@@ -8,9 +8,9 @@ public class RoomData{
 	private string genre;
 	private int visits;
 	private string[] members;
-	private string roomPreset;
+	private int roomPreset;
 
-	public RoomData(string roomId, string name, string genre, int visits, string[] members, string roomPreset){
+	public RoomData(string roomId, string name, string genre, int visits, string[] members, int roomPreset){
 		this.roomId = roomId;
 		this.name = name;
 		this.genre = genre;
@@ -66,6 +66,14 @@ public class RoomData{
 		}
 		set {
 			members = value;
+		}
+	}
+	public int RoomPreset {
+		get {
+			return this.roomPreset;
+		}
+		set {
+			roomPreset = value;
 		}
 	}
 

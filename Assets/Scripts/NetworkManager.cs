@@ -106,7 +106,17 @@ public class NetworkManager : Photon.MonoBehaviour {
 		Destroy (currentRoomObject);
 
 		// Update currentRoomObject and Data
-		currentRoomObject = (GameObject) Instantiate(defaultRoomTemplate);
+		switch (toRoom.RoomPreset) {
+		case (int) RoomController.roomPresets.defaultRoom:
+			currentRoomObject = (GameObject) Instantiate(defaultRoomTemplate);
+			break;
+		case (int) RoomController.roomPresets.jazzRoom:
+			currentRoomObject = (GameObject) Instantiate(jazzRoomTemplate);
+			break;
+		default:
+			currentRoomObject = (GameObject) Instantiate(defaultRoomTemplate);
+			break;
+		}
 
 		Debug.Log ("Changing room to " + toRoom.RoomId);
 
