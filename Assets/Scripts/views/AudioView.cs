@@ -20,6 +20,7 @@ public class AudioView : MonoBehaviour {
 	public Texture2D soundcloud_icon;
 	string[] mp3link = new string[32];
 
+	bool isMuted = false; float temp_vol = 0.0f;
 	bool isPlaying = false;
 	bool isActive= false;
 	bool getSongs = false;
@@ -48,17 +49,25 @@ public class AudioView : MonoBehaviour {
 		return false;
 	}
 
-	private void LoadAudio(string input_url){
+	private void LoadAudio(){
+		string input_url = AudiosController.currentSongURL + "?client_id=0cb45a6052596ee086177b11b29e8809"; 
+		StartCoroutine(LoadAudioWWW(input_url));
+	}
+
+	private IEnumerator LoadAudioWWW(string input_url){
 		WWW www = new WWW(input_url);
-		while(!www.isDone);
+		while(!www.isDone){
+			yield return www;
+		}
 		Debug.Log("URL Found");
-
+		
 		byte[] imageData = www.bytes;
-
+		
 		if(!LoadAudioFromData(imageData)){
 			Debug.LogError("Couldn't load Audio bytes");
 		} 
 
+		nWaveOutDevice.Play();
 		Resources.UnloadUnusedAssets();
 	}
 
@@ -94,14 +103,14 @@ public class AudioView : MonoBehaviour {
 			StartCoroutine(AudiosController.getSongData());
 		}
 		if(AudiosController.SongMeta_Load && isActive){
-			Debug.Log ("Calling update since meta load and isActive are both true");
+			//Debug.Log ("Calling update since meta load and isActive are both true");
 			if(AudiosController.currentSongURL != null && AudiosController.currentSongURL != ""){
 
 				//Load current song
-				Debug.Log("Current Song is not Null, here's proof: " + AudiosController.currentSongURL);
-				LoadAudio(AudiosController.currentSongURL + "?client_id=0cb45a6052596ee086177b11b29e8809");
-				Debug.Log("Current song Elapsed Time(2): " + ac.Current_song.Elapsed_time);
-				nWaveOutDevice.Play();
+				//Debug.Log("Current Song is not Null, here's proof: " + AudiosController.currentSongURL);
+				LoadAudio();
+				//Debug.Log("Current song Elapsed Time(2): " + ac.Current_song.Elapsed_time);
+
 				isActive = false;
 			}
 		}
@@ -117,23 +126,18 @@ public class AudioView : MonoBehaviour {
 			GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
 			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + AudiosController.CurrentSongName));
 
-			/*
-			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Play")){
-				if(!isPlaying){
-					nWaveOutDevice.Play();
-					isPlaying = !isPlaying;
-				}
 
+			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Mute")){
+				if(!isMuted){
+					temp_vol = nVolumeStream.Volume;
+					nVolumeStream.Volume = 0.0f;
+					isMuted = true;
+				}else{
+					nVolumeStream.Volume = temp_vol;
+					isMuted = false;
+				}
 			}
 
-			if(GUI.Button(new Rect(175, Screen.height - (Screen.height / 8) + 20, 50, 50), "Pause")){
-				if(isPlaying){
-					nWaveOutDevice.Pause();
-					isPlaying = !isPlaying;
-				}
-
-			}
-			*/
 			if(GUI.Button(new Rect(230, Screen.height - (Screen.height / 8) + 20, 50, 50), "V++")){
 				if(nVolumeStream.Volume >= 1.0f){
 					nVolumeStream.Volume = 1.0f;
@@ -154,6 +158,7 @@ public class AudioView : MonoBehaviour {
 
 	void OnJoinedRoom(){
 		isPlaying = false;
+		isMuted = false;
 		isActive = true;
 		if(nMainOutputStream != null){
 			//Stop previous song
@@ -168,7 +173,7 @@ public class AudioView : MonoBehaviour {
 	}
 
 	void OnDisconnectedFromPhoton(){
-		Debug.Log ("Disconnected from photon called");
+		//Debug.Log ("Disconnected from photon called");
 		nMainOutputStream.Dispose ();
 		nVolumeStream.Dispose ();
 		tmpStr.Dispose ();

@@ -112,7 +112,7 @@ public class RoomConfigMenu : MonoBehaviour {
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
-			GUILayout.Label ("New member email: ");
+			GUILayout.Label ("New member username: ");
 			GUI.SetNextControlName ("email field");
 			newMemberEmail = GUILayout.TextField (newMemberEmail);
 		GUILayout.EndHorizontal();
