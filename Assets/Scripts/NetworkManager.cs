@@ -128,7 +128,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 	}
 
 	[RPC] void kickToStart(string email){
-		if(email == "" || email == LoginModel.UserEmail.Trim('"')){
+		if(email == "" || email == LoginModel.Username.Trim('"')){
 			changeRoom(RoomModel.getInstance().getRoom("starting room"));
 		}
 	}
