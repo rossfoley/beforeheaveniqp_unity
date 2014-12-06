@@ -64,7 +64,7 @@ public sealed class AudiosController : MonoBehaviour {
 		Hashtable headers = new Hashtable();
 		Debug.Log ("CurrentRoomID = " + RoomModel.getInstance().CurrentRoom.RoomId);
 		headers.Add("Content-Type", "application/json");
-		headers.Add("X-User-Email", LoginModel.UserEmail);
+		headers.Add("X-User-Username", LoginModel.Username);
 		headers.Add("X-User-Token", LoginModel.AuthKey);
 
 		WWW allSongs = new WWW (RoomURL, null, headers);
@@ -119,7 +119,7 @@ public sealed class AudiosController : MonoBehaviour {
 
 		Hashtable headers = new Hashtable();
 		headers.Add("Content-Type", "application/json");
-		headers.Add("X-User-Email", LoginModel.UserEmail);
+		headers.Add("X-User-Username", LoginModel.Username);
 		headers.Add("X-User-Token", LoginModel.AuthKey);
 		//Test acquisition of song meta
 		string current_id = RoomModel.getInstance().CurrentRoom.RoomId;

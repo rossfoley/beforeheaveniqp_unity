@@ -5,7 +5,7 @@ public class FriendsListMenu : MonoBehaviour {
 
 	private Rect friendWindowRect = new Rect(100, 100, Screen.width - 200, Screen.height - 200);
 	
-	private string friendEmail = "";
+	private string friendUsername = "";
 	private int updateCounter = 0;
 
 	public int guiEdgeBorder = GUIController.GuiEdgeBorder;
@@ -36,10 +36,10 @@ public class FriendsListMenu : MonoBehaviour {
 		GUILayout.BeginArea (new Rect(0, guiEdgeBorder, 
 		                              friendWindowRect.width / 3, friendWindowRect.height));
 		
-		friendEmail = GUILayout.TextField (friendEmail);
+		friendUsername = GUILayout.TextField (friendUsername);
 		if (GUILayout.Button ("Add Friend")) {
-			LoginController.addFriend(friendEmail);
-			friendEmail = "";
+			LoginController.addFriend(friendUsername);
+			friendUsername = "";
 		}
 		
 		GUILayout.EndArea();
@@ -54,7 +54,7 @@ public class FriendsListMenu : MonoBehaviour {
 
 			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
 				GUILayout.BeginHorizontal();
-				if(GUILayout.Button(LoginModel.FriendData[i].UserEmail)) {
+				if(GUILayout.Button(LoginModel.FriendData[i].Username)) {
 					// TODO yield return?
 					Debug.Log ("Button pressed");
 					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
@@ -76,7 +76,7 @@ public class FriendsListMenu : MonoBehaviour {
 				}
 
 				if (GUILayout.Button("x")){
-					LoginController.removeFriend(LoginModel.FriendData[i].UserEmail); 
+					LoginController.removeFriend(LoginModel.FriendData[i].Username); 
 				}
 				GUILayout.EndHorizontal();
 

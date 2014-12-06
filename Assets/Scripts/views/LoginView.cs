@@ -54,8 +54,8 @@ public class LoginView : MonoBehaviour {
 			}
 			// Used for debug so logging can be done quickly
 			if (GUI.Button (new Rect(0, 60, 50, 20), "Bypass")){
-				userEmail = "awhan@wpi.edu";
-				userPassword = "hiandy257";
+				userEmail = "nathan@abc.com";
+				userPassword = "nintendo";
 				StartCoroutine(LoginController.login(userEmail, userPassword));
 			}
 
