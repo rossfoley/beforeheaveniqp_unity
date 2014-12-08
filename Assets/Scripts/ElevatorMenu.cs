@@ -73,18 +73,23 @@ public class ElevatorMenu : MonoBehaviour {
 				new Rect(0, 0, width / 2, 20*allRooms.Length));
 			for (int i = 0; i < allRooms.Length; i++) {
 				// If the current room has the same name as the next room, do not create the button for that room
-				if (RoomModel.getInstance().CurrentRoom.Name != allRooms[i].Name) {
+
 					// If one of the room buttons is pressed, join that room
 					GUILayout.BeginArea(new Rect(0, 40*i, width/2, 40));
-					if(GUI.Button(new Rect(0, 0, width / 2, 20), allRooms[i].Name)) {
-						GUIController.ElWindowVisible = false;
+					GUI.Label(new Rect(0, 0, width/4, 20), allRooms[i].Name.Trim('"'));
+					GUI.Label (new Rect(width/4, 0, width/4, 20), "Genre: " + allRooms[i].Genre.Trim ('"'));
+					GUI.Label(new Rect(0, 20, width/4, 20), "Visits: " + allRooms[i].Visits);
+					if (RoomModel.getInstance().CurrentRoom.Name != allRooms[i].Name) {
+						if(GUI.Button(new Rect(7*width/16, 0, width / 16, 40), "Join")) {
+							GUIController.ElWindowVisible = false;
 
-						NetworkManager.getInstance().changeRoom(allRooms[i]);
+							NetworkManager.getInstance().changeRoom(allRooms[i]);
 
 
+						}
 					}
 					GUILayout.EndArea();
-				}
+				
 			}
 			GUI.EndScrollView();
 		}
