@@ -10,7 +10,9 @@ public class LoginView : MonoBehaviour {
 	public GameObject roomController;
 	public GameObject chat;
 	public GameObject guiController;
-	
+
+	public Texture2D loginBackground;
+
 	string userEmail = "";
 	string userPassword = "";
 	string friendEmail = "";
@@ -28,6 +30,9 @@ public class LoginView : MonoBehaviour {
 	void OnGUI() {
 		// If the user has not logged in yet, display the GUI elements of the login screen
 		if (!LoginController.SuccessfulLogin){
+
+			GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), loginBackground);
+
 			GUI.BeginGroup (new Rect (50, 50, 500, 500));
 
 			// Email label
@@ -49,10 +54,15 @@ public class LoginView : MonoBehaviour {
 			}
 			// Used for debug so logging can be done quickly
 			if (GUI.Button (new Rect(0, 60, 50, 20), "Bypass")){
-				userEmail = "awhan@wpi.edu";
-				userPassword = "hiandy257";
+				userEmail = "nathan@abc.com";
+				userPassword = "nintendo";
 				StartCoroutine(LoginController.login(userEmail, userPassword));
 			}
+
+			if (GUI.Button (new Rect(0, 80, 50, 20), "Register")){
+				Application.OpenURL("http://beforeheaveniqp.herokuapp.com/users/sign_up");
+			}
+
 			switch(LoginController.LoginStatus){
 			case 3: 
 				// If the user does not enter a password, display the error message

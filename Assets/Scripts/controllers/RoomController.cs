@@ -7,7 +7,7 @@ using System.Net;
 public class RoomController : MonoBehaviour {
 
 	private static RoomController instance = null;
-	private string userEmail;
+	private string username;
 	private string userAuthKey;
 	private string userId;
 
@@ -36,9 +36,12 @@ public class RoomController : MonoBehaviour {
 		instance = this;
 
 		// Grabs the user's login information from LoginModel
-		userEmail = LoginModel.UserEmail;
+		username = LoginModel.Username;
 		userAuthKey = LoginModel.AuthKey;
 		userId = LoginModel.UserId;
+
+		Debug.Log ("Username = " + LoginModel.Username);
+		Debug.Log ("AuthKey = " + LoginModel.AuthKey);
 
 		// Boolean used to check if it is in the process of switching rooms
 		isChangingRoom = false;
@@ -54,7 +57,7 @@ public class RoomController : MonoBehaviour {
 		// Set up the request
 		Hashtable headers = new Hashtable();
 		headers.Add ("Content-Type", "application/json");
-		headers.Add("X-User-Email", userEmail);
+		headers.Add("X-User-Username", username);
 		headers.Add("X-User-Token", userAuthKey);
 		WWW rooms;
 		// If the search term is empty, grab all the rooms on server
@@ -70,6 +73,8 @@ public class RoomController : MonoBehaviour {
 
 		//TODO Eventually remove, but handy for debugging in the mean-time. Prints text of all the rooms and their members
 		Debug.Log (rooms.text);
+
+		Debug.Log (rooms.error);
 		var roomsParsed = JSON.Parse (rooms.text);
 		// Set AllRooms to what was returned from the request
 		RoomModel.getInstance().AllRooms = new RoomData[roomsParsed["data"].AsArray.Count];
@@ -97,7 +102,7 @@ public class RoomController : MonoBehaviour {
 		newRoomData.Add ("genre", newRoomGenre);
 		var headers = new Hashtable();
 		headers.Add ("Content-Type", "application/json");
-		headers.Add ("X-User-Email", userEmail);
+		headers.Add ("X-User-Username", username);
 		headers.Add ("X-User-Token", userAuthKey);
 		
 		// TODO
@@ -127,7 +132,7 @@ public class RoomController : MonoBehaviour {
 		request.Method = "DELETE";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", userEmail);
+		request.Headers.Add("x-user-Username", username);
 		request.Headers.Add("x-user-token", userAuthKey);
 		request.ContentLength = 0;
 		string responseContent=null;
@@ -140,7 +145,7 @@ public class RoomController : MonoBehaviour {
 		NetworkManager.getInstance().kickAll();
 	}
 
-	public void addBandMember(string roomId, string newMemberEmail) {
+	public void addBandMember(string roomId, string newMemberUsername) {
 		RoomConfigMenu.UpdateRoomStatus = 1;
 		
 		// Create the put request for adding the new band member
@@ -151,9 +156,9 @@ public class RoomController : MonoBehaviour {
 		request.Method = "PUT";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", userEmail);
+		request.Headers.Add("x-user-username", username);
 		request.Headers.Add("x-user-token", userAuthKey);
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_member_email\": \"" + newMemberEmail + "\"}");
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_member_username\": \"" + newMemberUsername + "\"}");
 		request.ContentLength = byteArray.Length;
 		using (var writer = request.GetRequestStream()){
 			writer.Write(byteArray, 0, byteArray.Length);
@@ -170,7 +175,7 @@ public class RoomController : MonoBehaviour {
 		// If a WebException is caught, display an error message
 		catch(WebException e){
 			//TODO Error message
-			Debug.Log ("Invalid email entered");
+			Debug.Log ("Invalid username entered");
 			RoomConfigMenu.UpdateRoomStatus = -2;
 		}
 	}
@@ -182,7 +187,7 @@ public class RoomController : MonoBehaviour {
 		request.Method = "PUT";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", LoginModel.UserEmail );
+		request.Headers.Add("x-user-username", LoginModel.Username);
 		request.Headers.Add("x-user-token", LoginModel.AuthKey );
 		
 		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\" } }");
