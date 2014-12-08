@@ -5,7 +5,7 @@ public class UserData{
 
 	private string userId;
 	private string currentRoomId;
-	private string userEmail;
+	private string username;
 
 
 	// Use this for initialization
@@ -21,7 +21,7 @@ public class UserData{
 	public UserData(string userId, string currentRoomId, string userEmail){
 		this.userId = userId;
 		this.currentRoomId = currentRoomId;
-		this.userEmail = userEmail;
+		this.username = userEmail;
 	}
 
 	public string UserId {
@@ -42,12 +42,12 @@ public class UserData{
 		}
 	}
 
-	public string UserEmail {
+	public string Username {
 		get {
-			return this.userEmail;
+			return this.username;
 		}
 		set {
-			userEmail = value;
+			username = value;
 		}
 	}
 }

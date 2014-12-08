@@ -4,7 +4,7 @@ using SimpleJSON;
 
 public class LoginController : MonoBehaviour {
 
-	private static string userEmail = "";
+	private static string username = "";
 	private static string userPassword = "";
 	private static string authKey;
 	private static string userId;
@@ -12,11 +12,11 @@ public class LoginController : MonoBehaviour {
 	private static bool successfulLogin = false;
 	private static int loginStatus = 0;
 
-	// Logs the user in using what the user typed into the email and password text fields
-	public static IEnumerator login(string userEmailInput, string userPasswordInput){
-		userEmail = userEmailInput;
+	// Logs the user in using what the user typed into the username and password text fields
+	public static IEnumerator login(string usernameInput, string userPasswordInput){
+		username = usernameInput;
 		userPassword = userPasswordInput;
-		if (userEmail == "") {
+		if (username == "") {
 			loginStatus = 2;
 			return true;
 		}
@@ -28,7 +28,8 @@ public class LoginController : MonoBehaviour {
 		WWW login;
 		// Login to get an authentication token
 		WWWForm loginForm = new WWWForm ();
-		loginForm.AddField ("email", userEmail);
+		Debug.Log (username);
+		loginForm.AddField ("username", username);
 		loginForm.AddField ("password", userPassword);
 		login = new WWW(loginURL, loginForm);
 		yield return login;
@@ -49,7 +50,7 @@ public class LoginController : MonoBehaviour {
 				userId = (parsed ["data"] ["_id"] ["$oid"]).ToString ().Trim ('"');
 
 				// Sets the values of the login model
-				LoginModel.UserEmail = userEmail;
+				LoginModel.Username = username;
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
 			}
@@ -69,8 +70,8 @@ public class LoginController : MonoBehaviour {
 		request.Method = "GET";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", LoginModel.UserEmail);
-		request.Headers.Add("x-user-token", LoginModel.AuthKey);
+		request.Headers.Add("X-User-Username", LoginModel.Username);
+		request.Headers.Add("X-User-Token", LoginModel.AuthKey);
 		request.ContentLength = 0;
 		string responseContent=null;
 		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
@@ -81,31 +82,31 @@ public class LoginController : MonoBehaviour {
 		var parsed = JSON.Parse (responseContent);
 		LoginModel.FriendData = new UserData[parsed ["data"].AsArray.Count];
 		int i = 0;
-		string userEmail = "";
+		string username = "";
 		string currentRoomId = "";
 		string userId = "";
 		foreach(JSONNode data in (parsed ["data"]).AsArray){
-			userEmail = data ["email"];
+			username = data ["username"];
 			currentRoomId = data ["current_room_id"];
 			userId = data ["_id"] ["$oid"];
-			UserData ud = new UserData(userId, currentRoomId, userEmail);
+			UserData ud = new UserData(userId, currentRoomId, username);
 			LoginModel.FriendData[i] = ud;
 			i++;
 		}
 	}
 	
-	// Adds the given friend email to the list of friends of the current user
-	public static void addFriend(string friendEmail){
+	// Adds the given friend username to the list of friends of the current user
+	public static void addFriend(string friendUsername){
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/add_friend/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		
 		request.Method = "PUT";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-username", LoginModel.Username);
 		request.Headers.Add("x-user-token", LoginModel.AuthKey);
 		
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_friend_email\": \"" + friendEmail + "\"}");
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_friend_username\": \"" + friendUsername + "\"}");
 		request.ContentLength = byteArray.Length;
 		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
 		string responseContent=null;
@@ -116,17 +117,17 @@ public class LoginController : MonoBehaviour {
 		}
 	}
 
-	public static void removeFriend(string friendEmail){
+	public static void removeFriend(string friendUsername){
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId +"/remove_friend/") as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		
 		request.Method = "PUT";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-username", LoginModel.Username);
 		request.Headers.Add("x-user-token", LoginModel.AuthKey);
 		
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_friend_email\": \"" + friendEmail + "\"}");
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"new_friend_username\": \"" + friendUsername + "\"}");
 		request.ContentLength = byteArray.Length;
 		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
 		string responseContent=null;
@@ -147,7 +148,7 @@ public class LoginController : MonoBehaviour {
 		request.Method = "PUT";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add("x-user-username", LoginModel.Username);
 		request.Headers.Add("x-user-token", LoginModel.AuthKey);
 		
 		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_id\": \"" + LoginModel.CurrentRoomId + "\"}");
@@ -168,7 +169,7 @@ public class LoginController : MonoBehaviour {
 		request.Method = "GET";
 		
 		request.ContentType = "application/json";
-		request.Headers.Add ("x-user-email", LoginModel.UserEmail);
+		request.Headers.Add ("x-user-username", LoginModel.Username);
 		request.Headers.Add ("x-user-token", LoginModel.AuthKey);
 		request.ContentLength = 0;
 		string responseContent = null;

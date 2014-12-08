@@ -106,7 +106,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 	[RPC]
 	public void Chat(string newLine, PhotonMessageInfo mi)
 	{
-		string senderName = LoginModel.UserEmail;
+		string senderName = LoginModel.Username;
 		
 		if (mi != null && mi.sender != null)
 		{
@@ -116,7 +116,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 			}
 			else
 			{
-				senderName = LoginModel.UserEmail;
+				senderName = LoginModel.Username;
 			}
 		}
 		
