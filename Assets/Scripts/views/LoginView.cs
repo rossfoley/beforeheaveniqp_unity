@@ -39,17 +39,21 @@ public class LoginView : MonoBehaviour {
 			GUI.Label (new Rect (0, 0, 100, 20), "Email: ");
 
 			// Email text field
+			GUI.SetNextControlName("username field");
 			userEmail = GUI.TextField (new Rect(110, 0, 200, 20), userEmail);
 
 			// Password label
 			GUI.Label (new Rect (0, 20, 100, 20), "Password: ");
 
 			// Password text field
+			GUI.SetNextControlName("password field");
 			userPassword = GUI.PasswordField (new Rect(110, 20, 200, 20), userPassword, '*');
 
 			// If the login button is clicked, check for input and then call the login() function if the user 
 			// has inputted both an email and password
-			if (GUI.Button (new Rect (0, 40, 50, 20), "Login")) {
+			if (GUI.Button (new Rect (0, 40, 50, 20), "Login") ||
+			    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && 
+			 	((GUI.GetNameOfFocusedControl() == "username field") || GUI.GetNameOfFocusedControl() == "password field"))){
 				StartCoroutine(LoginController.login (userEmail, userPassword));
 			}
 			// Used for debug so logging can be done quickly
