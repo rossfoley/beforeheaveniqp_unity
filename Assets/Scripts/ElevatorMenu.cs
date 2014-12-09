@@ -67,10 +67,11 @@ public class ElevatorMenu : MonoBehaviour {
 		// Populates a scroll view with all of the rooms currently in the database
 		GUI.skin.scrollView = style;
 		if(allRooms.Length > 0) {
+			int scrollViewHeight = allRooms.Length * 42;
 			scrollPosition = GUI.BeginScrollView (
-				new Rect (width / 3, 2 * guiEdgeBorder, width / 2, height - guiEdgeBorder),
+				new Rect (width / 3, 2 * guiEdgeBorder, (width / 2) + 50, height - guiEdgeBorder - 40),
 				scrollPosition, 
-				new Rect(0, 0, width / 2, 20*allRooms.Length));
+				new Rect(0, 0, (width / 2) + 30, scrollViewHeight));
 			for (int i = 0; i < allRooms.Length; i++) {
 				// If the current room has the same name as the next room, do not create the button for that room
 
