@@ -7,6 +7,7 @@ public class FriendsListMenu : MonoBehaviour {
 	
 	private string friendUsername = "";
 	private int updateCounter = 0;
+	private int statusCounter = 0;
 
 	public int guiEdgeBorder = GUIController.GuiEdgeBorder;
 	
@@ -54,27 +55,56 @@ public class FriendsListMenu : MonoBehaviour {
 
 			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
 				GUILayout.BeginHorizontal();
+				bool isFriendOnline = true;
+
+				if (statusCounter == 0){
+					bool isUserOnline = LoginController.isUserOnline(LoginModel.FriendData[i].UserId);
+					if (isUserOnline){
+						isFriendOnline = isUserOnline;
+					}
+					else {
+						isFriendOnline = isUserOnline;
+					}
+					statusCounter = 150;
+					if (LoginModel.FriendData[i].IsOnline != isFriendOnline){
+						LoginModel.FriendData[i].IsOnline = isFriendOnline;
+					}
+				}
+				else {
+					statusCounter--;
+				}
+
+				if (LoginModel.FriendData[i].IsOnline){
+					GUI.color = Color.green;
+				}
+				else {
+					GUI.color = Color.red;
+				}
+
 				if(GUILayout.Button(LoginModel.FriendData[i].Username)) {
 					// TODO yield return?
-					Debug.Log ("Button pressed");
-					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
-					Debug.Log ("Friend room name " + roomName);
-					RoomController.getInstance().getRooms("");
-					RoomData friendRD = null;
-					int j = 0;
-					foreach (RoomData rd in RoomModel.getInstance().AllRooms){
-						if (rd.Name.Trim ('"').Equals(roomName)){
-							friendRD = rd;
-							Debug.Log ("friendRD = " + friendRD.RoomId);
-							break;
+					if (LoginModel.FriendData[i].IsOnline){
+						Debug.Log ("Button pressed");
+						string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
+						Debug.Log ("Friend room name " + roomName);
+						RoomController.getInstance().getRooms("");
+						RoomData friendRD = null;
+						int j = 0;
+						foreach (RoomData rd in RoomModel.getInstance().AllRooms){
+							if (rd.Name.Trim ('"').Equals(roomName)){
+								friendRD = rd;
+								Debug.Log ("friendRD = " + friendRD.RoomId);
+								break;
+							}
+							j++;
 						}
-						j++;
-					}
-					if (friendRD != null){
-						NetworkManager.getInstance().changeRoom(friendRD);
+						if (friendRD != null){
+							NetworkManager.getInstance().changeRoom(friendRD);
+						}
 					}
 				}
 
+				GUI.color = Color.gray;
 				if (GUILayout.Button("x")){
 					LoginController.removeFriend(LoginModel.FriendData[i].Username); 
 				}
@@ -84,7 +114,6 @@ public class FriendsListMenu : MonoBehaviour {
 
 			GUILayout.EndScrollView();
 			GUILayout.EndArea ();
-
 		}
 	}
 }
