@@ -284,7 +284,6 @@ MonoBehaviour:
   roomController: {fileID: 2074609415}
   chat: {fileID: 426209483}
   guiController: {fileID: 1330364724}
-  loginBackground: {fileID: 2800000, guid: ab1999fa24d30a74899908a5e8d07ed5, type: 3}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,7 +306,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 371330630}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.8999996, y: -11.4359102, z: 5.54654503}
+  m_LocalPosition: {x: -12.6382885, y: -11.4359102, z: 5.54654503}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1737087073}
@@ -11761,7 +11760,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1365570922
 Transform:
   m_ObjectHideFlags: 0
@@ -12732,7 +12731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca1f6d49095dc82489573cb9bb1f9dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundcloud_icon: {fileID: 2800000, guid: bc0d45d5423c6894da32edba81e5d031, type: 3}
+  soundcloud_icon: {fileID: 0}
 --- !u!1 &2039934022
 GameObject:
   m_ObjectHideFlags: 0
