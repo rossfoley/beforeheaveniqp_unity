@@ -200,4 +200,13 @@ public sealed class AudiosController : MonoBehaviour {
 			StartCoroutine(getSongMeta(songMetaIndex));
 		}
 	}
+
+	public static int SongMetaIndex {
+		get {
+			return songMetaIndex;
+		}
+		set {
+			songMetaIndex = value;
+		}
+	}
 }

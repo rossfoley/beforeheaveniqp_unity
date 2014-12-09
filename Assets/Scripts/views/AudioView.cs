@@ -69,6 +69,13 @@ public class AudioView : MonoBehaviour {
 
 		nWaveOutDevice.Play();
 		Resources.UnloadUnusedAssets();
+
+		int previousSongPosition = ac.Current_song.Elapsed_time;
+		StartCoroutine(AudiosController.getSongMeta(AudiosController.SongMetaIndex));
+		int currentSongPosition = ac.Current_song.Elapsed_time;
+
+		duration = duration - (currentSongPosition - previousSongPosition);
+		nMainOutputStream.Seek(currentSongPosition * 100, SeekOrigin.Begin);
 	}
 
 	private IEnumerator loadNextSong(){
