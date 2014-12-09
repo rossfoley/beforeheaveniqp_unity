@@ -148,6 +148,7 @@ public class RoomController : MonoBehaviour {
 				responseContent = reader.ReadToEnd();
 			}
 		}
+		GUIController.CrWindowVisible = false;
 
 		NetworkManager.getInstance().kickAll();
 	}
