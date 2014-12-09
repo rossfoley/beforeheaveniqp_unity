@@ -7,6 +7,7 @@ public class FriendsListMenu : MonoBehaviour {
 	
 	private string friendUsername = "";
 	private int updateCounter = 0;
+	private int statusCounter = 0;
 
 	public int guiEdgeBorder = GUIController.GuiEdgeBorder;
 	
@@ -55,9 +56,21 @@ public class FriendsListMenu : MonoBehaviour {
 			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
 				bool isFriendOnline = false;
 				GUILayout.BeginHorizontal();
-				if (LoginController.isUserOnline(LoginModel.FriendData[i].UserId)){
+				if (statusCounter == 0){
+					if (LoginController.isUserOnline(LoginModel.FriendData[i].UserId)){
+						isFriendOnline = true;
+					}
+					else {
+						isFriendOnline = false;
+					}
+					statusCounter = 150;
+					LoginModel.FriendData[i].IsOnline = isFriendOnline;
+				}
+				else {
+					statusCounter--;
+				}
+				if (LoginModel.FriendData[i].IsOnline){
 					GUI.color = Color.green;
-					isFriendOnline = true;
 				}
 				else {
 					GUI.color = Color.red;
@@ -85,6 +98,7 @@ public class FriendsListMenu : MonoBehaviour {
 					}
 				}
 
+				GUI.color = Color.gray;
 				if (GUILayout.Button("x")){
 					LoginController.removeFriend(LoginModel.FriendData[i].Username); 
 				}
@@ -94,7 +108,6 @@ public class FriendsListMenu : MonoBehaviour {
 
 			GUILayout.EndScrollView();
 			GUILayout.EndArea ();
-			GUI.color = Color.black;
 		}
 	}
 }
