@@ -54,27 +54,33 @@ public class FriendsListMenu : MonoBehaviour {
 			scrollPos = GUILayout.BeginScrollView (scrollPos);
 
 			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
-				bool isFriendOnline = false;
 				GUILayout.BeginHorizontal();
+				bool isFriendOnline = true;
+
 				if (statusCounter == 0){
-					if (LoginController.isUserOnline(LoginModel.FriendData[i].UserId)){
-						isFriendOnline = true;
+					bool isUserOnline = LoginController.isUserOnline(LoginModel.FriendData[i].UserId);
+					if (isUserOnline){
+						isFriendOnline = isUserOnline;
 					}
 					else {
-						isFriendOnline = false;
+						isFriendOnline = isUserOnline;
 					}
 					statusCounter = 150;
-					LoginModel.FriendData[i].IsOnline = isFriendOnline;
+					if (LoginModel.FriendData[i].IsOnline != isFriendOnline){
+						LoginModel.FriendData[i].IsOnline = isFriendOnline;
+					}
 				}
 				else {
 					statusCounter--;
 				}
+
 				if (LoginModel.FriendData[i].IsOnline){
 					GUI.color = Color.green;
 				}
 				else {
 					GUI.color = Color.red;
 				}
+
 				if(GUILayout.Button(LoginModel.FriendData[i].Username)) {
 					// TODO yield return?
 					if (isFriendOnline){

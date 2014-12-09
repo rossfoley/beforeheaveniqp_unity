@@ -91,6 +91,7 @@ public class LoginController : MonoBehaviour {
 			currentRoomId = data ["current_room_id"];
 			userId = data ["_id"] ["$oid"];
 			UserData ud = new UserData(userId, currentRoomId, username);
+			ud.IsOnline = data["is_online"].AsBool;
 			LoginModel.FriendData[i] = ud;
 			i++;
 		}
