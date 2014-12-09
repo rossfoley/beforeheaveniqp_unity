@@ -53,25 +53,35 @@ public class FriendsListMenu : MonoBehaviour {
 			scrollPos = GUILayout.BeginScrollView (scrollPos);
 
 			for (int i = 0; i < LoginModel.FriendData.Length; i++) {
+				bool isFriendOnline = false;
 				GUILayout.BeginHorizontal();
+				if (LoginController.isUserOnline(LoginModel.FriendData[i].UserId)){
+					GUI.color = Color.green;
+					isFriendOnline = true;
+				}
+				else {
+					GUI.color = Color.red;
+				}
 				if(GUILayout.Button(LoginModel.FriendData[i].Username)) {
 					// TODO yield return?
-					Debug.Log ("Button pressed");
-					string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
-					Debug.Log ("Friend room name " + roomName);
-					RoomController.getInstance().getRooms("");
-					RoomData friendRD = null;
-					int j = 0;
-					foreach (RoomData rd in RoomModel.getInstance().AllRooms){
-						if (rd.Name.Trim ('"').Equals(roomName)){
-							friendRD = rd;
-							Debug.Log ("friendRD = " + friendRD.RoomId);
-							break;
+					if (isFriendOnline){
+						Debug.Log ("Button pressed");
+						string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
+						Debug.Log ("Friend room name " + roomName);
+						RoomController.getInstance().getRooms("");
+						RoomData friendRD = null;
+						int j = 0;
+						foreach (RoomData rd in RoomModel.getInstance().AllRooms){
+							if (rd.Name.Trim ('"').Equals(roomName)){
+								friendRD = rd;
+								Debug.Log ("friendRD = " + friendRD.RoomId);
+								break;
+							}
+							j++;
 						}
-						j++;
-					}
-					if (friendRD != null){
-						NetworkManager.getInstance().changeRoom(friendRD);
+						if (friendRD != null){
+							NetworkManager.getInstance().changeRoom(friendRD);
+						}
 					}
 				}
 
@@ -84,7 +94,7 @@ public class FriendsListMenu : MonoBehaviour {
 
 			GUILayout.EndScrollView();
 			GUILayout.EndArea ();
-
+			GUI.color = Color.black;
 		}
 	}
 }
