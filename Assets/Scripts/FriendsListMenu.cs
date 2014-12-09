@@ -83,7 +83,7 @@ public class FriendsListMenu : MonoBehaviour {
 
 				if(GUILayout.Button(LoginModel.FriendData[i].Username)) {
 					// TODO yield return?
-					if (isFriendOnline){
+					if (LoginModel.FriendData[i].IsOnline){
 						Debug.Log ("Button pressed");
 						string roomName = LoginController.getCurrentRoomOfUser(LoginModel.FriendData[i].UserId);
 						Debug.Log ("Friend room name " + roomName);
