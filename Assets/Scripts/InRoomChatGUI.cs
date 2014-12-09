@@ -52,7 +52,10 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 		{
 			if (!string.IsNullOrEmpty(this.inputLine))
 			{
-				this.photonView.RPC("Chat", PhotonTargets.All, this.inputLine);
+				object[] chatObject = new object[2];
+				chatObject[0] = this.inputLine;
+				chatObject[1] = LoginModel.Username;
+				this.photonView.RPC("Chat", PhotonTargets.All, chatObject);
 				this.inputLine = "";
 				GUI.FocusControl("ChatInput");
 				return; // printing the now modified list would result in an error. to avoid this, we just skip this single frame
@@ -94,7 +97,10 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 		if (GUILayout.Button("Send", GUILayout.ExpandWidth(false)))
 		{
 			if (!string.IsNullOrEmpty(this.inputLine)) {
-				this.photonView.RPC("Chat", PhotonTargets.All, this.inputLine);
+				object[] chatObject = new object[2];
+				chatObject[0] = this.inputLine;
+				chatObject[1] = LoginModel.Username;
+				this.photonView.RPC("Chat", PhotonTargets.All, chatObject);
 				this.inputLine = "";
 				GUI.FocusControl("ChatInput");
 			}
@@ -104,19 +110,21 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 	}
 	
 	[RPC]
-	public void Chat(string newLine, PhotonMessageInfo mi)
+	public void Chat(string newLine, string username, PhotonMessageInfo mi)
 	{
-		string senderName = LoginModel.Username;
-		
+		string senderName = username;
+
+		Debug.Log ("Sender name = " + mi.sender);
+
 		if (mi != null && mi.sender != null)
 		{
-			if (!string.IsNullOrEmpty(mi.sender.name))
+			if (!string.IsNullOrEmpty(username))
 			{
-				senderName = mi.sender.name;
+				senderName = username;
 			}
 			else
 			{
-				senderName = LoginModel.Username;
+				senderName = "Anonymous";
 			}
 		}
 		

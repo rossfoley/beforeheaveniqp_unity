@@ -74,13 +74,14 @@ public class RoomConfigMenu : MonoBehaviour {
 		                              configWindowRect.width/3-guiEdgeBorder,
 		                              configWindowRect.height-guiEdgeBorder));
 		GUILayout.BeginVertical();
-		// Add a new band member to the current room
-		AddMember();
+		// Create a new room
+
+		CreateRoom();
 
 		GUILayout.FlexibleSpace();
 
-		// Create a new room
-		CreateRoom();
+		// Add a new band member to the current room
+		AddMember();
 
 		GUILayout.EndVertical();
 		GUILayout.EndArea();
@@ -103,12 +104,12 @@ public class RoomConfigMenu : MonoBehaviour {
 
 		GUILayout.BeginHorizontal();
 			GUILayout.Label ("Room Name: ");
-			updateRoomName = GUILayout.TextField (updateRoomName);
+			updateRoomName = GUILayout.TextField (updateRoomName.Trim ('"'));
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();
 			GUILayout.Label ("Room Genre: ");
-			updateRoomGenre = GUILayout.TextField (updateRoomGenre);
+			updateRoomGenre = GUILayout.TextField (updateRoomGenre.Trim ('"'));
 		GUILayout.EndHorizontal();
 
 		GUILayout.BeginHorizontal();

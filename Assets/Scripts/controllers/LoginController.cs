@@ -53,6 +53,7 @@ public class LoginController : MonoBehaviour {
 				LoginModel.Username = username;
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
+				updateOnlineStatus(true);
 			}
 			// If the login was unsuccessful, display the error message
 			else {
@@ -90,6 +91,7 @@ public class LoginController : MonoBehaviour {
 			currentRoomId = data ["current_room_id"];
 			userId = data ["_id"] ["$oid"];
 			UserData ud = new UserData(userId, currentRoomId, username);
+			ud.IsOnline = data["is_online"].AsBool;
 			LoginModel.FriendData[i] = ud;
 			i++;
 		}
@@ -180,6 +182,49 @@ public class LoginController : MonoBehaviour {
 		}
 		var parsed = JSON.Parse (responseContent);
 		return parsed ["data"] ["name"];
+	}
+
+	public static bool isUserOnline(string userId){
+		var request = System.Net.WebRequest.Create ("http://beforeheaveniqp.herokuapp.com/api/users/" + userId + "/is_online/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "GET";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add ("x-user-username", LoginModel.Username);
+		request.Headers.Add ("x-user-token", LoginModel.AuthKey);
+		request.ContentLength = 0;
+		string responseContent = null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd ();
+			}
+		}
+		var parsed = JSON.Parse (responseContent);
+		return parsed ["data"].AsBool;
+	}
+
+	public static void updateOnlineStatus(bool status){
+		var request = System.Net.WebRequest.Create ("http://beforeheaveniqp.herokuapp.com/api/users/" + LoginModel.UserId + "/is_online/") as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		
+		request.Method = "PUT";
+		
+		request.ContentType = "application/json";
+		request.Headers.Add ("x-user-username", LoginModel.Username);
+		request.Headers.Add ("x-user-token", LoginModel.AuthKey);
+		request.ContentLength = 0;
+		string responseContent = null;
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"is_online\": \"" + status + "\"}");
+		request.ContentLength = byteArray.Length;
+		using (var writer = request.GetRequestStream()) {
+			writer.Write(byteArray, 0, byteArray.Length);
+		}
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
 	}
 
 	public static bool SuccessfulLogin {

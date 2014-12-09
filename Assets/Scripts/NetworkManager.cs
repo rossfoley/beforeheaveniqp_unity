@@ -121,4 +121,9 @@ public class NetworkManager : Photon.MonoBehaviour {
 			changeRoom(RoomModel.getInstance().getRoom("starting room"));
 		}
 	}
+
+	void OnApplicationQuit() { 
+		Debug.Log ("Quitting the app");
+		LoginController.updateOnlineStatus(false);
+	}
 }

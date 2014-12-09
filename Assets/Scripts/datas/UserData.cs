@@ -6,6 +6,7 @@ public class UserData{
 	private string userId;
 	private string currentRoomId;
 	private string username;
+	private bool isOnline;
 
 
 	// Use this for initialization
@@ -22,6 +23,7 @@ public class UserData{
 		this.userId = userId;
 		this.currentRoomId = currentRoomId;
 		this.username = userEmail;
+		isOnline = false;
 	}
 
 	public string UserId {
@@ -48,6 +50,15 @@ public class UserData{
 		}
 		set {
 			username = value;
+		}
+	}
+
+	public bool IsOnline {
+		get {
+			return this.isOnline;
+		}
+		set {
+			isOnline = value;
 		}
 	}
 }
