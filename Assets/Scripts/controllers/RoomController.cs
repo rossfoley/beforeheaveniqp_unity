@@ -10,6 +10,11 @@ public class RoomController : MonoBehaviour {
 	private string username;
 	private string userAuthKey;
 	private string userId;
+
+	public enum roomPresets {
+		defaultRoom = 0,
+		jazzRoom = 1,
+	}
 	
 	private bool isChangingRoom;
 
@@ -80,14 +85,13 @@ public class RoomController : MonoBehaviour {
 				i++;
 			}
 			// Build the roomData and place it in the allRooms array
-			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
+			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds, data["unity_data"].AsInt);
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		
 	}
 
-	public IEnumerator createRoom(string newRoomName, string newRoomGenre){
+	public IEnumerator createRoom(string newRoomName, string newRoomGenre, int roomPreset){
 		RoomConfigMenu.CreateRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();
@@ -100,21 +104,8 @@ public class RoomController : MonoBehaviour {
 		headers.Add ("X-User-Token", userAuthKey);
 		
 		// TODO
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\"} }");
-		
-		StringBuilder data = new StringBuilder();
-		data.Append("{\n");
-		data.Append("\t\"name\":");
-		data.Append(" \"" + newRoomName + "\",\n");
-		data.Append("\t\"genre\":");
-		data.Append(" \"" + newRoomGenre + "\"\n");
-		data.Append("}");
-		
-		roomCreateForm.AddField("room_data", data.ToString ());
-		
-		
-		byte[] rawData = roomCreateForm.data;
-		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\",\"unity_data\": \"" + roomPreset + "\"} }");
+
 		WWW newRoomRequest = new WWW(roomsURL, byteArray, headers);
 		yield return newRoomRequest;
 		if (!string.IsNullOrEmpty(newRoomRequest.error)) {

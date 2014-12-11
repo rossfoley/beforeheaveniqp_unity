@@ -8,7 +8,7 @@ public class BaseRoom : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 	
-		roomData = new RoomData ("0", "TestRoom", "TestGenre", 1, null);
+		roomData = new RoomData ("0", "TestRoom", "TestGenre", 1, null, (int) RoomController.roomPresets.defaultRoom);
 
 		// Increment visits and send to database
 		roomData.Visits++;
