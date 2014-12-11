@@ -14,6 +14,13 @@ public class RoomConfigMenu : MonoBehaviour {
 	private string newRoomName = "";
 	private string newRoomGenre = "";
 	private string roomPreset = ""; 
+
+	// Room preset structures
+	int enumLength = RoomController.roomPresets.GetValues(typeof(RoomController.roomPresets)).Length;
+	int presetIndex = 0;
+	int chosenPreset = 0;
+	string[] presets;
+	bool[] presetValues;
 	
 	private static int createRoomStatus = 0;
 	private static int updateRoomStatus;
@@ -53,6 +60,19 @@ public class RoomConfigMenu : MonoBehaviour {
 		newRoomName = "";
 		updateRoomName = RoomModel.getInstance().CurrentRoom.Name;
 		updateRoomGenre = RoomModel.getInstance().CurrentRoom.Genre;
+
+		presets = new string[enumLength];
+		presetValues = new bool[enumLength];
+		
+		foreach (var value in RoomController.roomPresets.GetValues(typeof(RoomController.roomPresets))) {
+			Debug.Log("Presets: " + presetIndex);
+			presets[presetIndex] = value.ToString ();
+			presetValues[presetIndex] = false;
+			presetIndex++;
+		}
+		presetValues[0] = true;
+		presetIndex = 0;
+		Debug.Log ("HAPPENED");
 	}
 
 	void OnGUI() {
@@ -178,20 +198,6 @@ public class RoomConfigMenu : MonoBehaviour {
 	}
 
 	void CreateRoom () {
-		int enumLength = RoomController.roomPresets.GetValues(typeof(RoomController.roomPresets)).Length;
-		int presetIndex = 0;
-		int chosenPreset = 0;
-		string[] presets = new string[enumLength];
-		bool[] presetValues = new bool[enumLength];
-		
-		foreach (var value in RoomController.roomPresets.GetValues(typeof(RoomController.roomPresets))) {
-			presets[presetIndex] = value.ToString ();
-			presetValues[presetIndex] = false;
-			presetValues[0] = true;
-			presetIndex++;
-		}
-		presetIndex = 0;
-
 		GUILayout.BeginHorizontal();
 			GUILayout.FlexibleSpace();
 			GUILayout.Label ("Create Room");
@@ -216,6 +222,8 @@ public class RoomConfigMenu : MonoBehaviour {
 			GUILayout.BeginVertical();
 			for (presetIndex = 0; presetIndex <= presets.Length - 1; presetIndex++) {
 				if (GUILayout.Toggle(presetValues[presetIndex], presets[presetIndex])) {
+					setAllPresetsFalse();
+					presetValues[presetIndex] = true;
 					chosenPreset = presetIndex;
 				}
 			}
@@ -247,5 +255,11 @@ public class RoomConfigMenu : MonoBehaviour {
 		}
 
 		GUILayout.EndHorizontal();
+	}
+
+	void setAllPresetsFalse () {
+		for (int i = 0; i <= presetValues.Length - 1; i++) {
+			presetValues[i] = false;
+		}
 	}
 }
