@@ -69,6 +69,13 @@ public class AudioView : MonoBehaviour {
 
 		nWaveOutDevice.Play();
 		Resources.UnloadUnusedAssets();
+
+		int previousSongPosition = ac.Current_song.Elapsed_time;
+		StartCoroutine(AudiosController.getSongMeta(AudiosController.SongMetaIndex));
+		int currentSongPosition = ac.Current_song.Elapsed_time;
+
+		duration = duration - (currentSongPosition - previousSongPosition);
+		nMainOutputStream.Seek(currentSongPosition * 100, SeekOrigin.Begin);
 	}
 
 	private IEnumerator loadNextSong(){
@@ -124,7 +131,7 @@ public class AudioView : MonoBehaviour {
 		if(LoginController.SuccessfulLogin){
 			GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
 			GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
-			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + mp3link[0]));
+			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + AudiosController.CurrentSongName));
 
 
 			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Mute")){

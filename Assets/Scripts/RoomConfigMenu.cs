@@ -97,13 +97,20 @@ public class RoomConfigMenu : MonoBehaviour {
 		                              configWindowRect.width/2-guiEdgeBorder,
 		                              configWindowRect.height-guiEdgeBorder));
 		GUILayout.BeginVertical();
-		// Add a new band member to the current room
-		AddMember();
+		// Create a new room
+
+		CreateRoom();
 
 		GUILayout.Space(4*guiEdgeBorder);
 
-		// Create a new room
-		CreateRoom();
+		if(RoomModel.getInstance().userIsMember()){
+			// Add a new band member to the current room
+			AddMember();
+		}
+		else{
+			RoomDetails();
+		}
+
 
 		GUILayout.EndVertical();
 		GUILayout.EndArea();
@@ -126,12 +133,12 @@ public class RoomConfigMenu : MonoBehaviour {
 
 			GUILayout.BeginHorizontal();
 				GUILayout.Label ("Room Name: ");
-				updateRoomName = GUILayout.TextField (updateRoomName);
+				updateRoomName = GUILayout.TextField (updateRoomName.Trim ('"'));
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
 				GUILayout.Label ("Room Genre: ");
-				updateRoomGenre = GUILayout.TextField (updateRoomGenre);
+				updateRoomGenre = GUILayout.TextField (updateRoomGenre.Trim ('"'));
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
@@ -193,6 +200,28 @@ public class RoomConfigMenu : MonoBehaviour {
 					RoomController.getInstance().deleteRoom();
 				}
 			}
+
+		GUILayout.EndVertical();
+	}
+
+	void RoomDetails(){
+		GUILayout.BeginVertical();
+
+		GUILayout.BeginHorizontal();
+		GUILayout.Label ("Room Name: ");
+		GUILayout.Label (thisRoom.Name.Trim ('"'));
+		GUILayout.EndHorizontal();
+
+		GUILayout.BeginHorizontal();
+		GUILayout.Label ("Room Genre: ");
+		GUILayout.Label (thisRoom.Genre.Trim ('"'));
+		GUILayout.EndHorizontal();
+		
+		GUILayout.BeginHorizontal();
+		GUILayout.Label ("Visits: ");
+		GUILayout.Label (thisRoom.Visits.ToString());
+		GUILayout.FlexibleSpace();
+		GUILayout.EndHorizontal();
 
 		GUILayout.EndVertical();
 	}

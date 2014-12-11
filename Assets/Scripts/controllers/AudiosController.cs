@@ -15,6 +15,7 @@ public sealed class AudiosController : MonoBehaviour {
 	public static bool SongMetaLoaded = false;
 
 	public static string currentSongURL = "";
+	private static string currentSongName = "";
 
 	private bool isActive= false;
 	private static bool callGetSongMeta = false;
@@ -57,6 +58,15 @@ public sealed class AudiosController : MonoBehaviour {
 		}
 		set{
 			SongMetaLoaded = value;
+		}
+	}
+
+	public static string CurrentSongName {
+		get {
+			return currentSongName;
+		}
+		set {
+			currentSongName = value;
 		}
 	}
 
@@ -142,8 +152,12 @@ public sealed class AudiosController : MonoBehaviour {
 		current_song = AudioList[index];
 
 		current_song.Duration = song_parsed["data"]["song"]["duration"].AsInt;
+		
+		// Set the name of the current song
+		currentSongName = song_parsed["data"]["song"]["title"];
 
-	//	Debug.Log("Current Song Elapsed Time: " + current_song.Elapsed_time);
+		Debug.Log("Current Song Elapsed Time: " + current_song.Elapsed_time);
+
 		SongMetaLoaded = true;
 	}
 
@@ -198,6 +212,15 @@ public sealed class AudiosController : MonoBehaviour {
 		if (callGetSongMeta){
 			callGetSongMeta = false;
 			StartCoroutine(getSongMeta(songMetaIndex));
+		}
+	}
+
+	public static int SongMetaIndex {
+		get {
+			return songMetaIndex;
+		}
+		set {
+			songMetaIndex = value;
 		}
 	}
 }
