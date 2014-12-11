@@ -25,8 +25,6 @@ public class RoomController : MonoBehaviour {
 		return instance;
 	}
 
-
-
 	//Constant URLs
 	private const string roomsURL = "http://beforeheaveniqp.herokuapp.com/api/rooms";
 	private const string roomSearchURL = "http://beforeheaveniqp.herokuapp.com/api/rooms/search/";
