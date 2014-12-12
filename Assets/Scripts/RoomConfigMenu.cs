@@ -142,7 +142,7 @@ public class RoomConfigMenu : MonoBehaviour {
 				} 
 				else {
 					Debug.Log("Updating Room");
-					RoomController.getInstance().updateRoom(updateRoomName, updateRoomGenre, "");
+					RoomController.getInstance().updateRoom(updateRoomName, updateRoomGenre, "", "");
 					thisRoom.Name = updateRoomName;
 					thisRoom.Genre = updateRoomGenre;
 					RoomModel.getInstance().CurrentRoom = thisRoom;
@@ -171,7 +171,14 @@ public class RoomConfigMenu : MonoBehaviour {
 		}
 		GUILayout.Label (status);
 		GUILayout.EndHorizontal();
-		
+
+		GUILayout.BeginHorizontal();
+		if (GUILayout.Button ("Refresh playlist")){
+			RoomController.getInstance().getUpdatedPlaylist();
+		}
+
+		GUILayout.EndHorizontal();
+
 		if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "Starting Room") {
 			if (GUILayout.Button ("Delete Room")) {
 				RoomController.getInstance().deleteRoom();

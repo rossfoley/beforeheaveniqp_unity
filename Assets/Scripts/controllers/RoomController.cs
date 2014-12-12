@@ -188,23 +188,54 @@ public class RoomController : MonoBehaviour {
 		}
 	}
 
-	public void updateRoom (string newRoomName, string newRoomGenre, string newRoomData) {
+	public void updateRoom (string newRoomName, string newRoomGenre, string newRoomData, string newRoomPlaylist) {
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId) as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		Debug.Log ("CURRENT ROOMAROO! " + RoomModel.getInstance ().CurrentRoom.RoomId);
 		request.Method = "PUT";
-		
+
 		request.ContentType = "application/json";
 		request.Headers.Add("x-user-username", LoginModel.Username);
 		request.Headers.Add("x-user-token", LoginModel.AuthKey );
-		
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\" } }");
+
+		Debug.Log ("Request JSON = " + "{ \"room_data\": { \"name\": \""  + newRoomName.Trim ('"') + "\", \"genre\": \"" + newRoomGenre.Trim ('"') + "\", \"playlist\": " + newRoomPlaylist + "} }");
+		Debug.Log ("Request Auth Key = " + LoginModel.AuthKey);
+		Debug.Log ("Request URL = http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId);
+
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\", \"unity_data\" : \"bingo_bango\", \"playlist\": " + newRoomPlaylist + "} }");
+		//byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\", \"unity_data\" : \"farts\" } }");
 		request.ContentLength = byteArray.Length;
 		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
 		string responseContent=null;
 		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
 			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
 				responseContent = reader.ReadToEnd();
+			}
+		}
+
+	}
+
+	public void getUpdatedPlaylist(){
+		var request = System.Net.WebRequest.Create ("http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.SoundcloudAccessToken) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("Request = http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.AuthKey);
+		request.Method = "GET";
+		request.ContentType = "application/json";
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+
+		var parsedPlaylist = JSON.Parse (responseContent);
+		Debug.Log ("ParsedPlaylist = " + parsedPlaylist);
+		Debug.Log ("Return = " + responseContent);
+
+		foreach (JSONNode playlist in parsedPlaylist.AsArray){
+			if (playlist["permalink"].ToString().Trim ('"') == "test2"){
+				Debug.Log ("Updating playlist");
+				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), "", playlist.ToString());
 			}
 		}
 	}

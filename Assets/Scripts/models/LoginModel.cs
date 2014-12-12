@@ -9,6 +9,7 @@ public class LoginModel : MonoBehaviour {
 	private static string[] friendIds;
 	private static UserData[] friendData;
 	private static string currentRoomId;
+	private static string soundcloudAccessToken;
 
 	// Use this for initialization
 	void Start () {
@@ -65,6 +66,15 @@ public class LoginModel : MonoBehaviour {
 		}
 		set {
 			currentRoomId = value;
+		}
+	}
+
+	public static string SoundcloudAccessToken {
+		get {
+			return soundcloudAccessToken;
+		}
+		set {
+			soundcloudAccessToken = value;
 		}
 	}
 }
