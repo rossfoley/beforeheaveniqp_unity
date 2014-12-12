@@ -130,10 +130,10 @@ public class AudioView : MonoBehaviour {
 				isActive = false;
 			}
 		}
-		if(AudiosController.SongMeta_Load){
+		if(AudiosController.SongMeta_Load && nWaveOutDevice != null){
 			//Increase the bar by how much time has passed multiplied by the ration of the bar width over the song's duration
 			//bar_tick += 0.01f;
-			bar_tick += ((bar_size.x * Time.deltaTime) / ac.Current_song.Duration);
+			bar_tick += ((Time.deltaTime * 1000) / ac.Current_song.Duration);
 			Debug.Log(Time.deltaTime + " : " + bar_tick);
 		}
 	}
