@@ -13,7 +13,7 @@ public class AudioView : MonoBehaviour {
 	private WaveChannel32 nVolumeStream;
 	private MemoryStream tmpStr;
 
-	private int duration;
+	private int duration = 0;
 
 	AudiosController ac;
 
@@ -24,6 +24,11 @@ public class AudioView : MonoBehaviour {
 	bool isPlaying = false;
 	bool isActive= false;
 	bool getSongs = false;
+
+	//Variables for controlling the Audio progress bar
+	Vector2 bar_pos = new Vector2(Screen.width / 2, Screen.height - (Screen.height / 8) + 20); 
+	Vector2 bar_size = new Vector2((Screen.width/ 2) - 80, 20);
+	float bar_tick= 0.0f;
 
 	private bool LoadAudioFromData(byte[] data){
 		try{
@@ -51,6 +56,7 @@ public class AudioView : MonoBehaviour {
 
 	private void LoadAudio(){
 		string input_url = AudiosController.currentSongURL + "?client_id=0cb45a6052596ee086177b11b29e8809"; 
+
 		StartCoroutine(LoadAudioWWW(input_url));
 	}
 
@@ -75,6 +81,7 @@ public class AudioView : MonoBehaviour {
 		int currentSongPosition = ac.Current_song.Elapsed_time;
 
 		duration = duration - (currentSongPosition - previousSongPosition);
+
 		nMainOutputStream.Seek(currentSongPosition * 100, SeekOrigin.Begin);
 	}
 
@@ -102,9 +109,10 @@ public class AudioView : MonoBehaviour {
 		ac = AudiosController.getInstance();
 		isActive = true;
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
+
 		if (getSongs){
 			getSongs = false;
 			StartCoroutine(AudiosController.getSongData());
@@ -112,27 +120,44 @@ public class AudioView : MonoBehaviour {
 		if(AudiosController.SongMeta_Load && isActive){
 			//Debug.Log ("Calling update since meta load and isActive are both true");
 			if(AudiosController.currentSongURL != null && AudiosController.currentSongURL != ""){
-
+				bar_tick = 0.0f;
 				//Load current song
-				//Debug.Log("Current Song is not Null, here's proof: " + AudiosController.currentSongURL);
 				LoadAudio();
-				//Debug.Log("Current song Elapsed Time(2): " + ac.Current_song.Elapsed_time);
 
+				//Set bar position to be the beginning of the song with respect to the bar's width
+				bar_tick = ac.Current_song.Elapsed_time / (bar_size.x * 1000);
+				Debug.Log("Bar Ticker Offset is: " + bar_tick);
 				isActive = false;
 			}
 		}
+		if(AudiosController.SongMeta_Load){
+			//Increase the bar by how much time has passed multiplied by the ration of the bar width over the song's duration
+			//bar_tick += 0.01f;
+			bar_tick += ((bar_size.x * Time.deltaTime) / ac.Current_song.Duration);
+			Debug.Log(Time.deltaTime + " : " + bar_tick);
+		}
 	}
 
+
 	void OnGUI(){
-		/*
-		ElevatorMenu em = gameObject.GetComponent<ElevatorMenu>();
-		RoomData rd = em.getCurrentRoom();
-		*/
+
 		if(LoginController.SuccessfulLogin){
 			GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
 			GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
 			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + AudiosController.CurrentSongName));
+			GUI.Label(new Rect((Screen.width / 4) + 20, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Genre: " + ac.Current_song.Genre));
+			GUI.Label(new Rect((Screen.width * 2)/ 4, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Duration: " + ac.Current_song.Duration/1000.0f));
 
+			// draw the background:
+			GUI.BeginGroup (new Rect (bar_pos.x, bar_pos.y, bar_size.x, bar_size.y));
+			GUI.Box (new Rect (0,0, bar_size.x, bar_size.y), new GUIContent(""));
+				
+				// draw the filled-in part:
+				GUI.BeginGroup (new Rect (0, 0, bar_size.x * bar_tick, bar_size.y));
+					GUI.Box (new Rect (0,0, bar_size.x, bar_size.y), new GUIContent(""));
+				GUI.EndGroup ();
+			
+			GUI.EndGroup ();
 
 			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Mute")){
 				if(!isMuted){
