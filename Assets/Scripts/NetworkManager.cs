@@ -122,6 +122,18 @@ public class NetworkManager : Photon.MonoBehaviour {
 		}
 	}
 
+	public void updateAll(string name, string genre){
+		object[] parameters = new object[2];
+		parameters[0] = name;
+		parameters[1] = genre;
+		photonView.RPC ("updateCurrentRoom", PhotonTargets.All, parameters);
+	}
+
+	[RPC] void updateCurrentRoom(string name, string genre){
+		RoomModel.getInstance().CurrentRoom.Name = name;
+		RoomModel.getInstance().CurrentRoom.Genre = genre;
+	}
+
 	void OnApplicationQuit() { 
 		Debug.Log ("Quitting the app");
 		LoginController.updateOnlineStatus(false);
