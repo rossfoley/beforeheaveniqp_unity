@@ -30,6 +30,12 @@ public class AudioView : MonoBehaviour {
 	Vector2 bar_size = new Vector2((Screen.width/ 2) - 80, 20);
 	float bar_tick= 0.0f;
 
+	/**
+	 * Makes use of the NAudio library to load songs into the player and converts the bytes into a playable format for the Unity Engine
+	 * @param data Data abstracted from HTTP Request
+	 * Returns true if the data is not null, otherwise returns false.
+	 * See NAudio Documentation for further details [http://naudio.codeplex.com/documentation]
+	 */
 	private bool LoadAudioFromData(byte[] data){
 		try{
 			tmpStr = new MemoryStream(data);
@@ -54,12 +60,21 @@ public class AudioView : MonoBehaviour {
 		return false;
 	}
 
+	/**
+	 * Constructs string containing the current song url and the client token to pass along to soundcloud
+	 * Also starts the Coroutine for pinging the server for the song data
+	 */
 	private void LoadAudio(){
 		string input_url = AudiosController.currentSongURL + "?client_id=0cb45a6052596ee086177b11b29e8809"; 
 
 		StartCoroutine(LoadAudioWWW(input_url));
 	}
 
+	/**
+	 * Makes HTTP Request to server for current song data
+	 * @param input_url Takes in a string containing the website address to query for songs
+	 * Returns once the url has been obtained or if the url supplied did not produce any usable data
+	 */ 
 	private IEnumerator LoadAudioWWW(string input_url){
 		WWW www = new WWW(input_url);
 		while(!www.isDone){
@@ -85,6 +100,9 @@ public class AudioView : MonoBehaviour {
 		nMainOutputStream.Seek(currentSongPosition * 100, SeekOrigin.Begin);
 	}
 
+	/**
+	 * Loads the next song in the playlist obtained from server
+	 */
 	private IEnumerator loadNextSong(){
 		string currentRoomId = RoomModel.getInstance().CurrentRoom.RoomId;
 		int waitTime = (duration/1000) + 1;
@@ -104,7 +122,8 @@ public class AudioView : MonoBehaviour {
 			nWaveOutDevice.Dispose();
 		}
 	}
-	
+
+	//Set active to true and make an instance of the AudiosController
 	void Start(){
 		ac = AudiosController.getInstance();
 		isActive = true;
@@ -131,8 +150,8 @@ public class AudioView : MonoBehaviour {
 			}
 		}
 		if(AudiosController.SongMeta_Load && nWaveOutDevice != null){
-			//Increase the bar by how much time has passed multiplied by the ration of the bar width over the song's duration
-			//bar_tick += 0.01f;
+
+			//Increase the bar by how much time has passed multiplied by the ratio of the bar width over the song's duration
 			bar_tick += ((Time.deltaTime * 1000) / ac.Current_song.Duration);
 			Debug.Log(Time.deltaTime + " : " + bar_tick);
 		}
@@ -144,21 +163,24 @@ public class AudioView : MonoBehaviour {
 		if(LoginController.SuccessfulLogin){
 			GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
 			GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
+
+			//GUI Elements for AudioPlayer
 			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + AudiosController.CurrentSongName));
-			GUI.Label(new Rect((Screen.width / 4) + 20, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Genre: " + ac.Current_song.Genre));
+			GUI.Label(new Rect((Screen.width / 4) + 60, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Genre: " + ac.Current_song.Genre));
 			GUI.Label(new Rect((Screen.width * 2)/ 4, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Duration: " + ac.Current_song.Duration/1000.0f));
 
-			// draw the background:
+			// Draw the background of the progress bar
 			GUI.BeginGroup (new Rect (bar_pos.x, bar_pos.y, bar_size.x, bar_size.y));
 			GUI.Box (new Rect (0,0, bar_size.x, bar_size.y), new GUIContent(""));
 				
-				// draw the filled-in part:
+				// Draw the filled-in part.
 				GUI.BeginGroup (new Rect (0, 0, bar_size.x * bar_tick, bar_size.y));
 					GUI.Box (new Rect (0,0, bar_size.x, bar_size.y), new GUIContent(""));
 				GUI.EndGroup ();
 			
 			GUI.EndGroup ();
 
+			//Mute Button
 			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Mute")){
 				if(!isMuted){
 					temp_vol = nVolumeStream.Volume;
@@ -170,6 +192,7 @@ public class AudioView : MonoBehaviour {
 				}
 			}
 
+			//Volume Buttons
 			if(GUI.Button(new Rect(230, Screen.height - (Screen.height / 8) + 20, 50, 50), "V++")){
 				if(nVolumeStream.Volume >= 1.0f){
 					nVolumeStream.Volume = 1.0f;
