@@ -168,10 +168,10 @@ public class RoomConfigMenu : MonoBehaviour {
 							thisRoom.Name = updateRoomName;
 							thisRoom.Genre = updateRoomGenre;
 							RoomModel.getInstance().CurrentRoom = thisRoom;
+							NetworkManager.getInstance ().updateAll(updateRoomName, updateRoomGenre);
 							newRoomName = "";
 							newRoomGenre = "";
 						}
-					}
 				}
 				string status;
 				switch(updateRoomStatus) {
