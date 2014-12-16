@@ -204,6 +204,7 @@ public class RoomConfigMenu : MonoBehaviour {
 		if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "Starting Room") {
 			if (GUILayout.Button ("Refresh Playlist")) {
 				RoomController.getInstance().getUpdatedPlaylist();
+				NetworkManager.getInstance().kickAll ();
 			}
 		}
 		GUILayout.EndHorizontal();
