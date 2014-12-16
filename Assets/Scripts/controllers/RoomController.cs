@@ -14,6 +14,7 @@ public class RoomController : MonoBehaviour {
 	public enum roomPresets {
 		defaultRoom = 0,
 		jazzRoom = 1,
+		coolRoom = 2,
 	}
 	
 	private bool isChangingRoom;

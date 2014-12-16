@@ -231,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  subId: 1
+  subId: 4
   ownerId: 0
   group: 0
   prefixBackup: -1
@@ -11761,7 +11761,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1365570922
 Transform:
   m_ObjectHideFlags: 0
@@ -12765,6 +12765,7 @@ MonoBehaviour:
   currentRoomObject: {fileID: 1365570921}
   defaultRoomTemplate: {fileID: 100000, guid: f5178051882574f4dbe9d55fdbccd69c, type: 2}
   jazzRoomTemplate: {fileID: 100016, guid: 463f125189de08343a0da32bbde567fa, type: 2}
+  coolRoomTemplate: {fileID: 100018, guid: 36d4f19aa8f984c40b9436636e91c916, type: 2}
 --- !u!4 &2039934024
 Transform:
   m_ObjectHideFlags: 0
