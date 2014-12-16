@@ -191,12 +191,14 @@ public class RoomConfigMenu : MonoBehaviour {
 					break;
 				}
 				GUILayout.Label (status);
-			GUILayout.EndHorizontal();
-			
-			if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "Starting Room") {
-				if (GUILayout.Button ("Delete Room")) {
-					RoomController.getInstance().deleteRoom();
-				}
+
+
+		}
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "Starting Room") {
+			if (GUILayout.Button ("Delete Room")) {
+				RoomController.getInstance().deleteRoom();
 			}
 		}
 		GUILayout.EndHorizontal();
