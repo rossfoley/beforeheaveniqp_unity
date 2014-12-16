@@ -20,7 +20,7 @@ public class RoomModel : MonoBehaviour {
 	void Start () {
 		instance = this;
 		// Creates a dummy currentRoomData
-		currentRoom = new RoomData ("0", "dummy", "none", 0, null);
+		currentRoom = new RoomData ("0", "dummy", "none", "", 0, null);
 	}
 
 	public RoomData getRoom (string name){

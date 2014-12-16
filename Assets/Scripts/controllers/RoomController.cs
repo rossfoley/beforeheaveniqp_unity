@@ -80,7 +80,13 @@ public class RoomController : MonoBehaviour {
 				i++;
 			}
 			// Build the roomData and place it in the allRooms array
-			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds);
+			RoomData roomData;
+			if (data["playlist"].ToString () != "\"null\""){
+				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["playlist"]["id"].ToString (), data["visits"].AsInt, memberIds);
+			}
+			else {
+				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), "", data["visits"].AsInt, memberIds);
+			}
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
 		}
@@ -233,7 +239,7 @@ public class RoomController : MonoBehaviour {
 		Debug.Log ("Return = " + responseContent);
 
 		foreach (JSONNode playlist in parsedPlaylist.AsArray){
-			if (playlist["permalink"].ToString().Trim ('"') == "test2"){
+			if (playlist["id"].ToString() == RoomModel.getInstance().CurrentRoom.PlaylistId){
 				Debug.Log ("Updating playlist");
 				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), "", playlist.ToString());
 			}
