@@ -16,7 +16,8 @@ public class NetworkManager : Photon.MonoBehaviour {
 	//Unity GameObject Links
 	public GameObject StandbyCamera;
 	public GameObject currentRoomObject;
-	public GameObject roomTemplate;
+	public GameObject defaultRoomTemplate;
+	public GameObject jazzRoomTemplate;
 	private SpawnSpot[] spawnSpots;
 	private GameObject myPlayerGO;
 
@@ -105,7 +106,17 @@ public class NetworkManager : Photon.MonoBehaviour {
 		Destroy (currentRoomObject);
 
 		// Update currentRoomObject and Data
-		currentRoomObject = (GameObject) Instantiate(roomTemplate);
+		switch (toRoom.RoomPreset) {
+		case (int) RoomController.roomPresets.defaultRoom:
+			currentRoomObject = (GameObject) Instantiate(defaultRoomTemplate);
+			break;
+		case (int) RoomController.roomPresets.jazzRoom:
+			currentRoomObject = (GameObject) Instantiate(jazzRoomTemplate);
+			break;
+		default:
+			currentRoomObject = (GameObject) Instantiate(defaultRoomTemplate);
+			break;
+		}
 
 		Debug.Log ("Changing room to " + toRoom.RoomId);
 
@@ -120,6 +131,18 @@ public class NetworkManager : Photon.MonoBehaviour {
 		if(username == "" || username == LoginModel.Username.Trim('"')){
 			changeRoom(RoomModel.getInstance().getRoom("Starting Room"));
 		}
+	}
+
+	public void updateAll(string name, string genre){
+		object[] parameters = new object[2];
+		parameters[0] = name;
+		parameters[1] = genre;
+		photonView.RPC ("updateCurrentRoom", PhotonTargets.All, parameters);
+	}
+
+	[RPC] void updateCurrentRoom(string name, string genre){
+		RoomModel.getInstance().CurrentRoom.Name = name;
+		RoomModel.getInstance().CurrentRoom.Genre = genre;
 	}
 
 	void OnApplicationQuit() { 

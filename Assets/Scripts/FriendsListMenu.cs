@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FriendsListMenu : MonoBehaviour {
 
-	private Rect friendWindowRect = new Rect(100, 100, Screen.width - 200, Screen.height - 200);
+	private Rect friendWindowRect = new Rect(Screen.width/3, 100, Screen.width/3, Screen.height - 200);
 	
 	private string friendUsername = "";
 	private int updateCounter = 0;
@@ -34,8 +34,8 @@ public class FriendsListMenu : MonoBehaviour {
 		else {
 			updateCounter--;
 		}
-		GUILayout.BeginArea (new Rect(0, guiEdgeBorder, 
-		                              friendWindowRect.width / 3, friendWindowRect.height));
+		GUILayout.BeginArea (new Rect(5, guiEdgeBorder, 
+		                              (friendWindowRect.width / 3)-5, friendWindowRect.height));
 		
 		friendUsername = GUILayout.TextField (friendUsername);
 		if (GUILayout.Button ("Add Friend")) {
@@ -105,7 +105,7 @@ public class FriendsListMenu : MonoBehaviour {
 				}
 
 				GUI.color = Color.gray;
-				if (GUILayout.Button("x")){
+				if (GUILayout.Button("x", GUILayout.Width(20))){
 					LoginController.removeFriend(LoginModel.FriendData[i].Username); 
 				}
 				GUILayout.EndHorizontal();

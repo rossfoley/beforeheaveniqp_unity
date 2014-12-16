@@ -10,6 +10,11 @@ public class RoomController : MonoBehaviour {
 	private string username;
 	private string userAuthKey;
 	private string userId;
+
+	public enum roomPresets {
+		defaultRoom = 0,
+		jazzRoom = 1,
+	}
 	
 	private bool isChangingRoom;
 
@@ -82,18 +87,17 @@ public class RoomController : MonoBehaviour {
 			// Build the roomData and place it in the allRooms array
 			RoomData roomData;
 			if (data["playlist"].ToString () != "\"null\""){
-				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["playlist"]["id"].ToString (), data["visits"].AsInt, memberIds);
+				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["playlist"]["id"].ToString (), data["visits"].AsInt, memberIds, data["unity_data"].AsInt);
 			}
 			else {
-				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), "", data["visits"].AsInt, memberIds);
+				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), "", data["visits"].AsInt, memberIds, data["unity_data"].AsInt);
 			}
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
 		}
-		
 	}
 
-	public IEnumerator createRoom(string newRoomName, string newRoomGenre){
+	public IEnumerator createRoom(string newRoomName, string newRoomGenre, int roomPreset){
 		RoomConfigMenu.CreateRoomStatus = 1; //Creating
 		// Set up the request
 		WWWForm roomCreateForm = new WWWForm();
@@ -106,21 +110,8 @@ public class RoomController : MonoBehaviour {
 		headers.Add ("X-User-Token", userAuthKey);
 		
 		// TODO
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\"} }");
-		
-		StringBuilder data = new StringBuilder();
-		data.Append("{\n");
-		data.Append("\t\"name\":");
-		data.Append(" \"" + newRoomName + "\",\n");
-		data.Append("\t\"genre\":");
-		data.Append(" \"" + newRoomGenre + "\"\n");
-		data.Append("}");
-		
-		roomCreateForm.AddField("room_data", data.ToString ());
-		
-		
-		byte[] rawData = roomCreateForm.data;
-		
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{\"room_data\": {\"name\": \"" + newRoomName + "\",\"genre\": \"" + newRoomGenre + "\",\"unity_data\": \"" + roomPreset + "\"} }");
+
 		WWW newRoomRequest = new WWW(roomsURL, byteArray, headers);
 		yield return newRoomRequest;
 		if (!string.IsNullOrEmpty(newRoomRequest.error)) {
@@ -208,7 +199,7 @@ public class RoomController : MonoBehaviour {
 		Debug.Log ("Request Auth Key = " + LoginModel.AuthKey);
 		Debug.Log ("Request URL = http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId);
 
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\", \"unity_data\" : \"bingo_bango\", \"playlist\": " + newRoomPlaylist + "} }");
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\", \"unity_data\" : \"" + newRoomData + "\", \"playlist\": " + newRoomPlaylist + "} }");
 		//byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\", \"unity_data\" : \"farts\" } }");
 		request.ContentLength = byteArray.Length;
 		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
@@ -241,7 +232,7 @@ public class RoomController : MonoBehaviour {
 		foreach (JSONNode playlist in parsedPlaylist.AsArray){
 			if (playlist["id"].ToString() == RoomModel.getInstance().CurrentRoom.PlaylistId){
 				Debug.Log ("Updating playlist");
-				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), "", playlist.ToString());
+				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), RoomModel.getInstance().CurrentRoom.RoomPreset.ToString(), playlist.ToString());
 			}
 		}
 	}

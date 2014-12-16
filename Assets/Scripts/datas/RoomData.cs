@@ -9,14 +9,16 @@ public class RoomData{
 	private string playlistId;
 	private int visits;
 	private string[] members;
-
-	public RoomData(string roomId, string name, string genre, string playlistId, int visits, string[] members){
+	private int roomPreset;
+	
+	public RoomData(string roomId, string name, string genre, string playlistId, int visits, string[] members, int roomPreset){
 		this.roomId = roomId;
 		this.name = name;
 		this.genre = genre;
 		this.visits = visits;
 		this.members = members;
 		this.playlistId = playlistId;
+		this.roomPreset = roomPreset;
 	}
 
 	// RoomId getter and setter
@@ -66,6 +68,14 @@ public class RoomData{
 		}
 		set {
 			members = value;
+		}
+	}
+	public int RoomPreset {
+		get {
+			return this.roomPreset;
+		}
+		set {
+			roomPreset = value;
 		}
 	}
 
