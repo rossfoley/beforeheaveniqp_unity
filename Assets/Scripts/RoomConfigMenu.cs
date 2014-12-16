@@ -117,7 +117,6 @@ public class RoomConfigMenu : MonoBehaviour {
 
 	void AddMember () {
 		GUILayout.BeginVertical();
-
 			GUILayout.BeginHorizontal();
 				GUILayout.FlexibleSpace();
 				GUILayout.Label ("Edit Room");
@@ -199,7 +198,8 @@ public class RoomConfigMenu : MonoBehaviour {
 					RoomController.getInstance().deleteRoom();
 				}
 			}
-
+		}
+		GUILayout.EndHorizontal();
 		GUILayout.EndVertical();
 	}
 
