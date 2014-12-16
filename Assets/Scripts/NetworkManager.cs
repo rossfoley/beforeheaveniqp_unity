@@ -18,6 +18,7 @@ public class NetworkManager : Photon.MonoBehaviour {
 	public GameObject currentRoomObject;
 	public GameObject defaultRoomTemplate;
 	public GameObject jazzRoomTemplate;
+	public GameObject coolRoomTemplate;
 	private SpawnSpot[] spawnSpots;
 	private GameObject myPlayerGO;
 
@@ -112,6 +113,9 @@ public class NetworkManager : Photon.MonoBehaviour {
 			break;
 		case (int) RoomController.roomPresets.jazzRoom:
 			currentRoomObject = (GameObject) Instantiate(jazzRoomTemplate);
+			break;
+		case (int) RoomController.roomPresets.coolRoom:
+			currentRoomObject = (GameObject) Instantiate(coolRoomTemplate);
 			break;
 		default:
 			currentRoomObject = (GameObject) Instantiate(defaultRoomTemplate);
