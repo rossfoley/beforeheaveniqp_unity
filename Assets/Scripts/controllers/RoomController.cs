@@ -46,6 +46,7 @@ public class RoomController : MonoBehaviour {
 		
 		// Retrieve all the rooms currently on the database
 		StartCoroutine(getRooms (""));
+		getAllPlaylists();
 	}
 
 	// Gets all the rooms from the database
@@ -212,6 +213,30 @@ public class RoomController : MonoBehaviour {
 
 	}
 
+	public void getAllPlaylists(){
+		var request = System.Net.WebRequest.Create ("http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.SoundcloudAccessToken) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("Request = http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.AuthKey);
+		request.Method = "GET";
+		request.ContentType = "application/json";
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+
+		var parsedPlaylist = JSON.Parse (responseContent);
+		var playlists = new string[parsedPlaylist.AsArray.Count];
+		var i = 0;
+		foreach (JSONNode playlist in parsedPlaylist.AsArray){
+			playlists[i] = playlist ["title"].ToString ();
+			Debug.Log ("Adding playlist name " + playlist["title"].ToString ());
+			i++;
+		}
+		LoginModel.PlaylistNames = playlists;
+	}
+
 	public void getUpdatedPlaylist(){
 		var request = System.Net.WebRequest.Create ("http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.SoundcloudAccessToken) as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
@@ -232,6 +257,31 @@ public class RoomController : MonoBehaviour {
 		foreach (JSONNode playlist in parsedPlaylist.AsArray){
 			if (playlist["id"].ToString() == RoomModel.getInstance().CurrentRoom.PlaylistId){
 				Debug.Log ("Updating playlist");
+				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), RoomModel.getInstance().CurrentRoom.RoomPreset.ToString(), playlist.ToString());
+			}
+		}
+	}
+
+	public void switchPlaylist(string newPlaylist){
+		var request = System.Net.WebRequest.Create ("http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.SoundcloudAccessToken) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("Request = http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.AuthKey);
+		request.Method = "GET";
+		request.ContentType = "application/json";
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+		
+		var parsedPlaylist = JSON.Parse (responseContent);
+		Debug.Log ("ParsedPlaylist = " + parsedPlaylist);
+		Debug.Log ("Return = " + responseContent);
+		
+		foreach (JSONNode playlist in parsedPlaylist.AsArray){
+			if (playlist["title"].ToString() == newPlaylist){
+				Debug.Log ("Switching playlist");
 				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), RoomModel.getInstance().CurrentRoom.RoomPreset.ToString(), playlist.ToString());
 			}
 		}

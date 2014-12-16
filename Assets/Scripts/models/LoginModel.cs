@@ -8,6 +8,7 @@ public class LoginModel : MonoBehaviour {
 	private static string userId;
 	private static string[] friendIds;
 	private static UserData[] friendData;
+	private static string[] playlistNames;
 	private static string currentRoomId;
 	private static string soundcloudAccessToken;
 
@@ -75,6 +76,15 @@ public class LoginModel : MonoBehaviour {
 		}
 		set {
 			soundcloudAccessToken = value;
+		}
+	}
+
+	public static string[] PlaylistNames {
+		get {
+			return playlistNames;
+		}
+		set {
+			playlistNames = value;
 		}
 	}
 }
