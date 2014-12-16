@@ -128,7 +128,6 @@ public class RoomConfigMenu : MonoBehaviour {
 		if (GUILayout.Button ("Update Room") || 
 		    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
 			Debug.Log ("Update Button Clicked");
-			
 			// Put request for a new band member
 			if (newMemberEmail.Trim() != "") {
 				RoomController.getInstance().addBandMember(thisRoom.RoomId, newMemberEmail);
@@ -146,6 +145,7 @@ public class RoomConfigMenu : MonoBehaviour {
 					thisRoom.Name = updateRoomName;
 					thisRoom.Genre = updateRoomGenre;
 					RoomModel.getInstance().CurrentRoom = thisRoom;
+					NetworkManager.getInstance ().updateAll(updateRoomName, updateRoomGenre);
 					newRoomName = "";
 					newRoomGenre = "";
 				}
