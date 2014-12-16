@@ -284,6 +284,7 @@ MonoBehaviour:
   roomController: {fileID: 2074609415}
   chat: {fileID: 426209483}
   guiController: {fileID: 1330364724}
+  loginBackground: {fileID: 0}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
@@ -2074,7 +2075,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 3
   m_Type: 1
-  m_Color: {r: .99513185, g: 1, b: .647058845, a: 1}
+  m_Color: {r: .933333337, g: .909803927, b: .309803933, a: 1}
   m_Intensity: .219999999
   m_Range: 10
   m_SpotAngle: 30
@@ -11760,7 +11761,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1365570922
 Transform:
   m_ObjectHideFlags: 0
@@ -11768,7 +11769,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1365570921}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.44338989, y: 3.6675663, z: 12.1661854}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1009805315}
@@ -12762,7 +12763,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StandbyCamera: {fileID: 858580294}
   currentRoomObject: {fileID: 1365570921}
-  roomTemplate: {fileID: 100000, guid: f5178051882574f4dbe9d55fdbccd69c, type: 2}
+  defaultRoomTemplate: {fileID: 100000, guid: f5178051882574f4dbe9d55fdbccd69c, type: 2}
+  jazzRoomTemplate: {fileID: 100016, guid: 463f125189de08343a0da32bbde567fa, type: 2}
 --- !u!4 &2039934024
 Transform:
   m_ObjectHideFlags: 0
