@@ -13,7 +13,7 @@ public class AudioView : MonoBehaviour {
 	private WaveChannel32 nVolumeStream;
 	private MemoryStream tmpStr;
 
-	private int duration;
+	private int duration = 0;
 
 	AudiosController ac;
 
@@ -25,6 +25,17 @@ public class AudioView : MonoBehaviour {
 	bool isActive= false;
 	bool getSongs = false;
 
+	//Variables for controlling the Audio progress bar
+	Vector2 bar_pos = new Vector2(Screen.width / 2, Screen.height - (Screen.height / 8) + 20); 
+	Vector2 bar_size = new Vector2((Screen.width/ 2) - 80, 20);
+	float bar_tick= 0.0f;
+
+	/**
+	 * Makes use of the NAudio library to load songs into the player and converts the bytes into a playable format for the Unity Engine
+	 * @param data Data abstracted from HTTP Request
+	 * Returns true if the data is not null, otherwise returns false.
+	 * See NAudio Documentation for further details [http://naudio.codeplex.com/documentation]
+	 */
 	private bool LoadAudioFromData(byte[] data){
 		try{
 			tmpStr = new MemoryStream(data);
@@ -49,11 +60,21 @@ public class AudioView : MonoBehaviour {
 		return false;
 	}
 
+	/**
+	 * Constructs string containing the current song url and the client token to pass along to soundcloud
+	 * Also starts the Coroutine for pinging the server for the song data
+	 */
 	private void LoadAudio(){
 		string input_url = AudiosController.currentSongURL + "?client_id=0cb45a6052596ee086177b11b29e8809"; 
+
 		StartCoroutine(LoadAudioWWW(input_url));
 	}
 
+	/**
+	 * Makes HTTP Request to server for current song data
+	 * @param input_url Takes in a string containing the website address to query for songs
+	 * Returns once the url has been obtained or if the url supplied did not produce any usable data
+	 */ 
 	private IEnumerator LoadAudioWWW(string input_url){
 		WWW www = new WWW(input_url);
 		while(!www.isDone){
@@ -75,9 +96,13 @@ public class AudioView : MonoBehaviour {
 		int currentSongPosition = ac.Current_song.Elapsed_time;
 
 		duration = duration - (currentSongPosition - previousSongPosition);
+
 		nMainOutputStream.Seek(currentSongPosition * 100, SeekOrigin.Begin);
 	}
 
+	/**
+	 * Loads the next song in the playlist obtained from server
+	 */
 	private IEnumerator loadNextSong(){
 		string currentRoomId = RoomModel.getInstance().CurrentRoom.RoomId;
 		int waitTime = (duration/1000) + 1;
@@ -97,14 +122,16 @@ public class AudioView : MonoBehaviour {
 			nWaveOutDevice.Dispose();
 		}
 	}
-	
+
+	//Set active to true and make an instance of the AudiosController
 	void Start(){
 		ac = AudiosController.getInstance();
 		isActive = true;
 	}
-
+	
 	// Update is called once per frame
 	void Update () {
+
 		if (getSongs){
 			getSongs = false;
 			StartCoroutine(AudiosController.getSongData());
@@ -112,28 +139,48 @@ public class AudioView : MonoBehaviour {
 		if(AudiosController.SongMeta_Load && isActive){
 			//Debug.Log ("Calling update since meta load and isActive are both true");
 			if(AudiosController.currentSongURL != null && AudiosController.currentSongURL != ""){
-
+				bar_tick = 0.0f;
 				//Load current song
-				//Debug.Log("Current Song is not Null, here's proof: " + AudiosController.currentSongURL);
 				LoadAudio();
-				//Debug.Log("Current song Elapsed Time(2): " + ac.Current_song.Elapsed_time);
 
+				//Set bar position to be the beginning of the song with respect to the bar's width
+				bar_tick = ac.Current_song.Elapsed_time / (bar_size.x * 1000);
+				Debug.Log("Bar Ticker Offset is: " + bar_tick);
 				isActive = false;
 			}
 		}
+		if(AudiosController.SongMeta_Load && nWaveOutDevice != null){
+
+			//Increase the bar by how much time has passed multiplied by the ratio of the bar width over the song's duration
+			bar_tick += ((Time.deltaTime * 1000) / ac.Current_song.Duration);
+			Debug.Log(Time.deltaTime + " : " + bar_tick);
+		}
 	}
 
+
 	void OnGUI(){
-		/*
-		ElevatorMenu em = gameObject.GetComponent<ElevatorMenu>();
-		RoomData rd = em.getCurrentRoom();
-		*/
+
 		if(LoginController.SuccessfulLogin){
-			GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width/3*2-10, Screen.height / 8), "");
+			GUI.Box(new Rect(10, Screen.height - (Screen.height / 8), Screen.width - 20, Screen.height / 8), "");
 			GUI.Label(new Rect(20, Screen.height - (Screen.height / 8), 100, 100), soundcloud_icon);
-			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width/3*2-10, 50), new GUIContent("Current Song: " + AudiosController.CurrentSongName));
 
+			//GUI Elements for AudioPlayer
+			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + AudiosController.CurrentSongName));
+			GUI.Label(new Rect((Screen.width / 4) + 60, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Genre: " + ac.Current_song.Genre));
+			GUI.Label(new Rect((Screen.width * 2)/ 4, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Duration: " + ac.Current_song.Duration/1000.0f));
 
+			// Draw the background of the progress bar
+			GUI.BeginGroup (new Rect (bar_pos.x, bar_pos.y, bar_size.x, bar_size.y));
+			GUI.Box (new Rect (0,0, bar_size.x, bar_size.y), new GUIContent(""));
+				
+				// Draw the filled-in part.
+				GUI.BeginGroup (new Rect (0, 0, bar_size.x * bar_tick, bar_size.y));
+					GUI.Box (new Rect (0,0, bar_size.x, bar_size.y), new GUIContent(""));
+				GUI.EndGroup ();
+			
+			GUI.EndGroup ();
+
+			//Mute Button
 			if(GUI.Button(new Rect(120, Screen.height - (Screen.height / 8) + 20, 50, 50), "Mute")){
 				if(!isMuted){
 					temp_vol = nVolumeStream.Volume;
@@ -145,6 +192,7 @@ public class AudioView : MonoBehaviour {
 				}
 			}
 
+			//Volume Buttons
 			if(GUI.Button(new Rect(230, Screen.height - (Screen.height / 8) + 20, 50, 50), "V++")){
 				if(nVolumeStream.Volume >= 1.0f){
 					nVolumeStream.Volume = 1.0f;
