@@ -145,8 +145,6 @@ public class RoomConfigMenu : MonoBehaviour {
 				newMemberEmail = GUILayout.TextField (newMemberEmail);
 			GUILayout.EndHorizontal();
 
-			GUILayout.EndHorizontal();
-
 			GUILayout.BeginHorizontal();
 			if (GUILayout.Button ("Update Room") || 
 				   (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
@@ -193,7 +191,6 @@ public class RoomConfigMenu : MonoBehaviour {
 					break;
 				}
 				GUILayout.Label (status);
-		
 		}
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
