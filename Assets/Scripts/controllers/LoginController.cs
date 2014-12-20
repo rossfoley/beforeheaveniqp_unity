@@ -53,6 +53,7 @@ public class LoginController : MonoBehaviour {
 				LoginModel.Username = username;
 				LoginModel.AuthKey = authKey;
 				LoginModel.UserId = userId;
+				LoginModel.SoundcloudAccessToken = parsed ["data"] ["soundcloud_access_token"];
 				updateOnlineStatus(true);
 			}
 			// If the login was unsuccessful, display the error message

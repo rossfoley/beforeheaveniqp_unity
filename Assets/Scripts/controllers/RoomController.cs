@@ -47,6 +47,7 @@ public class RoomController : MonoBehaviour {
 		
 		// Retrieve all the rooms currently on the database
 		StartCoroutine(getRooms (""));
+		getAllPlaylists();
 	}
 
 	// Gets all the rooms from the database
@@ -86,7 +87,13 @@ public class RoomController : MonoBehaviour {
 				i++;
 			}
 			// Build the roomData and place it in the allRooms array
-			RoomData roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["visits"].AsInt, memberIds, data["unity_data"].AsInt);
+			RoomData roomData;
+			if (data["playlist"].ToString () != "\"null\""){
+				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), data["playlist"]["id"].ToString (), data["visits"].AsInt, memberIds, data["unity_data"].AsInt);
+			}
+			else {
+				roomData = new RoomData(data["_id"]["$oid"], data["name"].ToString(), data["genre"].ToString(), "", data["visits"].AsInt, memberIds, data["unity_data"].AsInt);
+			}
 			RoomModel.getInstance().AllRooms[roomCount] = roomData;
 			roomCount++;
 		}
@@ -180,23 +187,103 @@ public class RoomController : MonoBehaviour {
 		}
 	}
 
-	public void updateRoom (string newRoomName, string newRoomGenre, string newRoomData) {
+	public void updateRoom (string newRoomName, string newRoomGenre, string newRoomData, string newRoomPlaylist) {
 		var request = System.Net.WebRequest.Create("http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId) as System.Net.HttpWebRequest;
 		request.KeepAlive = true;
 		Debug.Log ("CURRENT ROOMAROO! " + RoomModel.getInstance ().CurrentRoom.RoomId);
 		request.Method = "PUT";
-		
+
 		request.ContentType = "application/json";
 		request.Headers.Add("x-user-username", LoginModel.Username);
 		request.Headers.Add("x-user-token", LoginModel.AuthKey );
-		
-		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\" } }");
+
+		Debug.Log ("Request JSON = " + "{ \"room_data\": { \"name\": \""  + newRoomName.Trim ('"') + "\", \"genre\": \"" + newRoomGenre.Trim ('"') + "\", \"playlist\": " + newRoomPlaylist + "} }");
+		Debug.Log ("Request Auth Key = " + LoginModel.AuthKey);
+		Debug.Log ("Request URL = http://beforeheaveniqp.herokuapp.com/api/rooms/" + RoomModel.getInstance().CurrentRoom.RoomId);
+
+		byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\", \"unity_data\" : \"" + newRoomData + "\", \"playlist\": " + newRoomPlaylist + "} }");
+		//byte[] byteArray = System.Text.Encoding.UTF8.GetBytes("{ \"room_data\": { \"name\": \""  + newRoomName + "\", \"genre\": \"" + newRoomGenre + "\", \"unity_data\" : \"farts\" } }");
 		request.ContentLength = byteArray.Length;
 		using (var writer = request.GetRequestStream()){writer.Write(byteArray, 0, byteArray.Length);}
 		string responseContent=null;
 		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
 			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
 				responseContent = reader.ReadToEnd();
+			}
+		}
+
+	}
+
+	public void getAllPlaylists(){
+		var request = System.Net.WebRequest.Create ("http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.SoundcloudAccessToken) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("Request = http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.AuthKey);
+		request.Method = "GET";
+		request.ContentType = "application/json";
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+
+		var parsedPlaylist = JSON.Parse (responseContent);
+		var playlists = new string[parsedPlaylist.AsArray.Count];
+		var i = 0;
+		foreach (JSONNode playlist in parsedPlaylist.AsArray){
+			playlists[i] = playlist ["title"].ToString ();
+			Debug.Log ("Adding playlist name " + playlist["title"].ToString ());
+			i++;
+		}
+		LoginModel.PlaylistNames = playlists;
+	}
+
+	public void getUpdatedPlaylist(){
+		var request = System.Net.WebRequest.Create ("http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.SoundcloudAccessToken) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("Request = http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.AuthKey);
+		request.Method = "GET";
+		request.ContentType = "application/json";
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+
+		var parsedPlaylist = JSON.Parse (responseContent);
+		Debug.Log ("ParsedPlaylist = " + parsedPlaylist);
+		Debug.Log ("Return = " + responseContent);
+
+		foreach (JSONNode playlist in parsedPlaylist.AsArray){
+			if (playlist["id"].ToString() == RoomModel.getInstance().CurrentRoom.PlaylistId){
+				Debug.Log ("Updating playlist");
+				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), RoomModel.getInstance().CurrentRoom.RoomPreset.ToString(), playlist.ToString());
+			}
+		}
+	}
+
+	public void switchPlaylist(string newPlaylist){
+		var request = System.Net.WebRequest.Create ("http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.SoundcloudAccessToken) as System.Net.HttpWebRequest;
+		request.KeepAlive = true;
+		Debug.Log ("Request = http://api.soundcloud.com/me/playlists.json?oauth_token=" + LoginModel.AuthKey);
+		request.Method = "GET";
+		request.ContentType = "application/json";
+		string responseContent=null;
+		using (var response = request.GetResponse() as System.Net.HttpWebResponse) {
+			using (var reader = new System.IO.StreamReader(response.GetResponseStream())) {
+				responseContent = reader.ReadToEnd();
+			}
+		}
+		
+		var parsedPlaylist = JSON.Parse (responseContent);
+		Debug.Log ("ParsedPlaylist = " + parsedPlaylist);
+		Debug.Log ("Return = " + responseContent);
+		
+		foreach (JSONNode playlist in parsedPlaylist.AsArray){
+			if (playlist["title"].ToString() == newPlaylist){
+				Debug.Log ("Switching playlist");
+				updateRoom(RoomModel.getInstance().CurrentRoom.Name.Trim ('"'), RoomModel.getInstance().CurrentRoom.Genre.Trim ('"'), RoomModel.getInstance().CurrentRoom.RoomPreset.ToString(), playlist.ToString());
 			}
 		}
 	}

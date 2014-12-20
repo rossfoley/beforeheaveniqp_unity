@@ -94,7 +94,7 @@ public class RoomConfigMenu : MonoBehaviour {
 		GUILayout.BeginArea (new Rect(guiEdgeBorder,
 		                              guiEdgeBorder,
 		                              configWindowRect.width/2-guiEdgeBorder,
-		                              configWindowRect.height-guiEdgeBorder));
+		                              configWindowRect.height - guiEdgeBorder));
 		GUILayout.BeginVertical();
 		// Create a new room
 
@@ -105,6 +105,7 @@ public class RoomConfigMenu : MonoBehaviour {
 		if(RoomModel.getInstance().userIsMember()){
 			// Add a new band member to the current room
 			AddMember();
+			AddPlaylists();
 		}
 		else{
 			RoomDetails();
@@ -113,6 +114,22 @@ public class RoomConfigMenu : MonoBehaviour {
 
 		GUILayout.EndVertical();
 		GUILayout.EndArea();
+		GUILayout.BeginArea (new Rect(configWindowRect.width/2 + guiEdgeBorder, guiEdgeBorder, configWindowRect.width/2 - guiEdgeBorder, configWindowRect.height - guiEdgeBorder));
+		GUILayout.Label ("Change playlist");
+		int i;
+		for (i = 0; i < LoginModel.PlaylistNames.Length; i++){
+			GUILayout.BeginHorizontal();
+			if (GUILayout.Button (LoginModel.PlaylistNames[i])){
+				RoomController.getInstance().switchPlaylist(LoginModel.PlaylistNames[i]);
+				NetworkManager.getInstance().kickAll ();
+			}
+			GUILayout.EndHorizontal();
+		}
+		GUILayout.EndArea ();
+	}
+
+	void AddPlaylists(){
+
 	}
 
 	void AddMember () {
@@ -146,31 +163,31 @@ public class RoomConfigMenu : MonoBehaviour {
 			GUILayout.EndHorizontal();
 
 			GUILayout.BeginHorizontal();
-				if (GUILayout.Button ("Update Room") || 
-				    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
-					Debug.Log ("Update Button Clicked");
+			if (GUILayout.Button ("Update Room") || 
+				   (Event.current.isKey && Event.current.keyCode == KeyCode.Return && GUI.GetNameOfFocusedControl() == "email field")){
+				Debug.Log ("Update Button Clicked");
 					
-					// Put request for a new band member
-					if (newMemberEmail.Trim() != "") {
-						RoomController.getInstance().addBandMember(thisRoom.RoomId, newMemberEmail);
-					}
+				// Put request for a new band member
+				if (newMemberEmail.Trim() != "") {
+					RoomController.getInstance().addBandMember(thisRoom.RoomId, newMemberEmail);
+				}
 
-					// Update room name and room genre
-					if (updateRoomName.Trim() != thisRoom.Name || updateRoomGenre.Trim() != thisRoom.Genre) {
-						if (updateRoomName.Trim() == "" && updateRoomGenre.Trim() == "") {
-							updateRoomStatus = -2;
-							Debug.Log ("No room name given");
-						} 
-						else {
-							Debug.Log("Updating Room");
-							RoomController.getInstance().updateRoom(updateRoomName, updateRoomGenre, "");
-							thisRoom.Name = updateRoomName;
-							thisRoom.Genre = updateRoomGenre;
-							RoomModel.getInstance().CurrentRoom = thisRoom;
-							NetworkManager.getInstance ().updateAll(updateRoomName, updateRoomGenre);
-							newRoomName = "";
-							newRoomGenre = "";
-						}
+				// Update room name and room genre
+				if (updateRoomName.Trim() != thisRoom.Name || updateRoomGenre.Trim() != thisRoom.Genre) {
+					if (updateRoomName.Trim() == "" && updateRoomGenre.Trim() == "") {
+						updateRoomStatus = -2;
+						Debug.Log ("No room name given");
+					} 
+					else {
+						Debug.Log("Updating Room");
+						RoomController.getInstance().updateRoom(updateRoomName, updateRoomGenre, "", "");
+						thisRoom.Name = updateRoomName;
+						thisRoom.Genre = updateRoomGenre;
+						RoomModel.getInstance().CurrentRoom = thisRoom;
+						NetworkManager.getInstance ().updateAll(updateRoomName, updateRoomGenre);
+						newRoomName = "";
+						newRoomGenre = "";
+					}
 				}
 				string status;
 				switch(updateRoomStatus) {
@@ -191,14 +208,20 @@ public class RoomConfigMenu : MonoBehaviour {
 					break;
 				}
 				GUILayout.Label (status);
-
-
 		}
 		GUILayout.EndHorizontal();
 		GUILayout.BeginHorizontal();
 		if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "Starting Room") {
 			if (GUILayout.Button ("Delete Room")) {
 				RoomController.getInstance().deleteRoom();
+			}
+		}
+		GUILayout.EndHorizontal();
+		GUILayout.BeginHorizontal();
+		if (RoomModel.getInstance().CurrentRoom.Name.Trim ('"') != "Starting Room") {
+			if (GUILayout.Button ("Refresh Playlist")) {
+				RoomController.getInstance().getUpdatedPlaylist();
+				NetworkManager.getInstance().kickAll ();
 			}
 		}
 		GUILayout.EndHorizontal();
