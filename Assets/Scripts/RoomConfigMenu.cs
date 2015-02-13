@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEditor;
+//using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -115,15 +115,17 @@ public class RoomConfigMenu : MonoBehaviour {
 		GUILayout.EndVertical();
 		GUILayout.EndArea();
 		GUILayout.BeginArea (new Rect(configWindowRect.width/2 + guiEdgeBorder, guiEdgeBorder, configWindowRect.width/2 - guiEdgeBorder, configWindowRect.height - guiEdgeBorder));
-		GUILayout.Label ("Change playlist");
-		int i;
-		for (i = 0; i < LoginModel.PlaylistNames.Length; i++){
-			GUILayout.BeginHorizontal();
-			if (GUILayout.Button (LoginModel.PlaylistNames[i])){
-				RoomController.getInstance().switchPlaylist(LoginModel.PlaylistNames[i]);
-				NetworkManager.getInstance().kickAll ();
+		if (RoomModel.getInstance().userIsMember()){
+			GUILayout.Label ("Change playlist");
+			int i;
+			for (i = 0; i < LoginModel.PlaylistNames.Length; i++){
+				GUILayout.BeginHorizontal();
+				if (GUILayout.Button (LoginModel.PlaylistNames[i])){
+					RoomController.getInstance().switchPlaylist(LoginModel.PlaylistNames[i]);
+					NetworkManager.getInstance().kickAll ();
+				}
+				GUILayout.EndHorizontal();
 			}
-			GUILayout.EndHorizontal();
 		}
 		GUILayout.EndArea ();
 	}
