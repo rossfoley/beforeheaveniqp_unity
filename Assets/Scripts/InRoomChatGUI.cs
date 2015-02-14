@@ -14,6 +14,7 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 	private int MAXLINES = 1000;
 	private int BUFFER = 20;
 	private int minimizeButtonWidth = 20;
+	private int audioBarHeight = Screen.height / 8;
 	private string inputLine = "";
 	private Vector2 scrollPos = Vector2.zero;
 	
@@ -21,11 +22,11 @@ public class InRoomChatGUI : Photon.MonoBehaviour
 	
 	public void Start()
 	{
-		this.GuiRect = new Rect(Screen.width / 3*2, Screen.height / 3*2, 
+		this.GuiRect = new Rect(Screen.width / 3*2, Screen.height - audioBarHeight - Screen.height/3 - BUFFER, 
 		                        Screen.width/3, Screen.height/3);
 		this.chatButtonRect = new Rect(0, 0, 200, 20);
 		this.chatButtonRect.x = Screen.width - chatButtonRect.width - BUFFER;
-		this.chatButtonRect.y = Screen.height - chatButtonRect.height - BUFFER;
+		this.chatButtonRect.y = Screen.height - chatButtonRect.height - audioBarHeight - BUFFER;
 	}
 	
 	public void OnGUI()
