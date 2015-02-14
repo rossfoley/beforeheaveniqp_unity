@@ -51,7 +51,7 @@ public class LoginView : MonoBehaviour {
 
 			// If the login button is clicked, check for input and then call the login() function if the user 
 			// has inputted both an email and password
-			if (GUI.Button (new Rect (0, 40, 50, 20), "Login") ||
+			if (GUI.Button (new Rect (0, 40, 100, 20), "Login") ||
 			    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && 
 			 	((GUI.GetNameOfFocusedControl() == "username field") || GUI.GetNameOfFocusedControl() == "password field"))){
 				StartCoroutine(LoginController.login (userEmail, userPassword));
@@ -65,7 +65,7 @@ public class LoginView : MonoBehaviour {
 			}
 			*/
 	
-			if (GUI.Button (new Rect(0, 80, 50, 20), "Register")){
+			if (GUI.Button (new Rect(0, 80, 100, 20), "Register")){
 				Application.OpenURL("http://beforeheaveniqp.herokuapp.com/users/sign_up");
 			}
 
