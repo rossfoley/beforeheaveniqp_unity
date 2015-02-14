@@ -284,7 +284,7 @@ MonoBehaviour:
   roomController: {fileID: 2074609415}
   chat: {fileID: 426209483}
   guiController: {fileID: 1330364724}
-  loginBackground: {fileID: 2800000, guid: 5377dedb29a035042a44bccc1693714d, type: 3}
+  loginBackground: {fileID: 2800000, guid: e67f3d54bca0a6e41a37870faeccc07b, type: 3}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
@@ -12732,7 +12732,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca1f6d49095dc82489573cb9bb1f9dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundcloud_icon: {fileID: 2800000, guid: 72f12481a72913c408aeb66d7b3ca5bf, type: 3}
+  soundcloud_icon: {fileID: 2800000, guid: 7b6793f3dbaf0e2449db69008c381819, type: 3}
 --- !u!1 &2039934022
 GameObject:
   m_ObjectHideFlags: 0

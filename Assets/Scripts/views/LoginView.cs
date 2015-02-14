@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Net;
 using SimpleJSON;
+using System;
 
 public class LoginView : MonoBehaviour {
 
@@ -51,11 +52,24 @@ public class LoginView : MonoBehaviour {
 
 			// If the login button is clicked, check for input and then call the login() function if the user 
 			// has inputted both an email and password
+			DateTime today = DateTime.Today;
+			int before = today.CompareTo (new DateTime(2015, 2, 20));
+			int after = today.CompareTo (new DateTime(2015, 2, 23));
+			if(before < 0){
+				GUI.Label (new Rect (110, 40, 300, 25), "Testing will begin on Friday, February 20th.");
+				GUI.enabled = false;
+			}
+			if(after > 0){
+				GUI.Label (new Rect (110, 40, 300, 25), "Thank you for participating! We have concluded our testing.");
+				GUI.enabled = false;
+			}
 			if (GUI.Button (new Rect (0, 40, 100, 20), "Login") ||
 			    (Event.current.isKey && Event.current.keyCode == KeyCode.Return && 
-			 	((GUI.GetNameOfFocusedControl() == "username field") || GUI.GetNameOfFocusedControl() == "password field"))){
+			 	((GUI.GetNameOfFocusedControl() == "username field") || GUI.GetNameOfFocusedControl() == "password field")))
+			{
 				StartCoroutine(LoginController.login (userEmail, userPassword));
 			}
+			GUI.enabled = true;
 			// Used for debug so logging can be done quickly
 			/*
 			if (GUI.Button (new Rect(0, 60, 50, 20), "Bypass")){
