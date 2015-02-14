@@ -137,6 +137,8 @@ public sealed class AudiosController : MonoBehaviour {
 
 		current_song = AudioList[index];
 
+		current_song.Genre = song_parsed["data"]["song"]["genre"];
+
 		current_song.Duration = song_parsed["data"]["song"]["duration"].AsInt;
 		
 		currentSongName = song_parsed["data"]["song"]["title"];
