@@ -36,7 +36,7 @@ public class LoginView : MonoBehaviour {
 			GUI.BeginGroup (new Rect (50, 50, 500, 500));
 
 			// Email label
-			GUI.Label (new Rect (0, 0, 100, 20), "Email: ");
+			GUI.Label (new Rect (0, 0, 100, 20), "Username: ");
 
 			// Email text field
 			GUI.SetNextControlName("username field");
@@ -57,12 +57,14 @@ public class LoginView : MonoBehaviour {
 				StartCoroutine(LoginController.login (userEmail, userPassword));
 			}
 			// Used for debug so logging can be done quickly
+			/*
 			if (GUI.Button (new Rect(0, 60, 50, 20), "Bypass")){
 				userEmail = "nathan@abc.com";
 				userPassword = "nintendo";
 				StartCoroutine(LoginController.login(userEmail, userPassword));
 			}
-
+			*/
+	
 			if (GUI.Button (new Rect(0, 80, 50, 20), "Register")){
 				Application.OpenURL("http://beforeheaveniqp.herokuapp.com/users/sign_up");
 			}

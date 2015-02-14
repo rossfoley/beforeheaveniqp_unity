@@ -284,7 +284,7 @@ MonoBehaviour:
   roomController: {fileID: 2074609415}
   chat: {fileID: 426209483}
   guiController: {fileID: 1330364724}
-  loginBackground: {fileID: 2800000, guid: c5d9e5af51bd81c4d9efa4b34cc5afbe, type: 3}
+  loginBackground: {fileID: 2800000, guid: 5377dedb29a035042a44bccc1693714d, type: 3}
 --- !u!1 &371330630
 GameObject:
   m_ObjectHideFlags: 0
