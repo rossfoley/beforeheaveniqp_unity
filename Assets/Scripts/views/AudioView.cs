@@ -48,7 +48,7 @@ public class AudioView : MonoBehaviour {
 
 			duration = AudiosController.getInstance().Current_song.Duration - ac.Current_song.Elapsed_time;
 
-			Debug.Log("Duration = " + duration);
+			//Debug.Log("Duration = " + duration);
 
 			StartCoroutine(loadNextSong());
 
@@ -80,7 +80,7 @@ public class AudioView : MonoBehaviour {
 		while(!www.isDone){
 			yield return www;
 		}
-		Debug.Log("URL Found");
+		//Debug.Log("URL Found");
 		
 		byte[] imageData = www.bytes;
 		
@@ -109,7 +109,7 @@ public class AudioView : MonoBehaviour {
 
 		yield return new WaitForSeconds(waitTime);
 		if (currentRoomId == RoomModel.getInstance ().CurrentRoom.RoomId){
-			Debug.Log ("Finished waiting for song to end");
+			//Debug.Log ("Finished waiting for song to end");
 			AudiosController.SongMeta_Load = false;
 			isActive = true;
 			AudiosController.currentSongURL = "";
@@ -145,7 +145,7 @@ public class AudioView : MonoBehaviour {
 
 				//Set bar position to be the beginning of the song with respect to the bar's width
 				bar_tick = ac.Current_song.Elapsed_time / (bar_size.x * 1000);
-				Debug.Log("Bar Ticker Offset is: " + bar_tick);
+				//Debug.Log("Bar Ticker Offset is: " + bar_tick);
 				isActive = false;
 			}
 		}
@@ -153,7 +153,7 @@ public class AudioView : MonoBehaviour {
 
 			//Increase the bar by how much time has passed multiplied by the ratio of the bar width over the song's duration
 			bar_tick += ((Time.deltaTime * 1000) / ac.Current_song.Duration);
-			Debug.Log(Time.deltaTime + " : " + bar_tick);
+			//Debug.Log(Time.deltaTime + " : " + bar_tick);
 		}
 	}
 
@@ -168,7 +168,7 @@ public class AudioView : MonoBehaviour {
 			GUI.Label(new Rect(120, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Current Song: " + AudiosController.CurrentSongName));
 			GUI.Label(new Rect((Screen.width / 4) + 60, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Genre: " + ac.Current_song.Genre));
 			GUI.Label(new Rect((Screen.width * 2)/ 4, Screen.height - (Screen.height / 8), Screen.width - 10, 50), new GUIContent("Duration: " + ac.Current_song.Duration/1000.0f));
-
+		
 			// Draw the background of the progress bar
 			GUI.BeginGroup (new Rect (bar_pos.x, bar_pos.y, bar_size.x, bar_size.y));
 			GUI.Box (new Rect (0,0, bar_size.x, bar_size.y), new GUIContent(""));
@@ -198,7 +198,7 @@ public class AudioView : MonoBehaviour {
 					nVolumeStream.Volume = 1.0f;
 				}
 				nVolumeStream.Volume += 0.1f;
-				Debug.Log(nVolumeStream.Volume);
+				//Debug.Log(nVolumeStream.Volume);
 			}
 
 			if(GUI.Button(new Rect(285, Screen.height - (Screen.height / 8) + 20, 50, 50), "V--")){
@@ -206,7 +206,7 @@ public class AudioView : MonoBehaviour {
 					nVolumeStream.Volume = 0.0f;
 				}
 				nVolumeStream.Volume -= 0.1f;
-				Debug.Log(nVolumeStream.Volume);
+				//Debug.Log(nVolumeStream.Volume);
 			}
 		}
 	}
