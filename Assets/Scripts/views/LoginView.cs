@@ -28,23 +28,26 @@ public class LoginView : MonoBehaviour {
 	
 	}
 
+
 	void OnGUI() {
 		// If the user has not logged in yet, display the GUI elements of the login screen
 		if (!LoginController.SuccessfulLogin){
 
+			GUIStyle blackText = new GUIStyle();
+			blackText.normal.textColor = Color.black;
+
 			GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), loginBackground);
 
 			GUI.BeginGroup (new Rect (50, 50, 500, 500));
-
 			// Email label
-			GUI.Label (new Rect (0, 0, 100, 20), "Username: ");
+			GUI.Label (new Rect (0, 0, 100, 20), "Username: ", blackText);
 
 			// Email text field
 			GUI.SetNextControlName("username field");
 			userEmail = GUI.TextField (new Rect(110, 0, 200, 20), userEmail);
 
 			// Password label
-			GUI.Label (new Rect (0, 20, 100, 20), "Password: ");
+			GUI.Label (new Rect (0, 20, 100, 20), "Password: ", blackText);
 
 			// Password text field
 			GUI.SetNextControlName("password field");
@@ -55,12 +58,13 @@ public class LoginView : MonoBehaviour {
 			DateTime today = DateTime.Today;
 			int before = today.CompareTo (new DateTime(2015, 2, 20));
 			int after = today.CompareTo (new DateTime(2015, 2, 23));
+
 			if(before < 0){
-				GUI.Label (new Rect (110, 40, 300, 25), "Testing will begin on Friday, February 20th.");
+				GUI.Label (new Rect (110, 40, 300, 25), "Testing will begin on Friday, February 20th.", blackText);
 				GUI.enabled = false;
 			}
 			if(after > 0){
-				GUI.Label (new Rect (110, 40, 300, 25), "Thank you for participating! We have concluded our testing.");
+				GUI.Label (new Rect (110, 40, 300, 25), "Thank you for participating! We have concluded our testing.", blackText);
 				GUI.enabled = false;
 			}
 			if (GUI.Button (new Rect (0, 40, 100, 20), "Login") ||
