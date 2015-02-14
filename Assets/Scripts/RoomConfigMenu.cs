@@ -123,6 +123,8 @@ public class RoomConfigMenu : MonoBehaviour {
 				if (GUILayout.Button (LoginModel.PlaylistNames[i])){
 					RoomController.getInstance().switchPlaylist(LoginModel.PlaylistNames[i]);
 					NetworkManager.getInstance().kickAll ();
+					GUIController.CrWindowVisible = false;
+
 				}
 				GUILayout.EndHorizontal();
 			}
